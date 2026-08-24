@@ -463,7 +463,21 @@ setInterval(function(){
   var delta = (Math.random() - 0.48) * (pairsData[idx].price * 0.003);
   pairsData[idx].price = +(pairsData[idx].price + delta).toFixed(pairsData[idx].price > 1 ? 2 : 7);
   renderTable();
-}, 2500);
+// Security Protections: Disable Right Click & DevTools Shortcuts
+document.addEventListener('contextmenu', function(e) {
+  e.preventDefault();
+});
+
+document.addEventListener('keydown', function(e) {
+  if (
+    e.key === 'F12' ||
+    (e.ctrlKey && e.shiftKey && ['I', 'J', 'C'].includes(e.key.toUpperCase())) ||
+    (e.metaKey && e.altKey && ['I', 'J', 'C', 'U'].includes(e.key.toUpperCase())) ||
+    (e.ctrlKey && e.key.toUpperCase() === 'U')
+  ) {
+    e.preventDefault();
+  }
+});
 </script>
 
 </body>

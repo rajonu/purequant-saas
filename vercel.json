@@ -3,6 +3,18 @@
   "cleanUrls": true,
   "rewrites": [
     {
+      "source": "/health",
+      "destination": "/health.html"
+    },
+    {
+      "source": "/status",
+      "destination": "/health.html"
+    },
+    {
+      "source": "/health-status",
+      "destination": "/health.html"
+    },
+    {
       "source": "/:path*",
       "has": [
         {

@@ -233,14 +233,83 @@
   .nav-actions {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     flex-shrink: 0;
     white-space: nowrap;
   }
   .nav-actions .btn { white-space: nowrap; }
 
+  /* Hamburger Menu Button */
+  .hamburger-btn {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 9px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    cursor: pointer;
+    color: #ffffff;
+    font-size: 1.25rem;
+    line-height: 1;
+    transition: all 0.18s ease;
+    user-select: none;
+  }
+  .hamburger-btn:hover, .hamburger-btn:active {
+    background: rgba(0, 242, 254, 0.12);
+    border-color: var(--cyan);
+    color: var(--cyan);
+  }
+
+  /* Mobile / iPad Drawer & Backdrop */
+  .drawer-backdrop {
+    position: fixed; inset: 0; z-index: 9998; background: rgba(4, 7, 12, 0.8);
+    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+    opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+  .drawer-backdrop.active { opacity: 1; visibility: visible; }
+
+  .mobile-drawer {
+    position: fixed; top: 0; right: -360px; width: 330px; max-width: 88vw; height: 100vh; height: 100dvh;
+    z-index: 9999; background: #080d15; border-left: 1px solid rgba(0, 242, 254, 0.2);
+    box-shadow: -15px 0 45px rgba(0, 0, 0, 0.75); display: flex; flex-direction: column;
+    transition: right 0.32s cubic-bezier(0.16, 1, 0.3, 1); padding: 22px 18px; overflow-y: auto;
+  }
+  .mobile-drawer.active { right: 0; }
+
+  .drawer-header {
+    display: flex; align-items: center; justify-content: space-between; padding-bottom: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08); margin-bottom: 16px;
+  }
+  .drawer-close-btn {
+    width: 32px; height: 32px; border-radius: 8px; background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1); color: var(--text-muted); display: grid; place-items: center;
+    cursor: pointer; font-size: 1.1rem; transition: all 0.18s ease;
+  }
+  .drawer-close-btn:hover { color: #fff; background: rgba(255, 83, 118, 0.2); border-color: var(--red); }
+
+  .drawer-links { display: flex; flex-direction: column; gap: 7px; margin-bottom: 20px; }
+  .drawer-link {
+    display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 10px;
+    font-size: 0.9rem; font-weight: 600; color: #e2e8f0; transition: all 0.18s ease;
+    background: rgba(255, 255, 255, 0.02); border: 1px solid transparent; text-decoration: none;
+  }
+  .drawer-link:hover, .drawer-link:active {
+    background: rgba(0, 242, 254, 0.08); border-color: rgba(0, 242, 254, 0.25); color: var(--cyan);
+  }
+  .drawer-link-pill {
+    background: rgba(0, 242, 254, 0.08) !important; border: 1px solid rgba(0, 242, 254, 0.3) !important; color: var(--cyan) !important;
+  }
+  .drawer-link-pill-em {
+    background: rgba(0, 245, 160, 0.08) !important; border: 1px solid rgba(0, 245, 160, 0.3) !important; color: var(--emerald) !important;
+  }
+  .drawer-actions { margin-top: auto; display: flex; flex-direction: column; gap: 10px; padding-top: 16px; border-top: 1px solid rgba(255, 255, 255, 0.08); }
+  .drawer-actions .btn { width: 100%; text-align: center; justify-content: center; padding: 11px; font-size: 0.88rem; }
+
   @media(max-width: 1024px){
     .nav-links { display: none; }
+    .hamburger-btn { display: flex; }
   }
 
   /* Hero Section */
@@ -597,6 +666,7 @@
         <span class="pulse-dot" style="background: var(--emerald); box-shadow: 0 0 8px var(--emerald);"></span> Free Signals
       </a>
       <a href="#pricing" class="btn btn-cyan" style="padding: 9px 18px; font-size: 0.86rem;">Get Lifetime VIP ($9)</a>
+      <button id="hamburger-toggle" class="hamburger-btn" aria-label="Toggle navigation menu" onclick="toggleDrawer()">☰</button>
     </div>
   </div>
 </header>
@@ -1304,6 +1374,96 @@ function switchRadar(sym){
     observer.observe(el);
   });
 })();
+
+// Mobile & iPad Navigation Drawer Controller
+function toggleDrawer(open) {
+  var drawer = document.getElementById('mobile-drawer');
+  var backdrop = document.getElementById('drawer-backdrop');
+  var btn = document.getElementById('hamburger-toggle');
+  if(!drawer || !backdrop) return;
+  
+  var isOpen = (open !== undefined) ? open : !drawer.classList.contains('active');
+  if (isOpen) {
+    drawer.classList.add('active');
+    backdrop.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    if(btn) btn.innerHTML = '✕';
+  } else {
+    drawer.classList.remove('active');
+    backdrop.classList.remove('active');
+    document.body.style.overflow = '';
+    if(btn) btn.innerHTML = '☰';
+  }
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') toggleDrawer(false);
+});
+
+// Security Protections: Disable Right Click & DevTools Shortcuts
+document.addEventListener('contextmenu', function(e) {
+  e.preventDefault();
+});
+
+document.addEventListener('keydown', function(e) {
+  if (
+    e.key === 'F12' ||
+    (e.ctrlKey && e.shiftKey && ['I', 'J', 'C'].includes(e.key.toUpperCase())) ||
+    (e.metaKey && e.altKey && ['I', 'J', 'C', 'U'].includes(e.key.toUpperCase())) ||
+    (e.ctrlKey && e.key.toUpperCase() === 'U')
+  ) {
+    e.preventDefault();
+  }
+});
 </script>
+
+<!-- ===== Mobile & iPad Navigation Drawer ===== -->
+<div id="drawer-backdrop" class="drawer-backdrop" onclick="toggleDrawer(false)"></div>
+<aside id="mobile-drawer" class="mobile-drawer" aria-label="Mobile Navigation">
+  <div class="drawer-header">
+    <a href="/" class="logo" style="font-size: 1.1rem;" onclick="toggleDrawer(false)">
+      <div class="logo-badge" style="width: 28px; height: 28px; font-size: 0.9rem;">⚡</div>
+      <span>Pure<b>Quant</b> AI</span>
+    </a>
+    <button class="drawer-close-btn" onclick="toggleDrawer(false)" aria-label="Close menu">✕</button>
+  </div>
+
+  <nav class="drawer-links">
+    <a href="https://scanner.purequantai.xyz" target="_blank" class="drawer-link drawer-link-pill" onclick="toggleDrawer(false)">
+      <span>⚡</span> <span>Live 53-Pair Screener</span>
+    </a>
+    <a href="https://dashboard.purequantai.xyz" target="_blank" class="drawer-link drawer-link-pill-em" onclick="toggleDrawer(false)">
+      <span>📊</span> <span>Live Bot Portfolio Dashboard</span>
+    </a>
+    <a href="status.html" target="_blank" class="drawer-link" style="color: var(--emerald);" onclick="toggleDrawer(false)">
+      <span class="pulse-dot" style="width: 6px; height: 6px;"></span> <span>System Health Status (28/28)</span>
+    </a>
+    <a href="#signal-anatomy" class="drawer-link" onclick="toggleDrawer(false)">
+      <span>🧠</span> <span>Exact Signal Anatomy</span>
+    </a>
+    <a href="#proof" class="drawer-link" onclick="toggleDrawer(false)">
+      <span>🏆</span> <span>Verified Trade Proof</span>
+    </a>
+    <a href="#technology" class="drawer-link" onclick="toggleDrawer(false)">
+      <span>🔬</span> <span>Quantitative Edge</span>
+    </a>
+    <a href="#radar" class="drawer-link" onclick="toggleDrawer(false)">
+      <span>📡</span> <span>Live Signal Radar</span>
+    </a>
+    <a href="#pricing" class="drawer-link" onclick="toggleDrawer(false)">
+      <span>👑</span> <span>VIP Membership Plans</span>
+    </a>
+    <a href="#faq" class="drawer-link" onclick="toggleDrawer(false)">
+      <span>❓</span> <span>FAQ & AI Support</span>
+    </a>
+  </nav>
+
+  <div class="drawer-actions">
+    <a href="#pricing" class="btn btn-cyan" onclick="toggleDrawer(false)">Claim Lifetime VIP Pass ($9)</a>
+    <a href="https://t.me/PureQuantSignals" target="_blank" class="btn btn-outline" style="border-color: rgba(0, 245, 160, 0.4);">
+      <span class="pulse-dot"></span> Join Free Telegram Channel
+    </a>
+  </div>
+</aside>
 </body>
 </html>
