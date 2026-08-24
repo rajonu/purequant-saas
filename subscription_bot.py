@@ -329,13 +329,13 @@ def get_plans_keyboard() -> Dict[str, Any]:
     return {
         "inline_keyboard": [
             [
-                {"text": "🥉 Starter Spot — $3.00 / mo", "callback_data": "select_plan_starter"}
+                {"text": "🥉 Starter Spot — $3.00 / mo", "callback_data": "select_plan:starter"}
             ],
             [
-                {"text": "🥈 Pro VIP AI — $6.00 / mo (Popular)", "callback_data": "select_plan_pro"}
+                {"text": "🥈 Pro VIP AI — $6.00 / mo (Popular)", "callback_data": "select_plan:pro"}
             ],
             [
-                {"text": "👑 Lifetime VIP Pass — $9.00 (Best Value)", "callback_data": "select_plan_lifetime_vip"}
+                {"text": "👑 Lifetime VIP Pass — $9.00 (Best Value)", "callback_data": "select_plan:lifetime_vip"}
             ],
             [
                 {"text": "🔙 Back to Main Menu", "callback_data": "menu_main"}
@@ -347,15 +347,15 @@ def get_networks_keyboard(plan_key: str) -> Dict[str, Any]:
     return {
         "inline_keyboard": [
             [
-                {"text": "TRC-20 (Tron USDT)", "callback_data": f"net_{plan_key}_TRC20"},
-                {"text": "BEP-20 (BNB USDT/USDC)", "callback_data": f"net_{plan_key}_BEP20"}
+                {"text": "TRC-20 (Tron USDT)", "callback_data": f"net:{plan_key}:TRC20"},
+                {"text": "BEP-20 (BNB USDT/USDC)", "callback_data": f"net:{plan_key}:BEP20"}
             ],
             [
-                {"text": "Polygon (USDT/USDC)", "callback_data": f"net_{plan_key}_POLYGON"},
-                {"text": "Solana (USDT/USDC)", "callback_data": f"net_{plan_key}_SOLANA"}
+                {"text": "Polygon (USDT/USDC)", "callback_data": f"net:{plan_key}:POLYGON"},
+                {"text": "Solana (USDT/USDC)", "callback_data": f"net:{plan_key}:SOLANA"}
             ],
             [
-                {"text": "TON (TON USDT)", "callback_data": f"net_{plan_key}_TON"}
+                {"text": "TON (TON USDT)", "callback_data": f"net:{plan_key}:TON"}
             ],
             [
                 {"text": "🔙 Back to Plans", "callback_data": "menu_plans"}
@@ -484,88 +484,102 @@ def handle_callback(cb: Dict[str, Any]):
     first_name = cb["from"].get("first_name", "Trader")
     username = cb["from"].get("username", "")
 
-    if data == "menu_main":
-        USER_STATES[chat_id] = {"state": "idle"}
-        edit_message_text(chat_id, message_id, format_welcome_message(first_name), get_main_menu_keyboard())
-        answer_callback_query(cb_id)
+    try:
+        if data == "menu_main":
+            USER_STATES[chat_id] = {"state": "idle"}
+            edit_message_text(chat_id, message_id, format_welcome_message(first_name), get_main_menu_keyboard())
+            answer_callback_query(cb_id)
 
-    elif data == "menu_plans":
-        USER_STATES[chat_id] = {"state": "idle"}
-        edit_message_text(chat_id, message_id, format_plan_overview(), get_plans_keyboard())
-        answer_callback_query(cb_id)
+        elif data == "menu_plans":
+            USER_STATES[chat_id] = {"state": "idle"}
+            edit_message_text(chat_id, message_id, format_plan_overview(), get_plans_keyboard())
+            answer_callback_query(cb_id)
 
-    elif data == "menu_status":
-        answer_callback_query(cb_id)
-        handle_status(chat_id, username)
+        elif data == "menu_status":
+            answer_callback_query(cb_id)
+            handle_status(chat_id, username)
 
-    elif data == "menu_support":
-        USER_STATES[chat_id] = {"state": "awaiting_support_msg"}
-        support_prompt = (
-            f"💬 <b>PUREQUANT AI 24/7 SUPPORT DESK</b>\n\n"
-            f"Ask any question regarding:\n"
-            f"• VIP plans & crypto deposit addresses\n"
-            f"• How spot signals and Lorentzian ML work\n"
-            f"• Shariah/Halal zero-leverage principles\n"
-            f"• Instant assistance from our AI system & live human agents\n\n"
-            f"✍️ <i>Please type your question directly in chat:</i>"
-        )
-        edit_message_text(chat_id, message_id, support_prompt, {"inline_keyboard": [[{"text": "🔙 Back to Menu", "callback_data": "menu_main"}]]})
-        answer_callback_query(cb_id)
-
-    elif data.startswith("select_plan_"):
-        plan_key = data.replace("select_plan_", "")
-        if plan_key in PLANS:
-            USER_STATES[chat_id] = {"state": "select_net", "plan": plan_key}
-            plan = PLANS[plan_key]
-            text = (
-                f"💎 <b>Selected: {plan['badge']} (${plan['price_usdt']:.2f})</b>\n\n"
-                f"Choose your preferred crypto deposit network for payment:"
+        elif data == "menu_support":
+            USER_STATES[chat_id] = {"state": "awaiting_support_msg"}
+            support_prompt = (
+                f"💬 <b>PUREQUANT AI 24/7 SUPPORT DESK</b>\n\n"
+                f"Ask any question regarding:\n"
+                f"• VIP plans & crypto deposit addresses\n"
+                f"• How spot signals and Lorentzian ML work\n"
+                f"• Shariah/Halal zero-leverage principles\n"
+                f"• Instant assistance from our AI system & live human agents\n\n"
+                f"✍️ <i>Please type your question directly in chat:</i>"
             )
-            edit_message_text(chat_id, message_id, text, get_networks_keyboard(plan_key))
-        answer_callback_query(cb_id)
+            edit_message_text(chat_id, message_id, support_prompt, {"inline_keyboard": [[{"text": "🔙 Back to Menu", "callback_data": "menu_main"}]]})
+            answer_callback_query(cb_id)
 
-    elif data.startswith("net_"):
-        parts = data.split("_")
-        if len(parts) >= 3:
-            plan_key = parts[1]
-            net_key = parts[2]
-            USER_STATES[chat_id] = {"state": "awaiting_payment_proof", "plan": plan_key, "network": net_key}
-            invoice_text = format_payment_invoice(plan_key, net_key)
-            keyboard = {
-                "inline_keyboard": [
-                    [{"text": "✅ I Have Paid / Submit TX Hash", "callback_data": f"submit_proof_{plan_key}_{net_key}"}],
-                    [{"text": "🔙 Change Network", "callback_data": f"select_plan_{plan_key}"}]
-                ]
-            }
-            edit_message_text(chat_id, message_id, invoice_text, keyboard)
-        answer_callback_query(cb_id)
+        elif data.startswith("select_plan:") or data.startswith("select_plan_"):
+            plan_key = data.split(":", 1)[1] if ":" in data else data.replace("select_plan_", "")
+            if plan_key in PLANS:
+                USER_STATES[chat_id] = {"state": "select_net", "plan": plan_key}
+                plan = PLANS[plan_key]
+                text = (
+                    f"💎 <b>Selected: {plan['badge']} (${plan['price_usdt']:.2f})</b>\n\n"
+                    f"Choose your preferred crypto deposit network for payment:"
+                )
+                edit_message_text(chat_id, message_id, text, get_networks_keyboard(plan_key))
+            answer_callback_query(cb_id)
 
-    elif data.startswith("submit_proof_"):
-        parts = data.split("_")
-        plan_key = parts[2]
-        net_key = parts[3]
-        USER_STATES[chat_id] = {"state": "awaiting_txid", "plan": plan_key, "network": net_key}
-        prompt = (
-            f"📝 <b>SUBMIT TRANSACTION HASH (TXID)</b>\n\n"
-            f"Please reply with your transaction hash (TXID) or transfer ID.\n\n"
-            f"<i>Example:</i> <code>4f8b9e821a37c...</code>\n\n"
-            f"<i>(If you transferred via internal exchange transfer or screenshot, you can also paste the internal transfer ID)</i>"
-        )
-        send_message(chat_id, prompt)
-        answer_callback_query(cb_id, "Please type and send your TXID in chat.")
+        elif data.startswith("net:") or data.startswith("net_"):
+            if ":" in data:
+                _, plan_key, net_key = data.split(":", 2)
+            else:
+                parts = data.split("_")
+                plan_key = "_".join(parts[1:-1])
+                net_key = parts[-1]
 
-    elif data.startswith("admin_approve_"):
-        target_uid = data.replace("admin_approve_", "")
-        handle_admin_approval(chat_id, message_id, target_uid, cb_id)
+            if plan_key in PLANS and net_key in WALLETS:
+                USER_STATES[chat_id] = {"state": "awaiting_payment_proof", "plan": plan_key, "network": net_key}
+                invoice_text = format_payment_invoice(plan_key, net_key)
+                keyboard = {
+                    "inline_keyboard": [
+                        [{"text": "✅ I Have Paid / Submit TX Hash", "callback_data": f"submit_proof:{plan_key}:{net_key}"}],
+                        [{"text": "🔙 Change Network", "callback_data": f"select_plan:{plan_key}"}]
+                    ]
+                }
+                edit_message_text(chat_id, message_id, invoice_text, keyboard)
+            answer_callback_query(cb_id)
 
-    elif data.startswith("admin_reject_"):
-        target_uid = data.replace("admin_reject_", "")
-        handle_admin_rejection(chat_id, message_id, target_uid, cb_id)
+        elif data.startswith("submit_proof:") or data.startswith("submit_proof_"):
+            if ":" in data:
+                _, plan_key, net_key = data.split(":", 2)
+            else:
+                parts = data.split("_")
+                plan_key = "_".join(parts[2:-1])
+                net_key = parts[-1]
 
-    elif data.startswith("reply_user_"):
-        target_uid = data.replace("reply_user_", "")
-        USER_STATES[chat_id] = {"state": "admin_replying", "target_uid": target_uid}
-        send_message(chat_id, f"✍️ <b>Type your reply for user <code>{target_uid}</code>:</b>\n<i>(Your personal username is 100% hidden. It will be delivered as official PureQuant Support)</i>")
+            USER_STATES[chat_id] = {"state": "awaiting_txid", "plan": plan_key, "network": net_key}
+            prompt = (
+                f"📝 <b>SUBMIT TRANSACTION HASH (TXID)</b>\n\n"
+                f"Please reply with your transaction hash (TXID) or transfer ID.\n\n"
+                f"<i>Example:</i> <code>4f8b9e821a37c...</code>\n\n"
+                f"<i>(If you transferred via internal exchange transfer or screenshot, you can also paste the internal transfer ID)</i>"
+            )
+            send_message(chat_id, prompt)
+            answer_callback_query(cb_id, "Please type and send your TXID in chat.")
+
+        elif data.startswith("admin_approve:") or data.startswith("admin_approve_"):
+            target_uid = data.split(":", 1)[1] if ":" in data else data.replace("admin_approve_", "")
+            handle_admin_approval(chat_id, message_id, target_uid, cb_id)
+
+        elif data.startswith("admin_reject:") or data.startswith("admin_reject_"):
+            target_uid = data.split(":", 1)[1] if ":" in data else data.replace("admin_reject_", "")
+            handle_admin_rejection(chat_id, message_id, target_uid, cb_id)
+
+        elif data.startswith("reply_user:") or data.startswith("reply_user_"):
+            target_uid = data.split(":", 1)[1] if ":" in data else data.replace("reply_user_", "")
+            USER_STATES[chat_id] = {"state": "admin_replying", "target_uid": target_uid}
+            send_message(chat_id, f"✍️ <b>Type your reply for user <code>{target_uid}</code>:</b>\n<i>(Your personal username is 100% hidden. It will be delivered as official PureQuant Support)</i>")
+            answer_callback_query(cb_id)
+        else:
+            answer_callback_query(cb_id)
+    except Exception as e:
+        print(f"⚠️ Callback handler exception: {e}")
         answer_callback_query(cb_id)
 
 # ==============================================================================
