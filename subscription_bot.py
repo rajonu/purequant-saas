@@ -26,7 +26,7 @@ class HealthCheckHandler(BaseHTTPRequestHandler):
         pass  # Quiet HTTP logs
 
 def start_health_server():
-    port = int(os.getenv("PORT", "8080"))
+    port = int(os.getenv("PORT", "10000"))
     try:
         server = HTTPServer(("0.0.0.0", port), HealthCheckHandler)
         print(f"🌐 Health check HTTP server listening on port {port} (Free Web Service Ready)")
