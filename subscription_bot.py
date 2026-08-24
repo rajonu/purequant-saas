@@ -1205,8 +1205,8 @@ def run_bot():
     h_thread = threading.Thread(target=start_health_server, daemon=True)
     h_thread.start()
 
-    # Start Watchdog Daemon
-    t = threading.Thread(target=expiration_watchdog, daemon=True)
+    # Start Watchdog Daemon (Expiration & Daily Evening Recap)
+    t = threading.Thread(target=expiration_and_recap_watchdog, daemon=True)
     t.start()
 
     # Start Automated Daily Broadcast Scheduler (Recap at 00:00 UTC, Promo at 12:00 UTC)
