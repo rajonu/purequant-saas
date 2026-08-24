@@ -888,6 +888,22 @@ def process_message(msg: Dict[str, Any]):
         send_message(chat_id, admin_stats)
         return
 
+    # Admin command: /post_recap
+    if text.startswith("/post_recap") and str(chat_id) == ADMIN_TELEGRAM_ID:
+        from saas_signal_dispatcher import SaasSignalDispatcher
+        dispatcher = SaasSignalDispatcher()
+        ok = dispatcher.post_daily_performance_recap()
+        send_message(chat_id, f"✅ <b>Daily Performance Recap Post Triggered!</b> (Status: {'Delivered' if ok else 'No trades found'})")
+        return
+
+    # Admin command: /post_promo
+    if text.startswith("/post_promo") and str(chat_id) == ADMIN_TELEGRAM_ID:
+        from saas_signal_dispatcher import SaasSignalDispatcher
+        dispatcher = SaasSignalDispatcher()
+        ok = dispatcher.post_daily_vip_benefit_promo()
+        send_message(chat_id, f"✅ <b>Daily VIP Promo Post Triggered to Free Channel!</b>")
+        return
+
     # Check state machine
     current_state = USER_STATES.get(chat_id, {}).get("state")
 
@@ -966,6 +982,36 @@ def process_message(msg: Dict[str, Any]):
             send_message(ADMIN_TELEGRAM_ID, admin_ticket_msg, admin_kb)
         return
 
+def daily_broadcast_scheduler():
+    """Runs in background and posts daily recap at 00:00 UTC and daily promo at 12:00 UTC"""
+    from saas_signal_dispatcher import SaasSignalDispatcher
+    dispatcher = SaasSignalDispatcher()
+    last_recap_day = ""
+    last_promo_day = ""
+
+    while True:
+        try:
+            now_utc = datetime.utcnow()
+            day_str = now_utc.strftime("%Y-%m-%d")
+            hour = now_utc.hour
+
+            # 1. Daily Recap at 00:00 UTC
+            if hour == 0 and last_recap_day != day_str:
+                print(f"[{day_str}] Triggering automated Daily Performance Recap...")
+                dispatcher.post_daily_performance_recap()
+                last_recap_day = day_str
+
+            # 2. Daily Promo at 12:00 UTC
+            if hour == 12 and last_promo_day != day_str:
+                print(f"[{day_str}] Triggering automated Daily VIP Benefit Promo...")
+                dispatcher.post_daily_vip_benefit_promo()
+                last_promo_day = day_str
+
+            time.sleep(60)
+        except Exception as e:
+            print(f"Daily broadcast scheduler error: {e}")
+            time.sleep(60)
+
 def run_bot():
     init_db()
     print("====================================================================")
@@ -985,6 +1031,10 @@ def run_bot():
     # Start Watchdog Daemon
     t = threading.Thread(target=expiration_watchdog, daemon=True)
     t.start()
+
+    # Start Automated Daily Broadcast Scheduler (Recap at 00:00 UTC, Promo at 12:00 UTC)
+    b_thread = threading.Thread(target=daily_broadcast_scheduler, daemon=True)
+    b_thread.start()
 
     if not BOT_TOKEN:
         print("⚠️ Warning: SAAS_BOT_TOKEN is not set. Bot is in standby mode.")

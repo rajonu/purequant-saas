@@ -11,25 +11,42 @@
 
 * **Core Edge**: 100% Halal Spot-Only Trading Signals (zero margin debt, zero liquidation risk), Lorentzian k-NN Machine Learning, Fair Value Gap (FVG) entries, SMT Divergence tracking, and automated Trailing Risk Protection (+1.5% Breakeven lock).
 * **Launch Pricing**: Ultra-low-barrier **3 — 6 — 9 Pricing Ladder** to eliminate purchase friction and achieve massive early customer acquisition.
-* **Payment Architecture**: 100% non-custodial crypto checkout in USDT / USDC on TRC-20, BEP-20, Polygon, Solana, and TON with zero chargebacks and zero KYC friction.
+* **Payment Architecture**: 100% non-custodial crypto checkout in USDT / USDC on TRC-20, BEP-20, Polygon, Solana, and TON with zero chargebacks and zero KYC
 
----
+## 💰 Pricing & Monetization Model ($3 — $6 — $9 Launch Discount)
 
-## 💰 3 — 6 — 9 Pricing & Monetization Model
+To maximize conversion and build a massive global user base, we use an **Ultra-Low-Ticket High-Volume Model**:
 
 ```
 ┌────────────────────────────────┬────────────────────────────────┬────────────────────────────────┐
-│ 🥉 STARTER SPOT                │ 🥈 PRO VIP AI (Most Popular)   │ 👑 LIFETIME VIP PASS           │
-│ ~~$9~~ ➔ $3 / month (USDT)     │ ~~$19~~ ➔ $6 / month (USDT)    │ ~~$99~~ ➔ $9 ONE-TIME (USDT)   │
-│ [ 67% OFF · VIP DISCOUNT ]     │ [ 68% OFF · FULL AI SUITE ]    │ [ 91% OFF · ZERO MONTHLY FEES] │
-├────────────────────────────────┼────────────────────────────────┼────────────────────────────────┤
-│ • 24/7 Telegram Spot Alerts    │ • Everything in Starter Spot   │ • Lifetime Full VIP Telegram   │
-│ • Top 50 High-Volume Pairs     │ • Live Web Scanner Radar       │ • All Future ML Upgrades Free  │
-│ • Calculated Entry, SL & TP    │ • Lorentzian ML Confidence %   │ • Private VIP Strategy Group   │
-│ • 100% Halal / Spot-Only       │ • Dynamic Trailing SL Alerts   │ • Priority 1-on-1 Support      │
-│ • Grandfathered $3/mo Lock     │ • Daily AI Post-Mortem Autopsy │ • Never Pay Another Fee Again  │
+│ 🥉 STARTER SPOT VIP            │ 🥈 PRO VIP (Most Popular)      │ 🥇 LIFETIME FOUNDER            │
+│ $3 / month (in USDT)           │ $6 / month (in USDT)           │ $9 one-time (in USDT)          │
+├────────────────────────────────┴────────────────────────────────┴────────────────────────────────┤
+│ • 24/7 Telegram Spot Alerts    │ • 24/7 Real-Time Spot Alerts   │ • Lifetime VIP Telegram Access │
+│ • 8 to 15 Signals Daily        │ • Live Web Dashboard Access    │ • All Future AI Upgrades       │
+│ • Calculated SL & TP Targets   │ • AI Post-Mortem Autopsy Feed  │ • Private Strategy Group       │
+│ • 100% Halal Whitelist Active  │ • Trailing SL & Breakeven Alerts│ • Direct Priority Support      │
 └────────────────────────────────┴────────────────────────────────┴────────────────────────────────┘
 ```
+
+---
+
+## 📡 Channel Segmentation & Automated Content Engine
+
+### 1. 👑 VIP Private Channel (`-1004364917715`)
+* **100% of Signals:** Receives all real-time 15m Spot AI signals (8–15 per day).
+* **Live Execution Cards:** Real-time entries, SL, TP, Breakeven (+1.5%), Trailing SL (+2.2%).
+* **Post-Mortem Autopsies:** Root cause analysis and macro news sentiment for every trade.
+
+### 2. 🎁 Free Public Channel (`-1004423283944`)
+* **1 Free Signal Per Day:** Receives exactly 1 high-conviction 98+ score signal daily (1/1 limit).
+* **Daily Performance Recap Post (00:00 UTC):**
+  * Shows **Percentage (%) PnL ONLY** (e.g. `+3.50% TP`, `+1.50% BE`, `+2.80% TP`).
+  * **Zero dollar amounts** mentioned to ensure confidentiality and institutional look.
+  * Direct CTA button: *"Unlock 100% of winning signals for $3/mo 👉 @PureQuantAIBot"*.
+* **Daily Educational & Conversion Post (12:00 UTC):**
+  * Explains how automated risk shields, trailing SL, and AI autopsies protect capital.
+  * Promotes the limited-time **$3/mo, $6/mo, and $9 lifetime** discount plans.
 
 ---
 
