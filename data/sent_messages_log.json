@@ -15,5 +15,61 @@
     "message_type": "SPOT_BUY",
     "excerpt": "Signal #35 SOL/USDT Spot Buy executed at .40",
     "success": true
+  },
+  {
+    "timestamp": "2026-08-24 17:10:08 UTC",
+    "destination_id": "-1004364917715",
+    "channel_type": "VIP_CHANNEL",
+    "message_type": "GENERIC",
+    "excerpt": "\ud83d\udee1\ufe0f <b>BREAKEVEN ACTIVATED \u2014 #46 ROBO/USDT</b>\nProfit reached <b>+1.99%</b>! Stop-Loss moved to entry (<code>zsh.0136</code>). Zero risk remaining.",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24 17:28:00 UTC",
+    "destination_id": "-1004364917715",
+    "channel_type": "VIP_CHANNEL",
+    "message_type": "VIP_TP_HIT",
+    "excerpt": "\ud83c\udf89 <b>TAKE-PROFIT HIT! \u2014 #46 ROBO/USDT</b> \ud83d\udfe2\n\n\ud83d\udcb0 <b>Profit Secured:</b> <b>+0.20%</b> (<b>+$0.20</b>)\n\ud83d\udcb5 <b>Entry:</b> <code>$0.0136</code>\n\ud83d\udcb5 <b>Exit:</b> <code>$0...",
+    "success": false
+  },
+  {
+    "timestamp": "2026-08-24 17:28:01 UTC",
+    "destination_id": "-1004423283944",
+    "channel_type": "FREE_CHANNEL",
+    "message_type": "FREE_TP_MASKED",
+    "excerpt": "\ud83c\udfaf <b>TAKE-PROFIT TARGET HIT! \u2014 #ROBOUSDT</b> \ud83d\udfe2\n\n\ud83d\udcb0 <b>Profit Secured:</b> <b>+0.20% SPOT GAIN</b>\n\ud83d\udcb5 <b>Entry Price:</b> <code>[\ud83d\udd12 Locked for VIP]</code>\n\ud83c\udfaf <b>Exit...",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24 17:28:19 UTC",
+    "destination_id": "-1004364917715",
+    "channel_type": "VIP_CHANNEL",
+    "message_type": "VIP_TP_HIT",
+    "excerpt": "\ud83c\udf89 <b>TAKE-PROFIT HIT! \u2014 #46 ROBO/USDT</b> \ud83d\udfe2\n\n\ud83d\udcb0 <b>Profit Secured:</b> <b>+0.20%</b> (<b>+$0.20</b>)\n\ud83d\udcb5 <b>Entry:</b> <code>$0.0136</code>\n\ud83d\udcb5 <b>Exit:</b> <code>$0...",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24 17:28:20 UTC",
+    "destination_id": "-1004423283944",
+    "channel_type": "FREE_CHANNEL",
+    "message_type": "FREE_TP_MASKED",
+    "excerpt": "\ud83c\udfaf <b>TAKE-PROFIT TARGET HIT! \u2014 #ROBOUSDT</b> \ud83d\udfe2\n\n\ud83d\udcb0 <b>Profit Secured:</b> <b>+0.20% SPOT GAIN</b>\n\ud83d\udcb5 <b>Entry Price:</b> <code>[\ud83d\udd12 Locked for VIP]</code>\n\ud83c\udfaf <b>Exit...",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24 17:28:25 UTC",
+    "destination_id": "-1004364917715",
+    "channel_type": "VIP_CHANNEL",
+    "message_type": "VIP_SL_HIT",
+    "excerpt": "\ud83d\uded1 <b>STOP-LOSS HIT \u2014 #41 SOL/USDT</b> \ud83d\udd34\n\n\u26a0\ufe0f <b>Result:</b> <b>-1.20%</b> (<b>$-1.20</b>)\n\ud83d\udcb5 <b>Entry:</b> <code>$96.5800</code>\n\ud83d\udcb5 <b>Exit:</b> <code>$95.4200</co...",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-24 17:28:26 UTC",
+    "destination_id": "-1004423283944",
+    "channel_type": "FREE_CHANNEL",
+    "message_type": "FREE_SL_MASKED",
+    "excerpt": "\ud83d\udee1\ufe0f <b>STRICT RISK SHIELD EXECUTED \u2014 #SOLUSDT</b> \ud83d\uded1\n\n\u26a0\ufe0f <b>Result:</b> <b>-1.20% (Capital Protected)</b>\n\ud83d\udcb5 <b>Entry Price:</b> <code>[\ud83d\udd12 Locked for VIP]</code>\n\ud83d\udcb5 ...",
+    "success": true
   }
 ]

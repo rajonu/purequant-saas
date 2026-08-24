@@ -274,19 +274,21 @@ class SaasSignalDispatcher:
 
         free_tp_text = f"""🎯 <b>TAKE-PROFIT TARGET HIT! — #{clean_sym}</b> 🟢
 
-💰 <b>Profit Secured:</b> <b>{pnl_pct_str} (Spot Gain)</b>
-💵 <b>Entry Price:</b> <code>${entry:,.4f}</code>
-🎯 <b>Exit Price:</b> <code>${exit_p:,.4f}</code>
+💰 <b>Profit Secured:</b> <b>{pnl_pct_str} SPOT GAIN</b>
+💵 <b>Entry Price:</b> <code>[🔒 Locked for VIP]</code>
+🎯 <b>Exit Price:</b> <code>[🔒 Locked for VIP]</code>
+🎯 <b>Target TP:</b> <code>[🔒 Locked for VIP]</code>
 🧠 <b>Signal Engine:</b> PureQuant AI + Lorentzian ML (97+ Score)
+⚖️ <b>Execution:</b> 100% Halal Spot (Zero Leverage / Zero Debt)
 
 ───────────────
-🔒 <i>VIP & Pro Members received this exact buy alert in real-time!</i>
-👑 <b>Join VIP or Pro to get all AI intelligent data, 8–15 accurate daily signals & trailing risk shields!</b>"""
+🔒 <i>VIP & Pro Members received the exact entry trigger, exit price, and trailing stop alert in real-time!</i>
+👑 <b>Join VIP or Pro to unlock live market prices, 8–15 accurate daily signals & dynamic trailing risk shields!</b>"""
 
         free_tp_kb = {
             "inline_keyboard": [
                 [
-                    {"text": "⚡ Unlock VIP Signals ($3/mo)", "url": f"https://t.me/{self.bot_username}?start=upgrade"}
+                    {"text": "⚡ Unlock Live Prices & All Signals ($3/mo)", "url": f"https://t.me/{self.bot_username}?start=plans"}
                 ],
                 [
                     {"text": "🌐 View Live Dashboard", "url": "https://dashboard.purequantai.xyz/"}
@@ -302,9 +304,9 @@ class SaasSignalDispatcher:
             proof_card_path = generate_trade_proof_card(
                 pair=clean_sym,
                 pnl_percent=pnl_pct_str,
-                entry_price=f"${entry:,.4f}",
-                exit_price=f"${exit_p:,.4f}",
-                target_hit="Take-Profit Target Hit",
+                entry_price="🔒 VIP Entry",
+                exit_price="Take-Profit Hit",
+                target_hit="Take-Profit Harvested",
                 ml_confidence="96.2%",
                 strategy="15m SMC Orderblock + Lorentzian ML",
                 duration="2h 15m",
@@ -320,13 +322,53 @@ class SaasSignalDispatcher:
         else:
             send_tg_message(self.free_channel, free_tp_text, free_tp_kb, message_type="FREE_TP_HIT_TEXT")
 
-        # Post to VIP Channel (Crisp victory notice)
-        vip_tp_text = f"""🎉 <b>TAKE-PROFIT HARVESTED — #{clean_sym}</b> 🟢\n\n💰 <b>Gain:</b> <b>{pnl_pct_str}</b>\n💵 <b>Entry:</b> <code>${entry:,.4f}</code> ➔ <b>Exit:</b> <code>${exit_p:,.4f}</code>\n✅ <i>Position closed in profit. Trailing shield disarmed.</i>"""
+        # Post to VIP Channel (Full unmasked institutional notice)
+        vip_tp_text = f"""🎉 <b>TAKE-PROFIT HARVESTED — #{clean_sym}</b> 🟢\n\n💰 <b>Gain:</b> <b>{pnl_pct_str}</b>\n💵 <b>Entry:</b> <code>${entry:,.4f}</code> ➔ <b>Exit:</b> <code>${exit_p:,.4f}</code>\n✅ <i>Position closed in profit. Dynamic risk shield disarmed.</i>"""
         send_tg_message(self.vip_channel, vip_tp_text, message_type="VIP_TP_HIT")
 
         # Admin notice
         send_tg_message(ADMIN_TELEGRAM_ID, f"🎯 <b>[TP HIT]</b> #{clean_sym} {pnl_pct_str} closed successfully.", message_type="ADMIN_TP_NOTICE")
-        print(f"  [+] 🎯 Dispatched instant TP victory alert for {pair} across Free, VIP, and Admin channels")
+        print(f"  [+] 🎯 Dispatched instant TP victory alert for {pair} across Free (Masked), VIP (Unmasked), and Admin channels")
+
+    def dispatch_stop_loss_hit(self, trade: Dict[str, Any]):
+        """Broadcasts Stop-Loss capital protection alert: unmasked to VIP, masked to Free"""
+        pair = trade.get("pair", "UNKNOWN")
+        entry = float(trade.get("entry_price", 0.0))
+        exit_p = float(trade.get("exit_price", 0.0))
+        sl = float(trade.get("stop_loss", 0.0))
+        pnl = float(trade.get("pnl_pct", 0.0))
+        pnl_pct_str = f"{pnl:.2f}%"
+        clean_sym = pair.replace('/', '')
+
+        # 1. Free Channel (Masked with upgrade CTA)
+        free_sl_text = f"""🛡️ <b>STRICT RISK SHIELD EXECUTED — #{clean_sym}</b> 🛑
+
+⚠️ <b>Result:</b> <b>{pnl_pct_str} (Capital Protected)</b>
+💵 <b>Entry Price:</b> <code>[🔒 Locked for VIP]</code>
+💵 <b>Exit Price:</b> <code>[🔒 Locked for VIP]</code>
+🛑 <b>SL Bracket:</b> <code>[🔒 Locked for VIP]</code>
+🛡️ <b>Strict Risk Shield:</b> Automated Stop-Loss locked minimal drawdown.
+
+───────────────
+🔒 <i>VIP & Pro Members received real-time dynamic risk shield protection!</i>
+👑 <b>Join VIP or Pro for full risk-managed institutional Spot signals!</b>"""
+
+        free_sl_kb = {
+            "inline_keyboard": [
+                [
+                    {"text": "⚡ Get Institutional VIP Alpha ($3/mo)", "url": f"https://t.me/{self.bot_username}?start=plans"}
+                ],
+                [
+                    {"text": "🌐 View Live Dashboard", "url": "https://dashboard.purequantai.xyz/"}
+                ]
+            ]
+        }
+        send_tg_message(self.free_channel, free_sl_text, free_sl_kb, message_type="FREE_SL_MASKED")
+
+        # 2. VIP Channel (Full unmasked parameters)
+        vip_sl_text = f"""🛑 <b>STOP-LOSS HIT — #{clean_sym}</b> 🔴\n\n⚠️ <b>Result:</b> <b>{pnl_pct_str}</b>\n💵 <b>Entry:</b> <code>${entry:,.4f}</code> ➔ <b>Exit:</b> <code>${exit_p:,.4f}</code>\n🛑 <b>SL Bracket:</b> <code>${sl:,.4f}</code>\n🛡️ <i>Capital protected via strict automated risk management.</i>"""
+        send_tg_message(self.vip_channel, vip_sl_text, message_type="VIP_SL_HIT")
+
 
     def post_daily_performance_recap(self) -> bool:
         """
