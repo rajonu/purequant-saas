@@ -145,44 +145,103 @@
 
   /* Header & Banner */
   .urgency-banner {
-    background: rgba(13, 20, 30, 0.9);
+    background: rgba(13, 20, 30, 0.95);
     border-bottom: 1px solid rgba(0, 242, 254, 0.15);
-    padding: 9px 16px;
+    padding: 8px 16px;
     text-align: center;
-    font-size: 0.82rem;
+    font-size: 0.8rem;
     font-weight: 600;
     color: var(--text-main);
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
+    white-space: nowrap;
+    overflow-x: auto;
   }
   .urgency-banner b { color: var(--gold); }
   .urgency-tag {
     background: rgba(255, 83, 118, 0.18); border: 1px solid rgba(255, 83, 118, 0.4); color: #ff859d;
     padding: 2px 7px; border-radius: 6px; font-size: 0.68rem; font-family: var(--mono); font-weight: 700;
+    white-space: nowrap;
   }
 
   header.nav {
     position: sticky; top: 0; z-index: 100;
-    background: rgba(7, 10, 15, 0.85);
-    -webkit-backdrop-filter: blur(18px);
-    backdrop-filter: blur(18px);
+    background: rgba(7, 10, 15, 0.9);
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    width: 100%;
   }
-  .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 66px; }
-  .logo { display: flex; align-items: center; gap: 10px; font-family: var(--fd); font-weight: 800; font-size: 1.18rem; }
+  header.nav .wrap { max-width: 1340px; padding: 0 24px; }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 70px;
+    gap: 20px;
+  }
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--fd);
+    font-weight: 800;
+    font-size: 1.22rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
   .logo-badge {
-    width: 34px; height: 34px; border-radius: 10px;
+    width: 34px; height: 34px; border-radius: 9px;
     background: linear-gradient(135deg, #00f2fe, #4facfe);
     display: grid; place-items: center; color: #040810; font-size: 1.1rem; font-weight: 900;
     box-shadow: 0 0 16px rgba(0, 242, 254, 0.35);
+    flex-shrink: 0;
   }
-  .logo span { color: #ffffff; }
+  .logo span { color: #ffffff; white-space: nowrap; }
   .logo span b { color: var(--cyan); }
-  .nav-links { display: flex; align-items: center; gap: 24px; font-size: 0.9rem; font-weight: 600; color: var(--text-muted); }
+  
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+  .nav-links a { white-space: nowrap; transition: color 0.18s ease; }
   .nav-links a:hover { color: var(--cyan); }
-  @media(max-width: 768px){ .nav-links { display: none; } }
+  .nav-scanner-pill {
+    color: var(--cyan) !important;
+    font-weight: 700 !important;
+    background: rgba(0, 242, 254, 0.08);
+    border: 1px solid rgba(0, 242, 254, 0.28);
+    padding: 4px 11px;
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    box-shadow: 0 0 12px rgba(0, 242, 254, 0.15);
+  }
+  .nav-scanner-pill:hover {
+    background: rgba(0, 242, 254, 0.16);
+    border-color: var(--cyan);
+  }
+  
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+  .nav-actions .btn { white-space: nowrap; }
+
+  @media(max-width: 1024px){
+    .nav-links { display: none; }
+  }
 
   /* Hero Section */
   .hero { padding: clamp(48px, 7vw, 84px) 0 32px; text-align: center; }
@@ -468,23 +527,20 @@
 <!-- ===== Sticky Header ===== -->
 <header class="nav">
   <div class="wrap nav-inner">
-    <a href="#" class="logo">
+    <a href="/" class="logo">
       <div class="logo-badge">⚡</div>
       <span>Pure<b>Quant</b> AI</span>
     </a>
     <nav class="nav-links">
-      <a href="https://scanner.purequantai.xyz" target="_blank" style="color: var(--cyan); font-weight: 700;">Live Scanner ⚡</a>
+      <a href="https://scanner.purequantai.xyz" target="_blank" class="nav-scanner-pill">⚡ Live Scanner</a>
       <a href="#signal-anatomy">Signal Anatomy</a>
       <a href="#proof">Trade Proof</a>
-      <a href="#technology">Quantitative Edge</a>
+      <a href="#technology">Quant Edge</a>
       <a href="#radar">Signal Radar</a>
       <a href="#pricing">VIP Plans ($3 - $6 - $9)</a>
       <a href="#faq">FAQ</a>
     </nav>
-    <div style="display: flex; align-items: center; gap: 10px;">
-      <a href="https://scanner.purequantai.xyz" target="_blank" class="btn btn-outline" style="padding: 8px 14px; font-size: 0.84rem; display: inline-flex; align-items: center; gap: 6px; border-color: rgba(0, 242, 254, 0.4);">
-        <span class="pulse-dot" style="background: var(--cyan); box-shadow: 0 0 8px var(--cyan);"></span> Free Scanner
-      </a>
+    <div class="nav-actions">
       <a href="https://t.me/PureQuantSignals" target="_blank" class="btn btn-outline" style="padding: 8px 14px; font-size: 0.84rem; display: inline-flex; align-items: center; gap: 6px;">
         <span class="pulse-dot" style="background: var(--emerald); box-shadow: 0 0 8px var(--emerald);"></span> Free Signals
       </a>
