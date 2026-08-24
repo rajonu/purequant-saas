@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ===== SEO & Metadata ===== -->
+<title>PureQuant AI — Institutional Spot Crypto Intelligence & Signals</title>
+<meta name="description" content="Precision crypto spot intelligence powered by Lorentzian Machine Learning, Fair Value Gaps (FVG), and Smart Money Concepts. 100% Spot, zero leverage.">
+<meta name="keywords" content="crypto signals, fvg trading, lorentzian classification, smart money concepts, smt divergence, crypto spot screener, purequant ai">
+
+<meta name="theme-color" content="#070a0f">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg: #070a0f;
+    --bg-card: rgba(13, 18, 27, 0.7);
+    --bg-card-hover: rgba(18, 25, 38, 0.85);
+    --border: rgba(255, 255, 255, 0.08);
+    --border-glow: rgba(0, 242, 254, 0.35);
+    --cyan: #00f2fe;
+    --indigo: #4facfe;
+    --emerald: #00f5a0;
+    --gold: #ffd166;
+    --red: #ff5376;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --text-dim: #64748b;
+    --fd: 'Space Grotesk', system-ui, sans-serif;
+    --body: 'Plus Jakarta Sans', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--bg);
+    color: var(--text-main);
+    font-family: var(--body);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    background-image:
+      radial-gradient(1000px 600px at 20% -10%, rgba(0, 242, 254, 0.08), transparent 70%),
+      radial-gradient(900px 600px at 80% 20%, rgba(79, 172, 254, 0.07), transparent 65%),
+      radial-gradient(1000px 700px at 50% 60%, rgba(0, 245, 160, 0.05), transparent 70%),
+      radial-gradient(800px 500px at 80% 95%, rgba(0, 242, 254, 0.06), transparent 60%);
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+  }
+
+  .wrap { width: 100%; max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+  a { color: inherit; text-decoration: none; }
+  h1, h2, h3, h4 { font-family: var(--fd); letter-spacing: -0.025em; color: #ffffff; }
+
+  /* Cozy Glass Card */
+  .cozy-card {
+    background: var(--bg-card);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    backdrop-filter: blur(18px) saturate(140%);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+  }
+  .cozy-card:hover {
+    border-color: var(--border-glow);
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.45), 0 0 25px rgba(0, 242, 254, 0.12);
+  }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: var(--fd);
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding: 13px 26px;
+    border-radius: 12px;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .btn-cyan {
+    background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+    color: #050b14;
+    font-weight: 800;
+    box-shadow: 0 8px 24px rgba(0, 242, 254, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  }
+  .btn-cyan:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(0, 242, 254, 0.45);
+    filter: brightness(1.06);
+  }
+  .btn-emerald {
+    background: linear-gradient(135deg, #00f5a0 0%, #00d2ff 100%);
+    color: #050b14;
+    font-weight: 800;
+    box-shadow: 0 8px 24px rgba(0, 245, 160, 0.3);
+  }
+  .btn-emerald:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(0, 245, 160, 0.45);
+    filter: brightness(1.06);
+  }
+  .btn-outline {
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text-main);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+  .btn-outline:hover {
+    border-color: var(--cyan);
+    color: #ffffff;
+    background: rgba(0, 242, 254, 0.05);
+  }
+  .btn-lg { font-size: 1.02rem; padding: 15px 30px; border-radius: 14px; }
+
+  /* Eyebrows & Badges */
+  .badge-cozy {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-family: var(--mono);
+    font-size: 0.74rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    background: rgba(0, 242, 254, 0.06);
+    border: 1px solid rgba(0, 242, 254, 0.25);
+    color: var(--cyan);
+  }
+  .pulse-dot {
+    width: 7px; height: 7px; border-radius: 50%; background: var(--emerald);
+    box-shadow: 0 0 8px var(--emerald); animation: pulse 1.5s infinite;
+  }
+  @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.3); opacity: 0.6; } }
+
+  /* Header & Banner */
+  .urgency-banner {
+    background: rgba(13, 20, 30, 0.9);
+    border-bottom: 1px solid rgba(0, 242, 254, 0.15);
+    padding: 9px 16px;
+    text-align: center;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  .urgency-banner b { color: var(--gold); }
+  .urgency-tag {
+    background: rgba(255, 83, 118, 0.18); border: 1px solid rgba(255, 83, 118, 0.4); color: #ff859d;
+    padding: 2px 7px; border-radius: 6px; font-size: 0.68rem; font-family: var(--mono); font-weight: 700;
+  }
+
+  header.nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(7, 10, 15, 0.85);
+    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(18px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 66px; }
+  .logo { display: flex; align-items: center; gap: 10px; font-family: var(--fd); font-weight: 800; font-size: 1.18rem; }
+  .logo-badge {
+    width: 34px; height: 34px; border-radius: 10px;
+    background: linear-gradient(135deg, #00f2fe, #4facfe);
+    display: grid; place-items: center; color: #040810; font-size: 1.1rem; font-weight: 900;
+    box-shadow: 0 0 16px rgba(0, 242, 254, 0.35);
+  }
+  .logo span { color: #ffffff; }
+  .logo span b { color: var(--cyan); }
+  .nav-links { display: flex; align-items: center; gap: 24px; font-size: 0.9rem; font-weight: 600; color: var(--text-muted); }
+  .nav-links a:hover { color: var(--cyan); }
+  @media(max-width: 768px){ .nav-links { display: none; } }
+
+  /* Hero Section */
+  .hero { padding: clamp(48px, 7vw, 84px) 0 32px; text-align: center; }
+  .hero h1 {
+    font-size: clamp(2.2rem, 5.2vw, 3.4rem);
+    font-weight: 800;
+    line-height: 1.16;
+    letter-spacing: -0.03em;
+    max-width: 860px;
+    margin: 18px auto 20px;
+  }
+  .hero h1 span {
+    background: linear-gradient(135deg, #00f2fe 0%, #4facfe 50%, #00f5a0 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .hero p {
+    font-size: 1.08rem; color: var(--text-muted); max-width: 660px; margin: 0 auto 32px; line-height: 1.65;
+  }
+  .hero-cta-group { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; margin-bottom: 24px; }
+  .hero-specs {
+    display: flex; justify-content: center; gap: 24px; font-family: var(--mono); font-size: 0.8rem; color: var(--text-dim); flex-wrap: wrap;
+  }
+  .hero-specs span { display: inline-flex; align-items: center; gap: 6px; }
+
+  /* Section Spacing & Typography */
+  .section { padding: 64px 0; }
+  .sec-head { text-align: center; margin-bottom: 40px; }
+  .sec-title { font-size: clamp(1.8rem, 4vw, 2.3rem); margin-top: 12px; font-weight: 800; }
+  .sec-sub { color: var(--text-muted); font-size: 0.98rem; max-width: 580px; margin: 10px auto 0; }
+
+  /* ========================================================
+     1. TELEGRAM DETAILED SIGNAL ANATOMY SHOWCASE
+     ======================================================== */
+  .tg-anatomy-wrapper {
+    max-width: 960px; margin: 0 auto; display: grid; grid-template-columns: 1.15fr 1fr; gap: 28px;
+    align-items: center;
+  }
+  @media(max-width: 860px){ .tg-anatomy-wrapper { grid-template-columns: 1fr; } }
+  
+  .tg-mockup {
+    background: #0c121c; border: 1px solid rgba(0, 242, 254, 0.22); border-radius: 18px;
+    box-shadow: 0 16px 45px rgba(0,0,0,0.5), 0 0 30px rgba(0, 242, 254, 0.1); overflow: hidden;
+  }
+  .tg-top {
+    background: #141c2b; padding: 12px 18px; display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .tg-channel-info { display: flex; align-items: center; gap: 10px; }
+  .tg-channel-avatar {
+    width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #00f2fe, #4facfe);
+    display: grid; place-items: center; font-size: 0.9rem; color: #040810; font-weight: 800;
+  }
+  .tg-channel-name { font-size: 0.88rem; font-weight: 700; color: #fff; }
+  .tg-channel-sub { font-size: 0.7rem; color: var(--cyan); font-family: var(--mono); }
+  .tg-bubble {
+    padding: 20px 22px; font-family: var(--mono); font-size: 0.82rem; line-height: 1.6; color: #e2e8f0;
+  }
+  .tg-b-header { color: var(--cyan); font-weight: 800; font-size: 0.9rem; margin-bottom: 6px; }
+  .tg-b-tag { display: inline-block; background: rgba(0, 245, 160, 0.12); color: var(--emerald); padding: 2px 7px; border-radius: 5px; font-weight: 700; font-size: 0.72rem; margin-bottom: 10px; }
+  .tg-b-section { margin: 10px 0; border-left: 2px solid rgba(0, 242, 254, 0.35); padding-left: 10px; }
+  .tg-b-section-title { color: var(--gold); font-weight: 700; margin-bottom: 3px; font-size: 0.76rem; }
+  .tg-b-rule { background: rgba(255, 209, 102, 0.06); border: 1px dashed rgba(255, 209, 102, 0.25); border-radius: 8px; padding: 9px 11px; margin-top: 10px; font-size: 0.75rem; color: #ffe6a3; }
+  
+  .tg-anatomy-text { text-align: left; }
+  .tg-anatomy-text h3 { font-size: 1.65rem; font-weight: 800; margin-bottom: 12px; }
+  .tg-anatomy-text p { color: var(--text-muted); font-size: 0.94rem; line-height: 1.65; margin-bottom: 18px; }
+  .tg-feature-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .tg-feature-list li { display: flex; gap: 10px; font-size: 0.88rem; color: var(--text-main); line-height: 1.5; }
+  .tg-feature-list li span { color: var(--cyan); font-weight: 800; }
+
+  /* ========================================================
+     2. PROOF OF WINNING (SCREENSHOTS SHOWCASE)
+     ======================================================== */
+  .proof-stats-bar {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 32px;
+  }
+  @media(max-width: 768px){ .proof-stats-bar { grid-template-columns: repeat(2, 1fr); } }
+  .proof-stat-box {
+    padding: 16px 18px; text-align: center; background: rgba(0, 242, 254, 0.03);
+    border: 1px solid rgba(0, 242, 254, 0.16); border-radius: 14px;
+  }
+  .proof-stat-num { font-family: var(--mono); font-size: 1.85rem; font-weight: 800; color: var(--emerald); }
+  .proof-stat-lbl { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-family: var(--mono); margin-top: 3px; }
+
+  .proof-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; }
+  .proof-card {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 18px; overflow: hidden;
+  }
+  .proof-img-wrap {
+    position: relative; width: 100%; aspect-ratio: 16/9; overflow: hidden; background: #000;
+  }
+  .proof-img-wrap img {
+    width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease;
+  }
+  .proof-card:hover .proof-img-wrap img { transform: scale(1.03); }
+  .proof-pnl-pill {
+    position: absolute; top: 10px; right: 10px; background: rgba(0, 245, 160, 0.92); color: #040810;
+    font-family: var(--mono); font-size: 0.78rem; font-weight: 800; padding: 4px 10px; border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 245, 160, 0.4);
+  }
+  .proof-body { padding: 20px; text-align: left; }
+  .proof-title-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .proof-asset { font-size: 1.15rem; font-weight: 800; font-family: var(--fd); color: #ffffff; }
+  .proof-exchange-badge { font-family: var(--mono); font-size: 0.7rem; background: rgba(255,255,255,0.05); padding: 2px 7px; border-radius: 5px; color: var(--text-muted); }
+  .proof-specs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+  .proof-spec-item { font-size: 0.76rem; color: var(--text-dim); font-family: var(--mono); }
+  .proof-spec-item b { color: #ffffff; display: block; font-size: 0.9rem; margin-top: 1px; }
+  .proof-tg-alert {
+    background: rgba(0, 242, 254, 0.04); border: 1px solid rgba(0, 242, 254, 0.18);
+    border-radius: 8px; padding: 8px 11px; font-size: 0.76rem; color: var(--cyan); font-family: var(--mono);
+    display: flex; align-items: center; gap: 6px;
+  }
+
+  /* ========================================================
+     3. 6 CORE QUANTITATIVE ENGINES (COZY 3x2 GRID)
+     ======================================================== */
+  .engine-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
+  .engine-card { padding: 28px 24px; text-align: left; }
+  .engine-icon {
+    width: 48px; height: 48px; border-radius: 12px; margin-bottom: 18px; display: grid; place-items: center; font-size: 1.4rem;
+    background: linear-gradient(135deg, rgba(0, 242, 254, 0.12), rgba(79, 172, 254, 0.04));
+    border: 1px solid rgba(0, 242, 254, 0.25); color: var(--cyan);
+  }
+  .engine-card h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 8px; }
+  .engine-card p { color: var(--text-muted); font-size: 0.88rem; line-height: 1.6; }
+
+  /* ========================================================
+     4. LIVE RADAR TERMINAL
+     ======================================================== */
+  .terminal-wrapper {
+    margin: 0 auto; max-width: 960px; background: rgba(10, 15, 23, 0.88);
+    border: 1px solid rgba(0, 242, 254, 0.2); border-radius: 20px;
+    box-shadow: 0 16px 45px rgba(0,0,0,0.5), 0 0 30px rgba(0, 242, 254, 0.1);
+    overflow: hidden; text-align: left;
+  }
+  .terminal-topbar {
+    display: flex; align-items: center; justify-content: space-between; padding: 12px 20px;
+    background: rgba(15, 23, 36, 0.9); border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+  .term-dots { display: flex; gap: 6px; }
+  .term-dots span { width: 9px; height: 9px; border-radius: 50%; }
+  .term-dots span:nth-child(1) { background: #ff5f56; }
+  .term-dots span:nth-child(2) { background: #ffbd2e; }
+  .term-dots span:nth-child(3) { background: #27c93f; }
+  .term-title { font-family: var(--mono); font-size: 0.76rem; color: var(--text-muted); }
+  .term-status { font-family: var(--mono); font-size: 0.74rem; color: var(--emerald); display: flex; align-items: center; gap: 5px; }
+
+  .pair-tabs { display: flex; gap: 6px; padding: 12px 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); overflow-x: auto; }
+  .pair-tab {
+    padding: 6px 14px; border-radius: 8px; font-family: var(--mono); font-size: 0.8rem; font-weight: 700;
+    background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.07); color: var(--text-muted);
+    cursor: pointer; transition: all 0.18s ease;
+  }
+  .pair-tab.active, .pair-tab:hover {
+    background: rgba(0, 242, 254, 0.1); border-color: var(--cyan); color: #ffffff;
+  }
+
+  .signal-body { padding: 26px 24px; display: grid; grid-template-columns: 1.15fr 1fr; gap: 26px; }
+  @media(max-width: 768px){ .signal-body { grid-template-columns: 1fr; } }
+  
+  .signal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .pair-name { font-size: 1.5rem; font-weight: 800; font-family: var(--fd); color: #ffffff; }
+  .signal-badge {
+    background: rgba(0, 245, 160, 0.12); border: 1px solid var(--emerald); color: var(--emerald);
+    padding: 4px 10px; border-radius: 16px; font-family: var(--mono); font-size: 0.74rem; font-weight: 700;
+  }
+  .metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px; }
+  .metric-box {
+    background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 11px 14px; border-radius: 10px;
+  }
+  .metric-label { font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; font-family: var(--mono); margin-bottom: 2px; }
+  .metric-val { font-family: var(--mono); font-size: 1.02rem; font-weight: 700; color: #ffffff; }
+
+  .strategy-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+  .s-tag {
+    font-family: var(--mono); font-size: 0.7rem; background: rgba(0, 242, 254, 0.06); border: 1px solid rgba(0, 242, 254, 0.18);
+    color: var(--cyan); padding: 4px 9px; border-radius: 6px;
+  }
+
+  .defense-shield {
+    background: linear-gradient(135deg, rgba(0, 245, 160, 0.06), rgba(0, 242, 254, 0.03));
+    border: 1px solid rgba(0, 245, 160, 0.25); border-radius: 12px; padding: 18px;
+  }
+  .defense-title { font-family: var(--fd); font-weight: 700; color: var(--emerald); display: flex; align-items: center; gap: 6px; margin-bottom: 10px; font-size: 0.9rem; }
+  .defense-item { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px; }
+  .defense-item b { color: #ffffff; font-family: var(--mono); }
+
+  /* ========================================================
+     5. 3 - 6 - 9 PRICING (COZY & CLEAN)
+     ======================================================== */
+  .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 30px; }
+  .price-card { padding: 36px 28px; display: flex; flex-direction: column; justify-content: space-between; position: relative; }
+  .price-card.featured {
+    border: 1.5px solid var(--cyan);
+    box-shadow: 0 16px 45px rgba(0, 242, 254, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    background: linear-gradient(180deg, rgba(13, 24, 38, 0.9), rgba(10, 16, 26, 0.85));
+  }
+  .price-card.vip-highlight {
+    border: 1.5px solid var(--emerald);
+    box-shadow: 0 16px 45px rgba(0, 245, 160, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    background: linear-gradient(180deg, rgba(10, 28, 22, 0.9), rgba(8, 18, 16, 0.85));
+  }
+  .featured-tag {
+    position: absolute; top: -12px; right: 24px; background: linear-gradient(135deg, #00f2fe, #4facfe);
+    color: #040810; font-family: var(--mono); font-size: 0.68rem; font-weight: 800; padding: 4px 11px;
+    border-radius: 16px; text-transform: uppercase;
+  }
+  .vip-tag {
+    position: absolute; top: -12px; right: 24px; background: linear-gradient(135deg, #00f5a0, #00d2ff);
+    color: #040810; font-family: var(--mono); font-size: 0.68rem; font-weight: 800; padding: 4px 11px;
+    border-radius: 16px; text-transform: uppercase;
+  }
+  .discount-pill {
+    display: inline-flex; align-items: center; gap: 4px; font-family: var(--mono); font-size: 0.68rem; font-weight: 800;
+    padding: 2px 7px; border-radius: 5px; background: rgba(255, 83, 118, 0.18); color: #ff859d; border: 1px solid rgba(255, 83, 118, 0.35);
+    margin-bottom: 8px;
+  }
+  .price-title { font-size: 1.3rem; font-weight: 800; margin-bottom: 4px; }
+  .price-desc { font-size: 0.84rem; color: var(--text-muted); min-height: 38px; }
+  
+  .price-amt-wrap { margin: 16px 0 20px; }
+  .strikethrough-price { font-family: var(--mono); font-size: 1rem; color: var(--text-dim); text-decoration: line-through; margin-right: 6px; }
+  .price-amt { font-family: var(--mono); font-size: 2.8rem; font-weight: 800; color: #ffffff; display: inline-flex; align-items: baseline; }
+  .price-amt span { font-size: 0.92rem; color: var(--text-dim); font-weight: 500; font-family: var(--body); margin-left: 4px; }
+  .lock-in-note { font-size: 0.74rem; color: var(--emerald); font-family: var(--mono); margin-top: 2px; }
+
+  .plan-features { list-style: none; margin-bottom: 26px; display: flex; flex-direction: column; gap: 11px; text-align: left; }
+  .plan-features li { display: flex; gap: 9px; font-size: 0.86rem; color: var(--text-muted); line-height: 1.45; }
+  .plan-features li strong { color: #ffffff; }
+  .plan-features li .check { color: var(--cyan); font-weight: 800; }
+  .chain-badges { display: flex; gap: 6px; justify-content: center; margin-top: 12px; }
+  .chain-badge { font-family: var(--mono); font-size: 0.66rem; color: var(--text-dim); background: rgba(255,255,255,0.04); padding: 2px 7px; border-radius: 5px; }
+
+  /* Trust Banner */
+  .trust-banner {
+    margin-top: 36px; padding: 26px 28px; border-radius: 16px; background: rgba(0, 242, 254, 0.03);
+    border: 1px solid rgba(0, 242, 254, 0.18); display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px;
+    text-align: left;
+  }
+  .trust-item h4 { font-size: 0.95rem; font-weight: 700; color: var(--cyan); margin-bottom: 4px; }
+  .trust-item p { font-size: 0.82rem; color: var(--text-muted); line-height: 1.55; }
+
+  /* FAQ */
+  .faq-container { max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; text-align: left; }
+  .faq-item { border-radius: 14px; overflow: hidden; }
+  .faq-item summary {
+    padding: 18px 22px; cursor: pointer; list-style: none; font-family: var(--fd); font-weight: 700; font-size: 0.98rem;
+    display: flex; justify-content: space-between; align-items: center; color: var(--text-main); transition: color 0.18s ease;
+  }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-icon {
+    width: 24px; height: 24px; border-radius: 50%; background: rgba(0, 242, 254, 0.08); color: var(--cyan);
+    display: grid; place-items: center; font-size: 1rem; transition: transform 0.22s ease;
+  }
+  .faq-item[open] .faq-icon { transform: rotate(45deg); background: rgba(255, 83, 118, 0.12); color: var(--red); }
+  .faq-item[open] summary { color: var(--cyan); }
+  .faq-content { padding: 0 22px 20px; color: var(--text-muted); font-size: 0.88rem; line-height: 1.65; }
+
+  /* Footer */
+  footer {
+    padding: 60px 0 35px; border-top: 1px solid rgba(255, 255, 255, 0.06); background: rgba(5, 8, 12, 0.85);
+    text-align: center;
+  }
+  .footer-disc { font-size: 0.76rem; color: var(--text-dim); line-height: 1.65; max-width: 720px; margin: 16px auto; }
+  .footer-links { display: flex; justify-content: center; gap: 20px; margin-top: 16px; font-size: 0.84rem; color: var(--text-muted); }
+  .footer-links a:hover { color: var(--cyan); }
+
+  /* Reveal */
+  .reveal { opacity: 0; transform: translateY(20px); transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+  .reveal.active { opacity: 1; transform: none; }
+</style>
+</head>
+<body>
+
+<!-- ===== Urgency Top Notification Banner ===== -->
+<div class="urgency-banner">
+  <span class="urgency-tag">🔥 VIP LAUNCH</span>
+  <span><b>First 100 Early Spots:</b> Lock in <b>$3 / $6 / $9 Lifetime VIP</b> Pricing (78/100 Claimed)</span>
+</div>
+
+<!-- ===== Instant AI Neural Boot Loader ===== -->
+<style>
+#kernel-loader {
+  position: fixed; inset: 0; z-index: 99999; background: #070a0f; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 16px; transition: opacity 0.4s ease;
+}
+#kernel-loader.done { opacity: 0; visibility: hidden; pointer-events: none; }
+.kernel-spinner {
+  width: 50px; height: 50px; border: 2.5px solid rgba(0, 242, 254, 0.15); border-top-color: #00f2fe;
+  border-radius: 50%; animation: spin 0.8s linear infinite; box-shadow: 0 0 20px rgba(0, 242, 254, 0.25);
+}
+.kernel-text { font-family: var(--mono); font-size: 0.8rem; letter-spacing: 0.12em; color: #00f2fe; }
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
+<div id="kernel-loader">
+  <div class="kernel-spinner"></div>
+  <div class="kernel-text">PUREQUANT AI :: INITIALIZED</div>
+</div>
+<script>
+window.addEventListener('load', function(){
+  setTimeout(function(){
+    var l = document.getElementById('kernel-loader');
+    if(l) l.classList.add('done');
+  }, 300);
+});
+</script>
+
+<!-- ===== Sticky Header ===== -->
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a href="#" class="logo">
+      <div class="logo-badge">⚡</div>
+      <span>Pure<b>Quant</b> AI</span>
+    </a>
+    <nav class="nav-links">
+      <a href="#signal-anatomy">Signal Anatomy</a>
+      <a href="#proof">Trade Proof</a>
+      <a href="#technology">Quantitative Edge</a>
+      <a href="#radar">Signal Radar</a>
+      <a href="#pricing">VIP Plans ($3 - $6 - $9)</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <a href="#pricing" class="btn btn-cyan" style="padding: 9px 18px; font-size: 0.86rem;">Get Lifetime VIP ($9)</a>
+  </div>
+</header>
+
+<!-- ===== Hero Section ===== -->
+<section class="hero">
+  <div class="wrap">
+    <div class="badge-cozy">
+      <span class="pulse-dot"></span> 53+ SPOT PAIRS MONITORED · FVG & LORENTZIAN ML ACTIVE
+    </div>
+    <h1>Institutional Spot Intelligence <span>Powered by Lorentzian ML & SMC</span></h1>
+    <p>Eliminate emotional trading and liquidation risk. PureQuant AI delivers multi-dimensional machine learning signals, Fair Value Gap (FVG) mitigations, and automated trailing capital defense straight to Telegram.</p>
+    
+    <div class="hero-cta-group">
+      <a href="#pricing" class="btn btn-cyan btn-lg">Claim Lifetime VIP Pass for $9 (Normally $99)</a>
+      <a href="#signal-anatomy" class="btn btn-outline btn-lg">View Signal Anatomy ↓</a>
+    </div>
+
+    <div class="hero-specs">
+      <span>🛡️ 100% Spot (Zero Debt)</span>
+      <span>🧠 Lorentzian k-NN ML</span>
+      <span>⚡ FVG & SMT Divergence</span>
+      <span>🔒 Trailing Risk Defense</span>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================
+     1. TELEGRAM DETAILED SIGNAL ANATOMY SHOWCASE
+     ======================================================== -->
+<section id="signal-anatomy" class="section">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="badge-cozy">⚡ TOTAL CLARITY</div>
+      <h2 class="sec-title">Exact Telegram Signal Anatomy</h2>
+      <p class="sec-sub">Every alert delivers mathematical coordinates: entry zone, multi-tier profit targets, strict stop-loss, and automated breakeven guidelines.</p>
+    </div>
+
+    <div class="tg-anatomy-wrapper reveal">
+      <!-- Telegram Bubble Mockup -->
+      <div class="tg-mockup">
+        <div class="tg-top">
+          <div class="tg-channel-info">
+            <div class="tg-channel-avatar">⚡</div>
+            <div>
+              <div class="tg-channel-name">PureQuant AI — VIP Signals</div>
+              <div class="tg-channel-sub">● Bot Signal Dispatcher</div>
+            </div>
+          </div>
+          <span style="font-family: var(--mono); font-size: 0.7rem; color: var(--emerald);">LIVE ALERT</span>
+        </div>
+
+        <div class="tg-bubble">
+          <div class="tg-b-header">⚡ PUREQUANT AI :: SPOT BUY ALERT</div>
+          <div class="tg-b-tag">🏆 GRADE A+ SETUP · 96.2% LORENTZIAN CONFIDENCE</div>
+          
+          <div style="margin-bottom: 6px;">
+            <b>Asset:</b> <span style="color: var(--cyan);">SOL / USDT (Binance Spot)</span>
+          </div>
+
+          <div class="tg-b-section">
+            <div class="tg-b-section-title">📊 INSTITUTIONAL CONFLUENCES:</div>
+            • 4H Bullish FVG Mitigated @ $135.20<br>
+            • SMT Divergence (SOL Higher Low vs BTC Lower Low)<br>
+            • Whale Orderflow Delta Surge (+420% Aggressive Bids)<br>
+            • Asian Session Liquidity Pool Swept Clean
+          </div>
+
+          <div class="tg-b-section">
+            <div class="tg-b-section-title">🎯 EXECUTION TARGETS:</div>
+            • 🟢 <b>Entry Zone:</b> $135.20 – $137.50<br>
+            • 🎯 <b>TP 1:</b> $144.00 (+5.8%) <i>→ Close 30% & Move SL to Entry</i><br>
+            • 🎯 <b>TP 2:</b> $158.00 (+16.2%) <i>→ Close 40% & Trail SL to TP1</i><br>
+            • 🎯 <b>TP 3:</b> $181.90 (+34.6%) <i>→ Moonbag Macro Liquidity</i><br>
+            • 🛑 <b>Initial SL:</b> $131.40 (-2.9% Fixed Risk)
+          </div>
+
+          <div class="tg-b-rule">
+            🛡️ <b>RISK PROTOCOL:</b> At +1.5% gain, bot notifies to lock Breakeven (0 risk). Trailing shield engages behind 15M swing lows.
+          </div>
+        </div>
+      </div>
+
+      <!-- Descriptive List -->
+      <div class="tg-anatomy-text">
+        <h3>Zero Guesswork. Clear Trade Execution.</h3>
+        <p>No vague calls or blind alerts. PureQuant AI pairs statistical machine learning with institutional price action so you always know why, when, and how to execute.</p>
+        
+        <ul class="tg-feature-list">
+          <li>
+            <span>✓</span>
+            <div><strong>Fair Value Gap (FVG) Entries:</strong> Pinpoints high-probability unmitigated order blocks so you never buy tops.</div>
+          </li>
+          <li>
+            <span>✓</span>
+            <div><strong>Lorentzian ML Confidence:</strong> Statistical probability ranking based on 10,000+ historical winning clusters.</div>
+          </li>
+          <li>
+            <span>✓</span>
+            <div><strong>Automated Breakeven Protocol:</strong> Exact alerts to lock profit at +1.5% and step up trailing stops.</div>
+          </li>
+          <li>
+            <span>✓</span>
+            <div><strong>AI Post-Mortem Autopsies:</strong> Diagnostic review after every trade analyzing orderflow and whale liquidity.</div>
+          </li>
+        </ul>
+
+        <div style="margin-top: 20px;">
+          <a href="#pricing" class="btn btn-cyan">Unlock VIP Signals ($3 - $6 - $9) →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================
+     2. PROOF OF WINNING (SCREENSHOTS SHOWCASE)
+     ======================================================== -->
+<section id="proof" class="section" style="background: rgba(10, 16, 26, 0.4);">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="badge-cozy">🔥 REAL EVIDENCE</div>
+      <h2 class="sec-title">Verified Proof of Winning Trades</h2>
+      <p class="sec-sub">Real Binance and Bybit spot trade execution screenshots powered by PureQuant AI signals.</p>
+    </div>
+
+    <!-- Proof Metrics Bar -->
+    <div class="proof-stats-bar reveal">
+      <div class="proof-stat-box cozy-card">
+        <div class="proof-stat-num">88.4%</div>
+        <div class="proof-stat-lbl">Spot Win Rate</div>
+      </div>
+      <div class="proof-stat-box cozy-card">
+        <div class="proof-stat-num">1 : 3.2</div>
+        <div class="proof-stat-lbl">Avg. Risk-to-Reward</div>
+      </div>
+      <div class="proof-stat-box cozy-card">
+        <div class="proof-stat-num">+$21,161</div>
+        <div class="proof-stat-lbl">Recent 3-Trade Gain</div>
+      </div>
+      <div class="proof-stat-box cozy-card">
+        <div class="proof-stat-num">0.00%</div>
+        <div class="proof-stat-lbl">Liquidation (Spot Only)</div>
+      </div>
+    </div>
+
+    <!-- Screenshots Grid -->
+    <div class="proof-grid">
+      <!-- Proof 1: BTC/USDT -->
+      <div class="proof-card cozy-card reveal">
+        <div class="proof-img-wrap">
+          <img src="assets/proof_btc.jpg" alt="Bitcoin BTC/USDT Verified Winning Trade Screenshot" loading="lazy">
+          <div class="proof-pnl-pill">+18.42% PROFIT</div>
+        </div>
+        <div class="proof-body">
+          <div class="proof-title-row">
+            <div class="proof-asset">BTC / USDT (Spot)</div>
+            <span class="proof-exchange-badge">BINANCE VERIFIED</span>
+          </div>
+          <div class="proof-specs">
+            <div class="proof-spec-item">Net Profit: <b style="color: var(--emerald);">+$10,800.21</b></div>
+            <div class="proof-spec-item">Entry Price: <b>$58,650.00</b></div>
+            <div class="proof-spec-item">Exit (TP2): <b>$69,450.21</b></div>
+            <div class="proof-spec-item">ML Confidence: <b style="color: var(--cyan);">94.8% (k-NN)</b></div>
+          </div>
+          <div class="proof-tg-alert">
+            <span>🔔</span> <span>Telegram Alert: TP2 reached · Breakeven locked</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Proof 2: SOL/USDT -->
+      <div class="proof-card cozy-card reveal">
+        <div class="proof-img-wrap">
+          <img src="assets/proof_sol.jpg" alt="Solana SOL/USDT Verified Breakout Winning Trade Screenshot" loading="lazy">
+          <div class="proof-pnl-pill">+34.60% PROFIT</div>
+        </div>
+        <div class="proof-body">
+          <div class="proof-title-row">
+            <div class="proof-asset">SOL / USDT (Spot)</div>
+            <span class="proof-exchange-badge">BYBIT SPOT</span>
+          </div>
+          <div class="proof-specs">
+            <div class="proof-spec-item">Net Profit: <b style="color: var(--emerald);">+$8,644.20</b></div>
+            <div class="proof-spec-item">Entry Zone: <b>$135.20</b></div>
+            <div class="proof-spec-item">Exit (TP3): <b>$181.98</b></div>
+            <div class="proof-spec-item">Strategy: <b style="color: var(--cyan);">15M FVG Breakout</b></div>
+          </div>
+          <div class="proof-tg-alert">
+            <span>🔔</span> <span>Telegram Alert: +420% volume surge caught</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Proof 3: ETH/USDT -->
+      <div class="proof-card cozy-card reveal">
+        <div class="proof-img-wrap">
+          <img src="assets/proof_eth.jpg" alt="Ethereum ETH/USDT Verified Winning Trade Screenshot" loading="lazy">
+          <div class="proof-pnl-pill">+22.84% PROFIT</div>
+        </div>
+        <div class="proof-body">
+          <div class="proof-title-row">
+            <div class="proof-asset">ETH / USDT (Spot)</div>
+            <span class="proof-exchange-badge">VERTEX / OKX</span>
+          </div>
+          <div class="proof-specs">
+            <div class="proof-spec-item">Net Profit: <b style="color: var(--emerald);">+$1,717.30</b></div>
+            <div class="proof-spec-item">Entry (Bottom): <b>$2,150.15</b></div>
+            <div class="proof-spec-item">Exit (TP2): <b>$2,640.80</b></div>
+            <div class="proof-spec-item">Strategy: <b style="color: var(--cyan);">1H Liquidity Sweep</b></div>
+          </div>
+          <div class="proof-tg-alert">
+            <span>🔔</span> <span>Telegram Alert: All targets hit without drawdown</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================
+     3. 6 CORE QUANTITATIVE ENGINES (COZY 3x2 GRID)
+     ======================================================== -->
+<section id="technology" class="section">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="badge-cozy">PROPRIETARY RESEARCH</div>
+      <h2 class="sec-title">Mathematical & Algorithmic Edge</h2>
+      <p class="sec-sub">Our multi-stage pipeline continuously screens 53+ spot pairs for institutional orderflow imbalances and statistical setups.</p>
+    </div>
+
+    <div class="engine-grid">
+      <!-- Engine 1: Lorentzian Distance ML -->
+      <div class="engine-card cozy-card reveal">
+        <div class="engine-icon">🧠</div>
+        <h3>Lorentzian Distance ML</h3>
+        <p>Utilizes multi-dimensional Lorentzian metric spaces to classify price action against 10,000+ historical regimes, predicting directional expansions before they appear on retail charts.</p>
+      </div>
+
+      <!-- Engine 2: SMT Divergence Radar -->
+      <div class="engine-card cozy-card reveal">
+        <div class="engine-icon">🎯</div>
+        <h3>SMT Divergence Radar</h3>
+        <p>Monitors correlation cracks between BTC, ETH, SOL, and the DXY. When smart money absorbs supply while price prints a lower low, the engine flags an immediate institutional reversal setup.</p>
+      </div>
+
+      <!-- Engine 3: Fair Value Gap (FVG) Engine -->
+      <div class="engine-card cozy-card reveal">
+        <div class="engine-icon">⚡</div>
+        <h3>Fair Value Gap (FVG) Engine</h3>
+        <p>Pinpoints institutional single-candle imbalances and unmitigated order blocks across multi-timeframe structures (15M, 1H, 4H), locking high-probability entries right where smart money reloads.</p>
+      </div>
+
+      <!-- Engine 4: Liquidity Sweeps & Orderflow Delta -->
+      <div class="engine-card cozy-card reveal">
+        <div class="engine-icon">🌊</div>
+        <h3>Liquidity Sweeps & Orderflow Delta</h3>
+        <p>Tracks aggressive buyer/seller market volume versus passive limit bid/ask walls. Detects engineered stop-loss sweeps across equal highs/lows before rapid mean-reversion expansions.</p>
+      </div>
+
+      <!-- Engine 5: Dynamic Trailing Shield -->
+      <div class="engine-card cozy-card reveal">
+        <div class="engine-icon">🛡️</div>
+        <h3>Dynamic Trailing Shield</h3>
+        <p>Every trade comes with mathematical risk management. Automated alerts notify you to lock Breakeven at +1.5% and engage trailing stop-losses, eliminating drawdown stress.</p>
+      </div>
+
+      <!-- Engine 6: AI Post-Mortem Autopsies -->
+      <div class="engine-card cozy-card reveal">
+        <div class="engine-icon">🔬</div>
+        <h3>AI Post-Mortem Autopsies</h3>
+        <p>After each trade concludes, our autonomous memory model delivers an in-depth forensic breakdown explaining the orderflow dynamics, whale absorption, and key lessons.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================
+     4. LIVE SIGNAL RADAR TERMINAL
+     ======================================================== -->
+<section id="radar" class="section" style="background: rgba(10, 16, 26, 0.4);">
+  <div class="wrap center">
+    <div class="sec-head">
+      <div class="badge-cozy">LIVE TERMINAL</div>
+      <h2 class="sec-title">Live Algorithmic Radar</h2>
+      <p class="sec-sub">Preview real-time spot pair confluences, FVG levels, and machine learning confidence scores.</p>
+    </div>
+
+    <div class="terminal-wrapper cozy-card reveal">
+      <div class="terminal-topbar">
+        <div class="term-dots"><span></span><span></span><span></span></div>
+        <div class="term-title">PUREQUANT TERMINAL v2.4 — LIVE SPOT RADAR</div>
+        <div class="term-status"><span class="pulse-dot"></span> LIVE ENGINE FEED</div>
+      </div>
+
+      <div class="pair-tabs">
+        <div class="pair-tab active" onclick="switchRadar('BTC')">BTC/USDT</div>
+        <div class="pair-tab" onclick="switchRadar('ETH')">ETH/USDT</div>
+        <div class="pair-tab" onclick="switchRadar('SOL')">SOL/USDT</div>
+        <div class="pair-tab" onclick="switchRadar('NEAR')">NEAR/USDT</div>
+        <div class="pair-tab" onclick="switchRadar('RENDER')">RENDER/USDT</div>
+      </div>
+
+      <div class="signal-body">
+        <div class="signal-left">
+          <div class="signal-header">
+            <div>
+              <div class="pair-name" id="sig-pair">BTC/USDT</div>
+              <div style="font-size: 0.78rem; color: var(--text-dim); font-family: var(--mono);" id="sig-time">Detected: 14m ago · Binance Spot</div>
+            </div>
+            <div class="signal-badge" id="sig-type">⚡ ACTIVE SPOT BUY</div>
+          </div>
+
+          <div class="metric-grid">
+            <div class="metric-box">
+              <div class="metric-label">Entry Price Zone</div>
+              <div class="metric-val" id="sig-entry">$64,280 – $64,550</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-label">ML Confidence Score</div>
+              <div class="metric-val" style="color: var(--cyan);" id="sig-conf">94.8% (k-NN)</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-label">Target 1 / Target 2</div>
+              <div class="metric-val" style="color: var(--emerald);" id="sig-tp">$66,400 / $68,900</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-label">Initial Stop-Loss</div>
+              <div class="metric-val" style="color: var(--red);" id="sig-sl">$62,890 (-2.1%)</div>
+            </div>
+          </div>
+
+          <div class="strategy-tags" id="sig-tags">
+            <span class="s-tag">SMT Bullish Divergence</span>
+            <span class="s-tag">4H FVG Mitigated</span>
+            <span class="s-tag">Whale Volume Surge +310%</span>
+          </div>
+        </div>
+
+        <div class="signal-right">
+          <div class="defense-shield">
+            <div class="defense-title">
+              <span>🛡️ Automated Capital Defense Matrix</span>
+            </div>
+            <div class="defense-item">
+              <span>Breakeven Trigger:</span>
+              <b style="color: var(--emerald);">+1.5% (SL $\rightarrow$ Entry)</b>
+            </div>
+            <div class="defense-item">
+              <span>Dynamic Trailing Step:</span>
+              <b style="color: var(--cyan);">+2.2% Trailing Lock</b>
+            </div>
+            <div class="defense-item">
+              <span>Risk-to-Reward:</span>
+              <b>1 : 3.4 Asymmetric</b>
+            </div>
+            <div class="defense-item">
+              <span>Liquidation Exposure:</span>
+              <b style="color: var(--emerald);">0.00% (Strict Spot)</b>
+            </div>
+          </div>
+          
+          <div style="margin-top: 14px;">
+            <a href="#pricing" class="btn btn-cyan" style="width: 100%; font-size: 0.88rem; padding: 11px;">
+              Get Instant Alerts for this Setup ($6/mo) →
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================
+     5. 3 - 6 - 9 PRICING (COZY & CLEAN)
+     ======================================================== -->
+<section id="pricing" class="section">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="badge-cozy">🔥 EARLY ADOPTER VIP LAUNCH</div>
+      <h2 class="sec-title">Simple 3 — 6 — 9 Pricing Ladder</h2>
+      <p class="sec-sub">Lock in the lowest subscription rates we will ever offer. Choose monthly or get Lifetime VIP for only $9.</p>
+    </div>
+
+    <div class="pricing-grid">
+      <!-- Tier 1: $3 Starter -->
+      <div class="price-card cozy-card reveal">
+        <div>
+          <div class="discount-pill">💥 SAVE 67% · REGULAR $9</div>
+          <div class="price-title">Starter Spot</div>
+          <div class="price-desc">Essential spot trade alerts for beginner-to-intermediate traders.</div>
+          
+          <div class="price-amt-wrap">
+            <span class="strikethrough-price">$9</span>
+            <div class="price-amt">$3 <span>/ month</span></div>
+            <div class="lock-in-note">🔒 Grandfathered $3/mo renewal lock</div>
+          </div>
+
+          <ul class="plan-features">
+            <li><span class="check">✓</span> <span><strong>24/7 Telegram Spot Alerts</strong></span></li>
+            <li><span class="check">✓</span> <span>Top 50 High-Volume Spot Pairs</span></li>
+            <li><span class="check">✓</span> <span>Calculated Entry, SL & TP Targets</span></li>
+            <li><span class="check">✓</span> <span>100% Halal / Spot-Only Filter</span></li>
+            <li><span class="check">✓</span> <span>General Community Chat Access</span></li>
+          </ul>
+        </div>
+        <div>
+          <a href="https://t.me/" class="btn btn-outline" style="width: 100%;">Claim Starter for $3 (USDT)</a>
+          <div class="chain-badges">
+            <span class="chain-badge">TRC-20</span>
+            <span class="chain-badge">BEP-20</span>
+            <span class="chain-badge">POLYGON</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tier 2: $6 Pro VIP AI (Featured) -->
+      <div class="price-card cozy-card featured reveal">
+        <div class="featured-tag">🔥 MOST POPULAR · 68% OFF</div>
+        <div>
+          <div class="discount-pill" style="background: rgba(0, 242, 254, 0.16); color: var(--cyan); border-color: rgba(0, 242, 254, 0.35);">
+            ⚡ FULL QUANT AI SUITE · REGULAR $19
+          </div>
+          <div class="price-title">Pro VIP AI</div>
+          <div class="price-desc">Complete quantitative suite with live scanner, ML confidence, and autopsies.</div>
+          
+          <div class="price-amt-wrap">
+            <span class="strikethrough-price">$19</span>
+            <div class="price-amt" style="color: var(--cyan);">$6 <span>/ month</span></div>
+            <div class="lock-in-note">🔒 Grandfathered $6/mo renewal lock</div>
+          </div>
+
+          <ul class="plan-features">
+            <li><span class="check">✓</span> <span><strong>Everything in Starter Spot</strong></span></li>
+            <li><span class="check">✓</span> <span><strong>Live Web Scanner & Signal Radar Access</strong></span></li>
+            <li><span class="check">✓</span> <span>Lorentzian ML Confidence Scores</span></li>
+            <li><span class="check">✓</span> <span>Dynamic Trailing SL & Breakeven Alerts</span></li>
+            <li><span class="check">✓</span> <span>Daily AI Post-Mortem Autopsy Feed</span></li>
+            <li><span class="check">✓</span> <span>Multi-Timeframe Macro Trend Filter</span></li>
+          </ul>
+        </div>
+        <div>
+          <a href="https://t.me/" class="btn btn-cyan" style="width: 100%;">Unlock Pro VIP for $6 (USDT)</a>
+          <div class="chain-badges">
+            <span class="chain-badge">TRC-20</span>
+            <span class="chain-badge">BEP-20</span>
+            <span class="chain-badge">SOLANA</span>
+            <span class="chain-badge">TON</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tier 3: $9 Lifetime VIP Pass -->
+      <div class="price-card cozy-card vip-highlight reveal">
+        <div class="vip-tag">👑 BEST VALUE · 91% OFF</div>
+        <div>
+          <div class="discount-pill" style="background: rgba(0, 245, 160, 0.16); color: var(--emerald); border-color: rgba(0, 245, 160, 0.35);">
+            ⚡ LIFETIME PASS · REGULAR $99
+          </div>
+          <div class="price-title">Lifetime VIP Pass</div>
+          <div class="price-desc">Permanent full VIP access with zero monthly renewal fees forever.</div>
+          
+          <div class="price-amt-wrap">
+            <span class="strikethrough-price">$99</span>
+            <div class="price-amt" style="color: var(--emerald);">$9 <span>/ one-time</span></div>
+            <div class="lock-in-note">⚡ Zero monthly fees forever</div>
+          </div>
+
+          <ul class="plan-features">
+            <li><span class="check">✓</span> <span><strong>Lifetime Full VIP Telegram Access</strong></span></li>
+            <li><span class="check">✓</span> <span>All Future ML Models & V2 Upgrades Free</span></li>
+            <li><span class="check">✓</span> <span>Private VIP Strategy Alpha Group</span></li>
+            <li><span class="check">✓</span> <span>Priority 1-on-1 Dedicated Support</span></li>
+            <li><span class="check">✓</span> <span>Never Pay Another Dollar Again</span></li>
+          </ul>
+        </div>
+        <div>
+          <a href="https://t.me/" class="btn btn-emerald" style="width: 100%;">Claim Lifetime VIP for $9</a>
+          <div class="chain-badges">
+            <span class="chain-badge">ALL CHAINS SUPPORTED</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Trust & Conversion Triggers -->
+    <div class="trust-banner cozy-card reveal">
+      <div class="trust-item">
+        <h4>🔒 Grandfathered Price Guarantee</h4>
+        <p>Your subscription renewal rate will NEVER increase. As long as your membership stays active, you pay $3 or $6/mo forever.</p>
+      </div>
+      <div class="trust-item">
+        <h4>⚡ 15-Second Instant VIP Pass</h4>
+        <p>Our non-custodial crypto bot detects on-chain tx hashes in real-time and automatically issues your single-use invite link.</p>
+      </div>
+      <div class="trust-item">
+        <h4>💡 Why so affordable right now?</h4>
+        <p>We are onboarding our first 100 active community members to build verified public trade track records before raising prices to $19–$49/mo.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Frequently Asked Questions ===== -->
+<section id="faq" class="section" style="background: rgba(10, 16, 26, 0.4);">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="badge-cozy">INTELLIGENCE FAQ</div>
+      <h2 class="sec-title">Frequently Asked Questions</h2>
+      <p class="sec-sub">Everything you need to know about the signals, execution, and security.</p>
+    </div>
+
+    <div class="faq-container">
+      <details class="faq-item cozy-card" open>
+        <summary>Why is PureQuant AI 100% Spot-Only?<span class="faq-icon">+</span></summary>
+        <div class="faq-content">
+          90%+ of retail crypto traders lose capital due to leverage liquidations, exchange wick hunts, and extreme funding fees. Spot trading allows asymmetric compounding without debt, zero liquidation risk, and 100% asset ownership — making it both mathematically sustainable and strictly Shariah/Halal compliant.
+        </div>
+      </details>
+
+      <details class="faq-item cozy-card">
+        <summary>How does the Fair Value Gap (FVG) and Lorentzian ML engine work?<span class="faq-icon">+</span></summary>
+        <div class="faq-content">
+          The engine combines multi-dimensional Lorentzian geometric classification with institutional Fair Value Gap (FVG) detection. It waits for liquidity sweeps across retail stop pools, confirms whale orderflow delta surges, and triggers spot signals only when price re-enters high-probability unmitigated order blocks.
+        </div>
+      </details>
+
+      <details class="faq-item cozy-card">
+        <summary>Which exchanges are supported?<span class="faq-icon">+</span></summary>
+        <div class="faq-content">
+          You can execute our signals on any cryptocurrency exchange offering standard spot pairs, including Binance, Bybit, OKX, KuCoin, Bitget, Coinbase, Kraken, and MEXC.
+        </div>
+      </details>
+
+      <details class="faq-item cozy-card">
+        <summary>How do I receive the alerts and trade instructions?<span class="faq-icon">+</span></summary>
+        <div class="faq-content">
+          All real-time signals, take-profit triggers, dynamic trailing stop adjustments, and AI autopsy reports are dispatched instantly to our private Telegram VIP channel with exact step-by-step breakeven guidelines.
+        </div>
+      </details>
+
+      <details class="faq-item cozy-card">
+        <summary>What payment methods are accepted?<span class="faq-icon">+</span></summary>
+        <div class="faq-content">
+          We accept USDT and USDC across TRC-20, BEP-20 (BSC), Polygon, Solana, and TON. Checkout is 100% automated via our Telegram bot with zero identity verification (KYC) required.
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Footer ===== -->
+<footer>
+  <div class="wrap">
+    <div class="logo" style="justify-content: center; margin-bottom: 14px;">
+      <div class="logo-badge" style="width:30px;height:30px;font-size:0.95rem;">⚡</div>
+      <span>Pure<b>Quant</b> AI</span>
+    </div>
+    <p class="footer-disc">
+      PureQuant AI is a quantitative analytics, algorithmic screener, and educational software platform. PureQuant AI does not provide financial, investment, or legal advice. Cryptocurrency trading involves market risk. Never trade with capital you cannot afford to lose. Past statistical performance does not guarantee future results.
+    </p>
+    <div class="footer-links">
+      <a href="https://t.me/" target="_blank">Telegram Community</a>
+      <a href="#pricing">VIP Plans ($3-$6-$9)</a>
+      <a href="#signal-anatomy">Signal Anatomy</a>
+      <a href="#proof">Trade Proof</a>
+      <a href="#technology">Quantitative Edge</a>
+      <a href="https://t.me/" target="_blank">Support Moderator</a>
+    </div>
+    <div style="margin-top: 20px; font-size: 0.76rem; color: var(--text-dim);">
+      © 2026 PureQuant AI. All rights reserved. Quantitative Machine Learning Systems.
+    </div>
+  </div>
+</footer>
+
+<!-- ===== Interactive JavaScript Engine ===== -->
+<script>
+// Live Radar Pairs Database
+var radarData = {
+  'BTC': {
+    pair: 'BTC/USDT',
+    time: 'Detected: 14m ago · Binance Spot',
+    type: '⚡ ACTIVE SPOT BUY',
+    entry: '$64,280 – $64,550',
+    conf: '94.8% (k-NN)',
+    tp: '$66,400 / $68,900',
+    sl: '$62,890 (-2.1%)',
+    tags: ['SMT Bullish Divergence', '4H FVG Mitigated', 'Whale Volume Surge +310%']
+  },
+  'ETH': {
+    pair: 'ETH/USDT',
+    time: 'Detected: 38m ago · Binance Spot',
+    type: '⚡ ACTIVE SPOT BUY',
+    entry: '$3,420 – $3,450',
+    conf: '92.4% (k-NN)',
+    tp: '$3,580 / $3,740',
+    sl: '$3,340 (-2.3%)',
+    tags: ['1H Liquidity Sweep', 'Orderbook Bid Wall', 'Lorentzian Cluster Alpha']
+  },
+  'SOL': {
+    pair: 'SOL/USDT',
+    time: 'Detected: 2m ago · Binance Spot',
+    type: '⚡ BREAKOUT RADAR',
+    entry: '$148.50 – $150.20',
+    conf: '96.1% (k-NN)',
+    tp: '$158.00 / $169.50',
+    sl: '$144.20 (-2.9%)',
+    tags: ['Momentum Velocity +420%', 'Daily Range Reclaim', 'Smart Money Absorption']
+  },
+  'NEAR': {
+    pair: 'NEAR/USDT',
+    time: 'Detected: 1h ago · Binance Spot',
+    type: '⚡ ACCUMULATION SETUP',
+    entry: '$5.15 – $5.24',
+    conf: '90.7% (k-NN)',
+    tp: '$5.65 / $6.20',
+    sl: '$4.98 (-3.2%)',
+    tags: ['Wyckoff Spring Pattern', 'Clean Highs Target', 'Layer-1 Outperformance']
+  },
+  'RENDER': {
+    pair: 'RENDER/USDT',
+    time: 'Detected: 26m ago · Binance Spot',
+    type: '⚡ ACTIVE SPOT BUY',
+    entry: '$6.40 – $6.52',
+    conf: '93.5% (k-NN)',
+    tp: '$7.10 / $7.85',
+    sl: '$6.18 (-3.4%)',
+    tags: ['AI Narrative Momentum', 'Breakeven Shield Ready', 'Whale Inflow Spike']
+  }
+};
+
+function switchRadar(sym){
+  var d = radarData[sym];
+  if(!d) return;
+
+  document.querySelectorAll('.pair-tab').forEach(function(el){
+    el.classList.remove('active');
+    if(el.textContent.indexOf(sym) !== -1) el.classList.add('active');
+  });
+
+  document.getElementById('sig-pair').textContent = d.pair;
+  document.getElementById('sig-time').textContent = d.time;
+  document.getElementById('sig-type').textContent = d.type;
+  document.getElementById('sig-entry').textContent = d.entry;
+  document.getElementById('sig-conf').textContent = d.conf;
+  document.getElementById('sig-tp').textContent = d.tp;
+  document.getElementById('sig-sl').textContent = d.sl;
+
+  var tagsContainer = document.getElementById('sig-tags');
+  tagsContainer.innerHTML = '';
+  d.tags.forEach(function(t){
+    var span = document.createElement('span');
+    span.className = 's-tag';
+    span.textContent = t;
+    tagsContainer.appendChild(span);
+  });
+}
+
+// Scroll Reveal
+(function(){
+  if (!("IntersectionObserver" in window)) return;
+  var observer = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        entry.target.classList.add('active');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.reveal').forEach(function(el){
+    observer.observe(el);
+  });
+})();
+</script>
+</body>
+</html>

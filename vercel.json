@@ -1,13 +1,6 @@
 {
   "version": 2,
   "cleanUrls": true,
-  "rewrites": [
-    { "source": "/assets/(.*)", "destination": "/landing_page/assets/$1" },
-    { "source": "/robots.txt", "destination": "/landing_page/robots.txt" },
-    { "source": "/sitemap.xml", "destination": "/landing_page/sitemap.xml" },
-    { "source": "/", "destination": "/landing_page/index.html" },
-    { "source": "/(.*)", "destination": "/landing_page/$1" }
-  ],
   "headers": [
     {
       "source": "/(.*)",
