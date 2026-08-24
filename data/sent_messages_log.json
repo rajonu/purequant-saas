@@ -1,0 +1,19 @@
+[
+  {
+    "timestamp": "2026-08-24 16:10:43 UTC",
+    "destination_id": "1787832045",
+    "channel_type": "ADMIN_CHAT",
+    "message_type": "TEST_SYSTEM_START",
+    "excerpt": "Testing unified multi-channel audit logger",
+    "success": true,
+    "extra": {}
+  },
+  {
+    "timestamp": "2026-08-24 16:10:48 UTC",
+    "destination_id": "-1004364917715",
+    "channel_type": "VIP_CHANNEL",
+    "message_type": "SPOT_BUY",
+    "excerpt": "Signal #35 SOL/USDT Spot Buy executed at .40",
+    "success": true
+  }
+]

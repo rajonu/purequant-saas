@@ -64,6 +64,12 @@ FREE_CHANNEL_USERNAME = os.getenv("FREE_CHANNEL_USERNAME", "PureQuantSignals").l
 ADMIN_TELEGRAM_ID = os.getenv("ADMIN_TELEGRAM_ID", "").strip()
 SUPPORT_BOT_NAME = os.getenv("SAAS_BOT_USERNAME", "PureQuantAIBot").lstrip("@")
 
+def is_admin(chat_id: Any) -> bool:
+    if not ADMIN_TELEGRAM_ID:
+        return False
+    admin_list = [i.strip() for i in str(ADMIN_TELEGRAM_ID).split(",") if i.strip()]
+    return str(chat_id) in admin_list
+
 # Non-Custodial Deposit Wallet Addresses
 WALLETS = {
     "TRC20": {
@@ -1061,7 +1067,7 @@ def process_message(msg: Dict[str, Any]):
         return
 
     # Handle Admin /reply command: /reply <user_id> <message>
-    if str(chat_id) == ADMIN_TELEGRAM_ID:
+    if is_admin(chat_id):
         state = USER_STATES.get(chat_id, {}).get("state")
         if state == "admin_replying":
             target_uid = USER_STATES[chat_id].get("target_uid")
@@ -1111,9 +1117,10 @@ def process_message(msg: Dict[str, Any]):
 
     # Handle /id
     if text == "/id" or text.startswith("/myid"):
+        admin_badge = " <i>(Authorized Admin 👑)</i>" if is_admin(chat_id) else ""
         send_message(
             chat_id,
-            f"🆔 <b>Your Telegram User ID:</b> <code>{chat_id}</code>\n\n"
+            f"🆔 <b>Your Telegram User ID:</b> <code>{chat_id}</code>{admin_badge}\n\n"
             f"Enter this numeric ID on the Web Terminal (https://dashboard.purequantai.xyz) to verify your VIP channel access and unlock the dashboard.",
             {"inline_keyboard": [[{"text": "🚀 Open Web Terminal (1-Click Login)", "url": f"https://dashboard.purequantai.xyz/?tg_id={chat_id}"}]]}
         )
@@ -1143,12 +1150,38 @@ def process_message(msg: Dict[str, Any]):
             f"• /help — Show this help message\n\n"
             f"💬 Support is available 24/7 directly inside this bot."
         )
+        if is_admin(chat_id):
+            help_text += (
+                f"\n\n👑 <b>ADMIN COMMANDS:</b>\n"
+                f"• /preview_proof — Preview sample Trade Proof Card\n"
+                f"• /proof &lt;pair&gt; &lt;pnl&gt; &lt;entry&gt; &lt;exit&gt; — Post Proof Card to Free Channel\n"
+                f"• /preview_recap — Preview Daily Evening Recap\n"
+                f"• /recap — Broadcast Daily Performance Recap\n"
+                f"• /history — View latest 10 sent system messages & logs\n"
+                f"• /subscribers — List all active VIP members\n"
+                f"• /pending — List pending payments\n"
+                f"• /stats — View revenue and member metrics\n"
+                f"• /post_vip &lt;msg&gt; — Post message to VIP Channel\n"
+                f"• /post_free &lt;msg&gt; — Post message to Free Channel"
+            )
         send_message(chat_id, help_text)
         return
 
+    # Admin command authorization check
+    admin_commands = ("/stats", "/recap", "/broadcast_recap", "/preview_recap", "/history", "/logs", "/activity", "/proof", "/send_proof", "/preview_proof", "/subscribers", "/pending", "/post_vip", "/post_free")
+    if text.startswith(admin_commands):
+        if not is_admin(chat_id):
+            send_message(
+                chat_id,
+                f"🔒 <b>ADMIN ACCESS REQUIRED</b>\n\n"
+                f"This command is restricted to administrators.\n\n"
+                f"• <b>Your Telegram ID:</b> <code>{chat_id}</code>\n"
+                f"• To grant admin privileges, add ID <code>{chat_id}</code> to <code>ADMIN_TELEGRAM_ID</code>."
+            )
+            return
 
     # Admin command: /stats
-    if text.startswith("/stats") and str(chat_id) == ADMIN_TELEGRAM_ID:
+    if text.startswith("/stats") and is_admin(chat_id):
         subs = load_subscribers()
         active_count = sum(1 for s in subs.values() if s.get("is_active"))
         revenue = sum(s.get("amount_paid", 0) for s in subs.values())
@@ -1164,14 +1197,14 @@ def process_message(msg: Dict[str, Any]):
         return
 
     # Admin command: /recap or /broadcast_recap
-    if (text == "/recap" or text.startswith("/broadcast_recap")) and str(chat_id) == ADMIN_TELEGRAM_ID:
+    if (text == "/recap" or text.startswith("/broadcast_recap")) and is_admin(chat_id):
         res = broadcast_daily_recaps()
         status_msg = f"✅ <b>Daily Evening Recap Dispatched!</b>\n• VIP Channel: {'🟢 Delivered' if res['vip'] else '🔴 Failed'}\n• Free Channel: {'🟢 Delivered' if res['free'] else '🔴 Failed'}"
         send_message(chat_id, status_msg)
         return
 
     # Admin command: /preview_recap
-    if text.startswith("/preview_recap") and str(chat_id) == ADMIN_TELEGRAM_ID:
+    if text.startswith("/preview_recap") and is_admin(chat_id):
         send_message(chat_id, "<b>💎 VIP Channel Daily Recap Preview:</b>\n\n" + format_daily_vip_recap())
         bot_username = os.getenv("SAAS_BOT_USERNAME", "PureQuantAIBot").lstrip("@")
         free_kb = {"inline_keyboard": [[{"text": "⚡ Unlock Tomorrow's VIP Signals ($3 - $6/mo)", "url": f"https://t.me/{bot_username}"}]]}
@@ -1179,7 +1212,7 @@ def process_message(msg: Dict[str, Any]):
         return
 
     # Admin command: /history or /logs or /activity
-    if (text == "/history" or text == "/logs" or text == "/activity") and str(chat_id) == ADMIN_TELEGRAM_ID:
+    if (text == "/history" or text == "/logs" or text == "/activity") and is_admin(chat_id):
         logs = load_system_activity()
         if not logs:
             send_message(chat_id, "ℹ️ <b>No system activity logged yet.</b>")
@@ -1196,7 +1229,7 @@ def process_message(msg: Dict[str, Any]):
         return
 
     # Admin command: /proof or /send_proof <pair> <gain> <entry> <exit>
-    if (text.startswith("/proof") or text.startswith("/send_proof")) and str(chat_id) == ADMIN_TELEGRAM_ID:
+    if (text.startswith("/proof") or text.startswith("/send_proof")) and is_admin(chat_id):
         parts = text.split(" ")
         pair = parts[1] if len(parts) > 1 else "SOL/USDT"
         pnl = parts[2] if len(parts) > 2 else "+34.60%"
@@ -1208,7 +1241,7 @@ def process_message(msg: Dict[str, Any]):
         return
 
     # Admin command: /preview_proof <pair> <gain> <entry> <exit>
-    if text.startswith("/preview_proof") and str(chat_id) == ADMIN_TELEGRAM_ID:
+    if text.startswith("/preview_proof") and is_admin(chat_id):
         parts = text.split(" ")
         pair = parts[1] if len(parts) > 1 else "SOL/USDT"
         pnl = parts[2] if len(parts) > 2 else "+34.60%"
@@ -1221,7 +1254,7 @@ def process_message(msg: Dict[str, Any]):
         return
 
     # Admin command: /subscribers
-    if text.startswith("/subscribers") and str(chat_id) == ADMIN_TELEGRAM_ID:
+    if text.startswith("/subscribers") and is_admin(chat_id):
         subs = load_subscribers()
         active = [f"• <code>{uid}</code> (@{s.get('username', 'N/A')}): {s.get('plan_name')} (Expires: {s.get('expires_at')})" for uid, s in subs.items() if s.get("is_active")]
         msg = f"👥 <b>ACTIVE VIP SUBSCRIBERS ({len(active)}):</b>\n\n" + ("\n".join(active) if active else "No active subscribers yet.")
@@ -1229,7 +1262,7 @@ def process_message(msg: Dict[str, Any]):
         return
 
     # Admin command: /pending
-    if text.startswith("/pending") and str(chat_id) == ADMIN_TELEGRAM_ID:
+    if text.startswith("/pending") and is_admin(chat_id):
         pending = load_pending()
         if not pending:
             send_message(chat_id, "✅ <b>No pending payment verifications.</b>")
@@ -1239,7 +1272,7 @@ def process_message(msg: Dict[str, Any]):
         return
 
     # Admin command: /post_vip <text>
-    if text.startswith("/post_vip ") and str(chat_id) == ADMIN_TELEGRAM_ID:
+    if text.startswith("/post_vip ") and is_admin(chat_id):
         post_content = text.replace("/post_vip ", "", 1).strip()
         if VIP_CHANNEL_ID and post_content:
             r = send_message(VIP_CHANNEL_ID, post_content)
@@ -1247,7 +1280,7 @@ def process_message(msg: Dict[str, Any]):
         return
 
     # Admin command: /post_free <text>
-    if text.startswith("/post_free ") and str(chat_id) == ADMIN_TELEGRAM_ID:
+    if text.startswith("/post_free ") and is_admin(chat_id):
         post_content = text.replace("/post_free ", "", 1).strip()
         if FREE_CHANNEL_ID and post_content:
             bot_username = os.getenv("SAAS_BOT_USERNAME", "PureQuantAIBot").lstrip("@")
@@ -1347,11 +1380,12 @@ def daily_broadcast_scheduler():
             day_str = now_utc.strftime("%Y-%m-%d")
             hour = now_utc.hour
 
-            # 1. Daily Recap at 00:00 UTC
-            if hour == 0 and last_recap_day != day_str:
-                print(f"[{day_str}] Triggering automated Daily Performance Recap...")
+            # 1. Daily Evening Performance Recap & Proof Card at 20:00 UTC
+            if hour in [20, 0] and last_recap_day != day_str:
+                print(f"[{day_str} {now_utc.strftime('%H:%M')} UTC] Triggering automated Daily Performance Recap & Trade Proof Card...")
                 dispatcher.post_daily_performance_recap()
                 last_recap_day = day_str
+
 
             # 2. Daily Promo at 12:00 UTC
             if hour == 12 and last_promo_day != day_str:
