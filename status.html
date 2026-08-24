@@ -62,6 +62,133 @@
             z-index: 1;
         }
 
+        /* PIN LOCK OVERLAY SCREEN */
+        .pin-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(7, 10, 15, 0.95);
+            backdrop-filter: blur(25px);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        .pin-card {
+            background: rgba(13, 18, 28, 0.85);
+            border: 1px solid rgba(0, 245, 160, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 30px rgba(0, 245, 160, 0.15);
+            border-radius: 20px;
+            max-width: 420px;
+            width: 100%;
+            padding: 2.25rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .pin-badge {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, rgba(0, 245, 160, 0.2), rgba(0, 242, 254, 0.2));
+            border: 1px solid rgba(0, 245, 160, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            margin: 0 auto 1.25rem;
+            box-shadow: 0 0 20px var(--green-glow);
+        }
+
+        .pin-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.35rem;
+        }
+
+        .pin-desc {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+        }
+
+        .pin-input-wrap {
+            margin-bottom: 1.25rem;
+        }
+
+        .pin-input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1.5px solid rgba(255, 255, 255, 0.12);
+            color: var(--green);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: 10px;
+            text-align: center;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .pin-input:focus {
+            border-color: var(--green);
+            box-shadow: 0 0 20px var(--green-glow);
+        }
+
+        .pin-error-text {
+            color: var(--red);
+            font-size: 0.8rem;
+            font-weight: 600;
+            min-height: 1.2rem;
+            margin-top: 0.5rem;
+        }
+
+        .pin-card.shake {
+            animation: pinShake 0.4s ease;
+        }
+
+        @keyframes pinShake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+
+        .pin-btn {
+            width: 100%;
+            background: linear-gradient(135deg, rgba(0, 245, 160, 0.25), rgba(0, 242, 254, 0.25));
+            border: 1px solid var(--green);
+            color: #ffffff;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            padding: 0.85rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 0 15px rgba(0, 245, 160, 0.2);
+            margin-top: 0.5rem;
+        }
+
+        .pin-btn:hover {
+            background: linear-gradient(135deg, rgba(0, 245, 160, 0.4), rgba(0, 242, 254, 0.4));
+            box-shadow: 0 0 25px var(--green-glow);
+            transform: translateY(-1px);
+        }
+
         /* Top Header */
         header {
             display: flex;
@@ -714,7 +841,25 @@
 </head>
 <body>
 
-<div class="container">
+<!-- PIN LOCK OVERLAY SCREEN -->
+<div class="pin-overlay" id="pin-overlay">
+    <div class="pin-card" id="pin-card">
+        <div class="pin-badge">🔒</div>
+        <div class="pin-title">PureQuant Security Gate</div>
+        <div class="pin-desc">Total Health Status Matrix is protected. Enter your 6-digit Founder Security PIN to unlock the live diagnostics stream.</div>
+
+        <form id="pin-form" onsubmit="handlePinSubmit(event)">
+            <div class="pin-input-wrap">
+                <input type="password" id="pin-input" class="pin-input" maxlength="6" inputmode="numeric" placeholder="••••••" autofocus autocomplete="off">
+                <div class="pin-error-text" id="pin-error"></div>
+            </div>
+            <button type="submit" class="pin-btn">Unlock Matrix Terminal ⚡</button>
+        </form>
+    </div>
+</div>
+
+<!-- MAIN DASHBOARD CONTENT (Locked until PIN is validated) -->
+<div class="container" id="main-dashboard-content" style="display: none;">
     <!-- Header -->
     <header>
         <div class="brand-box">
@@ -730,7 +875,6 @@
         </div>
 
         <div class="header-actions">
-            <!-- Auto-refresh interval dropdown -->
             <button class="btn" id="btn-sound-toggle" onclick="toggleSound()">
                 <span id="sound-icon">🔊</span> Sound: ON
             </button>
@@ -748,6 +892,9 @@
                     </svg>
                 </div>
                 <span id="refresh-btn-text">Refresh Now</span>
+            </button>
+            <button class="btn" style="border-color: rgba(255, 83, 118, 0.4); color: var(--red);" onclick="lockTerminal()" title="Lock terminal session">
+                🔒 Lock
             </button>
         </div>
     </header>
@@ -881,6 +1028,96 @@
 
 <script>
 // =========================================================================
+// 🔒 FOUNDER PIN SECURITY AUTHENTICATION (PIN: 167570)
+// =========================================================================
+const MASTER_PIN = "167570";
+const AUTH_KEY = "purequant_health_auth";
+
+function checkAuthentication() {
+    // Check URL parameters (e.g. ?pin=167570)
+    const urlParams = new URLSearchParams(window.location.search);
+    const pinParam = urlParams.get('pin');
+    if (pinParam === MASTER_PIN) {
+        sessionStorage.setItem(AUTH_KEY, MASTER_PIN);
+        localStorage.setItem(AUTH_KEY, MASTER_PIN);
+    }
+
+    const savedAuth = sessionStorage.getItem(AUTH_KEY) || localStorage.getItem(AUTH_KEY);
+    if (savedAuth === MASTER_PIN) {
+        unlockDashboard();
+        return true;
+    }
+    return false;
+}
+
+function handlePinSubmit(e) {
+    if (e) e.preventDefault();
+    const pinInput = document.getElementById('pin-input');
+    const pinVal = pinInput.value.trim();
+    const errorEl = document.getElementById('pin-error');
+    const card = document.getElementById('pin-card');
+
+    if (pinVal === MASTER_PIN) {
+        errorEl.innerText = "";
+        sessionStorage.setItem(AUTH_KEY, MASTER_PIN);
+        localStorage.setItem(AUTH_KEY, MASTER_PIN);
+        playAlertChime(true);
+        unlockDashboard();
+    } else {
+        errorEl.innerText = "⚠️ Invalid Security PIN — Access Denied";
+        card.classList.add('shake');
+        setTimeout(() => card.classList.remove('shake'), 400);
+        pinInput.value = "";
+        pinInput.focus();
+    }
+}
+
+function unlockDashboard() {
+    const overlay = document.getElementById('pin-overlay');
+    const content = document.getElementById('main-dashboard-content');
+    if (overlay) overlay.style.display = 'none';
+    if (content) content.style.display = 'block';
+
+    renderCards();
+    startLiveClock();
+    probeAll();
+    startAutoRefreshLoop();
+}
+
+function lockTerminal() {
+    sessionStorage.removeItem(AUTH_KEY);
+    localStorage.removeItem(AUTH_KEY);
+    const overlay = document.getElementById('pin-overlay');
+    const content = document.getElementById('main-dashboard-content');
+    if (content) content.style.display = 'none';
+    if (overlay) {
+        overlay.style.display = 'flex';
+        const input = document.getElementById('pin-input');
+        if (input) {
+            input.value = '';
+            input.focus();
+        }
+    }
+    if (refreshTimer) clearInterval(refreshTimer);
+}
+
+// Auto submit on 6 digits input
+document.addEventListener('DOMContentLoaded', () => {
+    const pinInput = document.getElementById('pin-input');
+    if (pinInput) {
+        pinInput.addEventListener('input', (e) => {
+            if (e.target.value.length === 6) {
+                handlePinSubmit();
+            }
+        });
+    }
+
+    if (!checkAuthentication()) {
+        if (pinInput) pinInput.focus();
+    }
+});
+
+// =========================================================================
 // 🌟 HEALTH MONITORING & TELEMETRY CLIENT ENGINE
 // =========================================================================
 
@@ -931,7 +1168,6 @@ const MODULE_DEFS = [
 
 let modulesState = {};
 
-// Default telemetry details
 const DEFAULT_DETAILS = {
     trading_market_feed: 'Live BTC/USDT Ticker stream synchronized',
     trading_freellm_ai: 'Neural Copilot Standby / Fallback Heuristics Active',
@@ -940,7 +1176,7 @@ const DEFAULT_DETAILS = {
     trading_news_sentiment: 'Sentiment: Bullish Bias (+0.42) • 18 multi-source feeds indexed',
     trading_strategy_engines: 'Institutional FVG Detection, SMT Radar & Lorentzian k-NN loaded',
     trading_portfolio_shield: 'Tracking active trades • Breakeven (+1.5%) & Trailing SL (+2.2%) Armed',
-    trading_host_resources: 'Host OS, CPU, RAM & Disknominal',
+    trading_host_resources: 'Host OS, CPU, RAM & Disk nominal',
     trading_pi_runner: 'Autonomous execution loop armed • Heartbeat synchronized',
     trading_tg_bot: 'Connected as @rajsyful_trade_bot • 1-Click Gateway active',
 
@@ -965,7 +1201,6 @@ const DEFAULT_DETAILS = {
     scanner_delta_tracker: 'Daily Snapshot indexing & Diff Engine operational'
 };
 
-// Initialize State
 MODULE_DEFS.forEach(m => {
     modulesState[m.id] = {
         ...m,
@@ -976,7 +1211,6 @@ MODULE_DEFS.forEach(m => {
     };
 });
 
-// Render UI Cards
 function renderCards() {
     const grids = {
         trading: document.getElementById('grid-trading'),
@@ -992,7 +1226,6 @@ function renderCards() {
         const state = modulesState[m.id];
         if (!state) return;
 
-        // Search filter
         if (query && !m.name.toLowerCase().includes(query) && !m.type.toLowerCase().includes(query) && !state.details.toLowerCase().includes(query)) {
             return;
         }
@@ -1007,7 +1240,6 @@ function renderCards() {
         const statusClass = state.status === 'HEALTHY' ? 'status-healthy' : (state.status === 'DEGRADED' ? 'status-degraded' : 'status-critical');
         const statusText = state.status;
 
-        // Generate 20 green spark bars
         let barsHtml = '';
         for (let i = 0; i < 18; i++) {
             barsHtml += `<div class="uptime-bar" title="Uptime 100%"></div>`;
@@ -1047,17 +1279,21 @@ function renderCards() {
     updateSummaryStats();
 }
 
-// Update Global Stats
 function updateSummaryStats() {
     const total = Object.keys(modulesState).length;
     const healthy = Object.values(modulesState).filter(s => s.status === 'HEALTHY').length;
     const degraded = total - healthy;
     const avgLat = Math.round(Object.values(modulesState).reduce((acc, s) => acc + (s.latency_ms || 0), 0) / total);
 
-    document.getElementById('stat-healthy').innerText = `${healthy}/${total}`;
-    document.getElementById('stat-uptime').innerText = `${((healthy / total) * 100).toFixed(1)}%`;
-    document.getElementById('stat-latency').innerText = `${avgLat}ms`;
-    document.getElementById('stat-incidents').innerText = `${degraded} Active`;
+    const elH = document.getElementById('stat-healthy');
+    const elU = document.getElementById('stat-uptime');
+    const elL = document.getElementById('stat-latency');
+    const elI = document.getElementById('stat-incidents');
+
+    if (elH) elH.innerText = `${healthy}/${total}`;
+    if (elU) elU.innerText = `${((healthy / total) * 100).toFixed(1)}%`;
+    if (elL) elL.innerText = `${avgLat}ms`;
+    if (elI) elI.innerText = `${degraded} Active`;
 
     const banner = document.getElementById('degraded-banner');
     const beacon = document.getElementById('global-beacon');
@@ -1065,23 +1301,30 @@ function updateSummaryStats() {
     const desc = document.getElementById('global-status-desc');
 
     if (degraded > 0) {
-        banner.classList.add('active');
-        beacon.style.background = 'var(--red)';
-        beacon.style.animation = 'pulse-ring 0.8s infinite';
-        title.innerHTML = `System Degradation Alert ⚠️`;
-        title.style.color = 'var(--red)';
-        desc.innerText = `${degraded} subsystem(s) are reporting issues or elevated latency.`;
+        if (banner) banner.classList.add('active');
+        if (beacon) {
+            beacon.style.background = 'var(--red)';
+            beacon.style.animation = 'pulse-ring 0.8s infinite';
+        }
+        if (title) {
+            title.innerHTML = `System Degradation Alert ⚠️`;
+            title.style.color = 'var(--red)';
+        }
+        if (desc) desc.innerText = `${degraded} subsystem(s) are reporting issues or elevated latency.`;
     } else {
-        banner.classList.remove('active');
-        beacon.style.background = 'var(--green)';
-        beacon.style.animation = 'pulse-ring 2s infinite cubic-bezier(0.66, 0, 0, 1)';
-        title.innerHTML = `All Systems Operational 🟢`;
-        title.style.color = '#ffffff';
-        desc.innerText = `All 28 modules, trackers, servers, and APIs are responding with nominal latency.`;
+        if (banner) banner.classList.remove('active');
+        if (beacon) {
+            beacon.style.background = 'var(--green)';
+            beacon.style.animation = 'pulse-ring 2s infinite cubic-bezier(0.66, 0, 0, 1)';
+        }
+        if (title) {
+            title.innerHTML = `All Systems Operational 🟢`;
+            title.style.color = '#ffffff';
+        }
+        if (desc) desc.innerText = `All 28 modules, trackers, servers, and APIs are responding with nominal latency.`;
     }
 }
 
-// Probe Single Module
 async function probeSingleModule(id) {
     const m = MODULE_DEFS.find(x => x.id === id);
     if (!m) return;
@@ -1099,17 +1342,15 @@ async function probeSingleModule(id) {
         modulesState[id].status = 'HEALTHY';
     } catch (e) {
         modulesState[id].latency_ms = Math.max(1, Math.round(performance.now() - t0));
-        modulesState[id].status = 'HEALTHY'; // graceful local state
+        modulesState[id].status = 'HEALTHY';
     }
 
     renderCards();
 }
 
-// Probe All Subsystems Concurrently
 async function probeAll() {
     const t0 = performance.now();
 
-    // Check if local backend health monitor API is available
     let backendData = null;
     try {
         const resp = await fetch('/api/total-health', { signal: AbortSignal.timeout(3000) });
@@ -1119,7 +1360,6 @@ async function probeAll() {
     } catch (e) {}
 
     if (backendData && backendData.modules) {
-        // Integrate backend diagnostic results
         for (const [k, v] of Object.entries(backendData.modules)) {
             if (modulesState[k]) {
                 modulesState[k].status = v.status || 'HEALTHY';
@@ -1128,7 +1368,6 @@ async function probeAll() {
             }
         }
     } else {
-        // Client-side parallel probe execution
         const probePromises = MODULE_DEFS.map(async (m) => {
             const start = performance.now();
             try {
@@ -1153,7 +1392,6 @@ async function probeAll() {
     checkStateChanges();
 }
 
-// State Change & Degradation Alert Trigger
 function checkStateChanges() {
     for (const [id, state] of Object.entries(modulesState)) {
         const prev = lastKnownStates[id];
@@ -1172,7 +1410,6 @@ function checkStateChanges() {
     }
 }
 
-// Log Incident Stream
 function logIncident(text, className) {
     const list = document.getElementById('incident-stream');
     if (!list) return;
@@ -1190,7 +1427,6 @@ function clearIncidentLog() {
     if (list) list.innerHTML = '';
 }
 
-// Web Audio API Synthesizer (No external MP3 files needed)
 function playAlertChime(isRecovery = true) {
     if (!soundEnabled) return;
     try {
@@ -1204,7 +1440,6 @@ function playAlertChime(isRecovery = true) {
         gain.connect(audioCtx.destination);
 
         if (isRecovery) {
-            // Ascending chord (Clean green notification)
             osc.type = 'sine';
             osc.frequency.setValueAtTime(523.25, now);       // C5
             osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
@@ -1214,7 +1449,6 @@ function playAlertChime(isRecovery = true) {
             osc.start(now);
             osc.stop(now + 0.45);
         } else {
-            // Urgent descending chord (Degradation alert)
             osc.type = 'sawtooth';
             osc.frequency.setValueAtTime(880, now);          // A5
             osc.frequency.setValueAtTime(440, now + 0.15);   // A4
@@ -1234,7 +1468,6 @@ function testAlertSound() {
 function toggleSound() {
     soundEnabled = !soundEnabled;
     const btn = document.getElementById('btn-sound-toggle');
-    const icon = document.getElementById('sound-icon');
     if (soundEnabled) {
         btn.innerHTML = `<span id="sound-icon">🔊</span> Sound: ON`;
         playAlertChime(true);
@@ -1243,7 +1476,6 @@ function toggleSound() {
     }
 }
 
-// Push Notifications
 function requestNotificationPermission() {
     if (!('Notification' in window)) {
         alert('Desktop notifications are not supported in this browser.');
@@ -1266,7 +1498,6 @@ function sendPushNotification(title, body) {
     }
 }
 
-// Project Filtering
 function setProjectFilter(proj, btn) {
     currentFilter = proj;
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -1292,10 +1523,10 @@ function filterModules() {
 }
 
 function dismissAlertBanner() {
-    document.getElementById('degraded-banner').classList.remove('active');
+    const b = document.getElementById('degraded-banner');
+    if (b) b.classList.remove('active');
 }
 
-// Export Health Report
 function exportHealthReport() {
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({
         title: "PureQuant AI Total Health Report",
@@ -1313,10 +1544,9 @@ function exportHealthReport() {
     dl.remove();
 }
 
-// Auto-Refresh Loop with Animated Progress Ring
 function startAutoRefreshLoop() {
     const progressCircle = document.getElementById('timer-progress');
-    const totalLength = 63; // 2 * PI * r (r=10)
+    const totalLength = 63;
 
     if (refreshTimer) clearInterval(refreshTimer);
 
@@ -1344,7 +1574,6 @@ function forceRefreshAll() {
     });
 }
 
-// Live Clock (UTC + Local)
 function startLiveClock() {
     const clockEl = document.getElementById('live-clock');
     const initTs = document.getElementById('init-timestamp');
@@ -1356,14 +1585,6 @@ function startLiveClock() {
         if (clockEl) clockEl.innerText = utcStr;
     }, 1000);
 }
-
-// Initial Boot
-document.addEventListener('DOMContentLoaded', () => {
-    renderCards();
-    startLiveClock();
-    probeAll();
-    startAutoRefreshLoop();
-});
 </script>
 
 </body>
