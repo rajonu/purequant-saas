@@ -10,8 +10,29 @@ import json
 import time
 import threading
 import requests
+from http.server import HTTPServer, BaseHTTPRequestHandler
 from datetime import datetime, timedelta
 from typing import Dict, Any, Optional, List
+
+# Built-in Health Check Server for 100% Free Web Service Hosting (Render / Railway / Koyeb)
+class HealthCheckHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header("Content-type", "text/plain; charset=utf-8")
+        self.end_headers()
+        self.wfile.write(b"PureQuant AI Paywall Bot is Active & Running 24/7 OK")
+
+    def log_message(self, format, *args):
+        pass  # Quiet HTTP logs
+
+def start_health_server():
+    port = int(os.getenv("PORT", "8080"))
+    try:
+        server = HTTPServer(("0.0.0.0", port), HealthCheckHandler)
+        print(f"🌐 Health check HTTP server listening on port {port} (Free Web Service Ready)")
+        server.serve_forever()
+    except Exception as e:
+        print(f"⚠️ Health server notice: {e}")
 
 # Load .env file automatically if present
 def load_env_file(filepath: str = ".env"):
@@ -942,6 +963,10 @@ def run_bot():
     print(f"• Free Channel ID: {FREE_CHANNEL_ID or '[MISSING]'}")
     print(f"• Admin Telegram ID: {ADMIN_TELEGRAM_ID or '[MISSING]'}")
     print("====================================================================")
+
+    # Start Health Check Server (Enables 100% Free Web Service on Render / Railway)
+    h_thread = threading.Thread(target=start_health_server, daemon=True)
+    h_thread.start()
 
     # Start Watchdog Daemon
     t = threading.Thread(target=expiration_watchdog, daemon=True)
