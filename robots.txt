@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://purequant.ai/sitemap.xml
+Sitemap: https://purequantai.xyz/sitemap.xml
