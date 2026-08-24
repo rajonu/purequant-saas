@@ -10,6 +10,12 @@
 <meta name="keywords" content="crypto signals, fvg trading, lorentzian classification, smart money concepts, smt divergence, crypto spot screener, purequant ai">
 
 <meta name="theme-color" content="#070a0f">
+<link rel="icon" type="image/png" href="/assets/favicon.png">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/assets/logo.png">
+<meta property="og:image" content="https://purequantai.xyz/assets/logo.png">
+<meta name="twitter:image" content="https://purequantai.xyz/assets/logo.png">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -190,6 +196,13 @@
     font-weight: 800;
     font-size: 1.22rem;
     white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .logo-img {
+    width: 36px; height: 36px; border-radius: 9px;
+    object-fit: cover;
+    border: 1px solid rgba(0, 242, 254, 0.35);
+    box-shadow: 0 0 16px rgba(0, 242, 254, 0.35);
     flex-shrink: 0;
   }
   .logo-badge {
@@ -648,7 +661,7 @@
 <header class="nav">
   <div class="wrap nav-inner">
     <a href="/" class="logo">
-      <div class="logo-badge">⚡</div>
+      <img src="/assets/logo.png" alt="PureQuant AI" class="logo-img">
       <span>Pure<b>Quant</b> AI</span>
     </a>
     <nav class="nav-links">
@@ -1252,7 +1265,7 @@
 <footer>
   <div class="wrap">
     <div class="logo" style="justify-content: center; margin-bottom: 14px;">
-      <div class="logo-badge" style="width:30px;height:30px;font-size:0.95rem;">⚡</div>
+      <img src="/assets/logo.png" alt="PureQuant AI" class="logo-img" style="width: 32px; height: 32px;">
       <span>Pure<b>Quant</b> AI</span>
     </div>
     <p class="footer-disc">
@@ -1421,7 +1434,7 @@ document.addEventListener('keydown', function(e) {
 <aside id="mobile-drawer" class="mobile-drawer" aria-label="Mobile Navigation">
   <div class="drawer-header">
     <a href="/" class="logo" style="font-size: 1.1rem;" onclick="toggleDrawer(false)">
-      <div class="logo-badge" style="width: 28px; height: 28px; font-size: 0.9rem;">⚡</div>
+      <img src="/assets/logo.png" alt="PureQuant AI" class="logo-img" style="width: 30px; height: 30px;">
       <span>Pure<b>Quant</b> AI</span>
     </a>
     <button class="drawer-close-btn" onclick="toggleDrawer(false)" aria-label="Close menu">✕</button>
