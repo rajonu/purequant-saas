@@ -184,6 +184,39 @@ class SaasSignalDispatcher:
                 save_free_signal_state(free_state)
                 print(f"  [+] 🎁 Broadcasted Daily Free Signal ({pair}) to Free Channel ({self.free_channel})!")
 
+    def dispatch_take_profit_hit(self, trade: Dict[str, Any]):
+        """Broadcasts instant Take-Profit victory to the Free Channel with % gain and VIP upgrade CTA"""
+        pair = trade.get("pair", "UNKNOWN")
+        entry = float(trade.get("entry_price", 0.0))
+        exit_p = float(trade.get("exit_price", 0.0))
+        pnl = float(trade.get("pnl_pct", 0.0))
+        pnl_pct_str = f"+{pnl:.2f}%" if pnl >= 0 else f"{pnl:.2f}%"
+        clean_sym = pair.replace('/', '')
+
+        free_tp_text = f"""🎯 <b>TAKE-PROFIT TARGET HIT! — #{clean_sym}</b> 🟢
+
+💰 <b>Profit Secured:</b> <b>{pnl_pct_str} (Spot Gain)</b>
+💵 <b>Entry Price:</b> <code>${entry:,.4f}</code>
+🎯 <b>Exit Price:</b> <code>${exit_p:,.4f}</code>
+🧠 <b>Signal Engine:</b> PureQuant AI + Lorentzian ML (97+ Score)
+
+───────────────
+🔒 <i>VIP & Pro Members received this exact buy alert in real-time!</i>
+👑 <b>Join VIP or Pro to get all AI intelligent data, 8–15 accurate daily signals & trailing risk shields!</b>"""
+
+        free_tp_kb = {
+            "inline_keyboard": [
+                [
+                    {"text": "⚡ Unlock VIP Signals ($3/mo)", "url": f"https://t.me/{self.bot_username}?start=upgrade"}
+                ],
+                [
+                    {"text": "🌐 View Live Dashboard", "url": "https://dashboard.purequantai.xyz/"}
+                ]
+            ]
+        }
+        send_tg_message(self.free_channel, free_tp_text, free_tp_kb)
+        print(f"  [+] 🎯 Dispatched instant TP victory alert for {pair} to Free Channel ({self.free_channel})")
+
     def post_daily_performance_recap(self) -> bool:
         """
         Posts daily recap to Free and VIP channels.
@@ -249,12 +282,14 @@ class SaasSignalDispatcher:
 🎯 <b>Win Rate:</b> <b>{win_rate:.1f}%</b> ({wins}/{len(today_trades)} Positive)
 🕌 <b>Trading Mode:</b> 100% Halal Spot (Zero Leverage / Zero Debt)
 
-🔒 <i>Free channel members received 1 signal today. VIP members caught all {len(today_trades)} moves!</i>"""
+───────────────
+🔒 <i>Free channel members received 1 signal today. VIP members caught all {len(today_trades)} moves!</i>
+👑 <b>Join VIP or Pro to get all AI intelligent data and 8–15 accurate daily signals!</b>"""
 
         recap_kb = {
             "inline_keyboard": [
                 [
-                    {"text": "🚀 Get Instant VIP Access (From $3/mo)", "url": f"https://t.me/{self.bot_username}?start=plans"}
+                    {"text": "🚀 Get Instant VIP Access ($3/mo)", "url": f"https://t.me/{self.bot_username}?start=plans"}
                 ]
             ]
         }
