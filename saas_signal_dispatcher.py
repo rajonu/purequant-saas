@@ -104,40 +104,42 @@ class SaasSignalDispatcher:
         ai_reason = signal_data.get("ai_reasoning", "Strong whale accumulation volume and multi-timeframe 1h trend alignment confirmed.")
         tv_link = f"https://www.tradingview.com/chart/?symbol=BINANCE:{pair.replace('/', '')}"
 
+        # Multi-Target Take Profits (TP1, TP2, TP3)
+        tp1 = price * (1 + max(1.5, tp_pct * 0.6) / 100)
+        tp2 = price * (1 + max(3.5, tp_pct) / 100)
+        tp3 = price * (1 + max(6.5, tp_pct * 1.8) / 100)
+        tp1_pct = (tp1 - price) / price * 100
+        tp2_pct = (tp2 - price) / price * 100
+        tp3_pct = (tp3 - price) / price * 100
+
         # -------------------------------------------------------------
-        # 1. VIP Channel Card (Full Features + Live Dashboard Link)
+        # 1. VIP Channel Card (Grade A+ Multi-TP Institutional Setup)
         # -------------------------------------------------------------
-        vip_text = f"""🚀 <b>AUTONOMOUS SPOT TRADE EXECUTED — {pair}</b> (15m)
+        clean_sym = pair.replace('/', '')
+        vip_text = f"""⚡ <b>PUREQUANT AI :: VIP SPOT BUY ALERT</b>
+🏆 <b>GRADE A+ SETUP · {score:.1f}% LORENTZIAN CONFIDENCE</b>
 
-⚡ <b>Action:</b> <b>SPOT BUY / ACCUMULATE ($100 Position)</b>
-🕌 <b>Shariah Status:</b> <b>100% Halal Verified Digital Asset ✅</b>
-📊 <b>PureQuant Score:</b> <b>{score} / 100</b>
-🧠 <b>AI Technical Quality:</b> <b>High Confluence (Approved)</b>
+<b>Asset:</b> #{clean_sym} (Spot Only)
+🟢 <b>Entry:</b> ${price:,.4f}
+🎯 <b>TP 1:</b> ${tp1:,.4f} (+{tp1_pct:.1f}%)
+🎯 <b>TP 2:</b> ${tp2:,.4f} (+{tp2_pct:.1f}%)
+🎯 <b>TP 3:</b> ${tp3:,.4f} (+{tp3_pct:.1f}%)
+🛑 <b>Stop-Loss:</b> ${sl:,.4f} (-{sl_pct:.1f}%)
+🛡️ <b>Risk Shield:</b> Auto-Breakeven @ +1.5% | Trailing SL @ +2.2%
 
-💵 <b>Entry Price:</b> <code>${price:,.4f}</code>
-🎯 <b>Take-Profit:</b> <code>${tp:,.4f}</code> (<b>+{tp_pct:.1f}%</b>)
-🛑 <b>Stop-Loss:</b> <code>${sl:,.4f}</code> (<b>-{sl_pct:.1f}%</b>)
-🛡️ <b>Shield:</b> Auto-Breakeven @ +1.5% | Trailing SL @ +2.2%
-
-📊 <b>Smart Money Technicals:</b>
-• <b>Fair Value Gap (FVG):</b> {fvg_desc}
-• <b>Trend Alignment:</b> Above 200 EMA ✅
-
-🤖 <b>Local AI Analyst Verdict ({ai_conf}% Conf):</b>
-<i>\"{ai_reason}\"</i>
-
-⏰ <i>Status: Monitored 24/7 with Trailing Stop-Loss.</i>"""
+🤖 <b>AI Analyst Verdict:</b>
+<i>\"{ai_reason}\"</i>"""
 
         vip_kb = {
             "inline_keyboard": [
                 [
-                    {"text": "📈 TradingView Chart", "url": tv_link},
-                    {"text": "🌐 Live Dashboard", "url": "https://trade.d4f.me/"}
+                    {"text": "📈 TradingView Live Chart", "url": tv_link},
+                    {"text": "🌐 Pro Live Dashboard", "url": "https://dashboard.purequantai.xyz/"}
                 ]
             ]
         }
         send_tg_message(self.vip_channel, vip_text, vip_kb)
-        print(f"  [+] Dispatched Spot Signal for {pair} to VIP Channel ({self.vip_channel})")
+        print(f"  [+] Dispatched Grade A+ VIP Signal for {pair} to VIP Channel ({self.vip_channel})")
 
         # -------------------------------------------------------------
         # 2. Free Public Channel (1 Signal Per Day Limit + Upgrade CTA)
