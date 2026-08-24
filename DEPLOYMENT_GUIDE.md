@@ -1,50 +1,62 @@
-# 🚀 PureQuant AI — Complete Deployment & Production Guide
+## 🏗️ Architecture Split: Landing Page vs. 24/7 Telegram Bot
 
-This guide covers step-by-step deployment for both the **Landing Page** and the **Telegram Paywall Bot Backend**.
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          1 GITHUB REPOSITORY                                │
+└───────────────────────┬─────────────────────────────┬───────────────────────┘
+                        │                             │
+                        ▼                             ▼
+       ┌────────────────────────────────┐ ┌────────────────────────────────┐
+       │     🌐 1. LANDING PAGE         │ │     🤖 2. 24/7 TELEGRAM BOT    │
+       │    (Vercel / Cloudflare)       │ │     (Render / Railway / VPS)   │
+       │                                │ │                                │
+       │  • Fast Global Edge CDN        │ │  • Persistent Python Process   │
+       │  • 100% Free Hosting           │ │  • Long-polling Telegram Loop  │
+       │  • Zero Configuration Needed   │ │  • 24/7 Expiration Watchdog    │
+       └────────────────────────────────┘ └────────────────────────────────┘
+```
+
+> **Why can't Vercel run the Telegram Bot?**  
+> Vercel is a **Serverless** platform designed for static websites and short API calls (times out after 10–60s). A Telegram paywall bot requires a **persistent background worker** that stays connected 24/7 to listen for payments, process user commands, and run the automated 30-day expiration watchdog.
 
 ---
 
-## 🌐 1. Landing Page Deployment
+## 🌐 Part 1: Landing Page Deployment (Vercel)
 
-The landing page (`landing_page/index.html` + `landing_page/assets/`) is zero-dependency static HTML/CSS/JS.
-
-### Option A: Cloudflare Pages (Recommended · 100% Free & Fast CDN)
-1. Log in to [Cloudflare Dashboard](https://dash.cloudflare.com/) $\rightarrow$ **Workers & Pages** $\rightarrow$ **Create Application** $\rightarrow$ **Pages**.
-2. Connect your GitHub repository.
-3. Build Settings:
-   - **Build command**: *(Leave blank)*
-   - **Build output directory**: `landing_page`
-4. Click **Save and Deploy**. Your site is now live on a global edge CDN with free SSL.
-
-### Option B: Vercel
-```bash
-npm i -g vercel
-cd landing_page
-vercel --prod
-```
-
-### Option C: Ubuntu / Nginx VPS
-```bash
-# Copy files to web root
-sudo mkdir -p /var/www/purequant
-sudo cp -r landing_page/* /var/www/purequant/
-
-# Nginx virtual host configuration (/etc/nginx/sites-available/purequant)
-server {
-    listen 80;
-    server_name yourdomain.com www.yourdomain.com;
-    root /var/www/purequant;
-    index index.html;
-
-    location / {
-        try_files $uri $uri/ =404;
-    }
-}
-```
+1. Push this repository to GitHub.
+2. Go to [Vercel Dashboard](https://vercel.com/) ➔ **Add New Project** ➔ Import your repo.
+3. Keep default settings (Vercel automatically detects `index.html` and `vercel.json`).
+4. Click **Deploy**. Your landing page is live with global SSL!
 
 ---
 
-## 🤖 2. Telegram Bot Backend Deployment (VPS)
+## 🤖 Part 2: 24/7 Telegram Bot Deployment
+
+Choose any of the following 3 options to run the bot 24/7 for free or under $5/mo:
+
+### Option A: Render.com (Recommended · 1-Click GitHub Deploy)
+1. Sign up at [Render.com](https://render.com/).
+2. Click **New +** ➔ **Background Worker**.
+3. Connect your GitHub repository (`purequant-saas`).
+4. Build Settings:
+   - **Runtime**: `Python 3`
+   - **Build Command**: `pip install -r requirements.txt`
+   - **Start Command**: `python3 subscription_bot.py`
+5. Click **Advanced ➔ Add Environment Variables**:
+   - Add all variables from your `.env` file (`SAAS_BOT_TOKEN`, `VIP_CHANNEL_ID`, `ADMIN_TELEGRAM_ID`, etc.).
+6. Click **Create Background Worker**. Render will keep the bot running 24/7 and restart it automatically if it ever crashes.
+
+---
+
+### Option B: Railway.app (Fast & Reliable)
+1. Go to [Railway.app](https://railway.app/) ➔ **New Project** ➔ **Deploy from GitHub Repo**.
+2. Select `purequant-saas`.
+3. Go to **Variables** tab and paste your `.env` variables.
+4. Railway automatically detects `Procfile` and runs `python3 subscription_bot.py` 24/7.
+
+---
+
+### Option C: Ubuntu VPS (DigitalOcean / Hetzner / Contabo)
 
 ### Step 1: Telegram Bot Credentials Setup
 1. Message [@BotFather](https://t.me/BotFather) on Telegram and run `/newbot`.

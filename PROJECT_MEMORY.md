@@ -66,3 +66,32 @@
 * [`BUSINESS_IMPLEMENTATION_PLAN.md`](file:///Users/rajrio/Desktop/dev/purequant-saas/BUSINESS_IMPLEMENTATION_PLAN.md): Marketing and commercial blueprint.
 * [`ARCHITECTURE.md`](file:///Users/rajrio/Desktop/dev/purequant-saas/ARCHITECTURE.md): Technical system architecture and diagrams.
 * [`DEPLOYMENT_GUIDE.md`](file:///Users/rajrio/Desktop/dev/purequant-saas/DEPLOYMENT_GUIDE.md): Production deployment for Cloudflare Pages and VPS Systemd.
+
+---
+
+## 🌐 Domain & Infrastructure Strategy
+
+* **Domain TLD Selection Principles**:
+  - Prefer `.xyz` (Cheapest entry + low yearly renewal, high Web3/Crypto acceptance) or `.net` (High institutional credibility, stable renewal).
+  - Avoid high-hike renewal traps (`.online`, `.store`, `.site`, `.tech` where renewal jumps to \$35-\$55/yr).
+* **DNS & Hosting**:
+  - Cloudflare CDN & DNS proxy for origin IP masking and DDoS protection.
+  - Non-custodial USDT gateway integration (OxaPay / Cryptomus / manual TxHash verification).
+
+---
+
+## 📢 Social Media, Branding & Meta Compliance (Anti-Ban Rules)
+
+* **Facebook Page Configuration**:
+  - **Name**: `PureQuant AI`
+  - **Category**: `Software Company` or `Financial Technology Company` *(Never select "Financial Consultant" or "Investment Service")*
+  - **Core Bio**: *"Next-generation algorithmic market intelligence, quantitative analytics & volatility screening software."*
+* **Meta (Facebook/Instagram) Compliance Playbook**:
+  - **Angle**: Strictly position as **Quantitative Analytics SaaS / Data Science Tool / Market Screener**, never financial advisory or investment schemes.
+  - **Prohibited Words/Themes**: "100% winrate", "guaranteed profit", "make $X/day", "buy this token", "passive income", "pump signals".
+  - **Allowed & High-Trust Language**: "Quantitative models", "Fair Value Gap mapping", "Machine Learning anomaly screening", "orderflow analytics", "automated risk defense".
+  - **Mandatory Disclaimer**: All marketing copy and landing pages must include a clear software/education disclaimer.
+* **Operational Privacy & Anonymity (OPSEC)**:
+  - **Facebook**: Manage through Meta Business Suite using dedicated project emails; personal profile identities are hidden from the public by default.
+  - **Telegram**: Enable "Sign Messages" $\rightarrow$ OFF, "Send as Channel" $\rightarrow$ ON, and "Remain Anonymous" for admins in discussion groups. Use dedicated project numbers or Telegram Fragment blockchain numbers.
+

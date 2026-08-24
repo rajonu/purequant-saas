@@ -24,12 +24,14 @@
 ```
 purequant-saas/
 ├── .gitignore                        # Git exclusion rules
+├── .env.example                      # Configuration template (Bot token, Channel IDs, Wallets)
 ├── README.md                         # Main repository documentation & quick start
+├── TELEGRAM_SETUP_TUTORIAL.md        # Step-by-step visual tutorial for Channels & Bot setup
 ├── BUSINESS_IMPLEMENTATION_PLAN.md   # Marketing, Meta Ads & Go-To-Market blueprint
 ├── ARCHITECTURE.md                   # Complete technical architecture & data flow
 ├── DEPLOYMENT_GUIDE.md               # VPS, Cloudflare Pages & Systemd deployment
 ├── PROJECT_MEMORY.md                 # Context, design system tokens & business rules
-├── subscription_bot.py               # Automated USDT/USDC Telegram Paywall & Signal Engine
+├── subscription_bot.py               # Interactive USDT/USDC Telegram Paywall & Signal Engine
 ├── landing_page/
 │   ├── index.html                    # High-converting Cyber-Quant dark landing page
 │   └── assets/
@@ -37,7 +39,8 @@ purequant-saas/
 │       ├── proof_sol.jpg             # Verified Solana breakout winning trade screenshot
 │       └── proof_eth.jpg             # Verified Ethereum winning trade screenshot
 └── data/
-    └── subscribers.json              # Local persistent subscriber store (auto-created)
+    ├── subscribers.json              # Local persistent subscriber store (auto-created)
+    └── pending_payments.json         # Pending verification store (auto-created)
 ```
 
 ---

@@ -1,6 +1,26 @@
 {
   "version": 2,
   "cleanUrls": true,
+  "rewrites": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "scanner.purequantai.xyz"
+        }
+      ],
+      "destination": "/scanner/index.html"
+    },
+    {
+      "source": "/scanner",
+      "destination": "/scanner/index.html"
+    },
+    {
+      "source": "/scanner/:path*",
+      "destination": "/scanner/:path*"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",

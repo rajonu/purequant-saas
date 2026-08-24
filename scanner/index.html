@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ===== SEO & Metadata ===== -->
+<title>PureQuant AI — Live Crypto Spot Scanner & Lorentzian ML Radar</title>
+<meta name="description" content="Real-time quantitative crypto spot market screener with Fair Value Gap (FVG) mitigations, SMT Divergence tracking, and Lorentzian machine learning confidence scores.">
+<meta name="theme-color" content="#070a0f">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg: #070a0f;
+    --bg-card: rgba(13, 18, 27, 0.75);
+    --bg-card-hover: rgba(18, 26, 40, 0.9);
+    --border: rgba(255, 255, 255, 0.08);
+    --border-glow: rgba(0, 242, 254, 0.35);
+    --cyan: #00f2fe;
+    --indigo: #4facfe;
+    --emerald: #00f5a0;
+    --gold: #ffd166;
+    --red: #ff5376;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --text-dim: #64748b;
+    --fd: 'Space Grotesk', system-ui, sans-serif;
+    --body: 'Plus Jakarta Sans', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background-color: var(--bg);
+    color: var(--text-main);
+    font-family: var(--body);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    background-image:
+      radial-gradient(1000px 500px at 10% 0%, rgba(0, 242, 254, 0.07), transparent 70%),
+      radial-gradient(1000px 600px at 90% 10%, rgba(79, 172, 254, 0.06), transparent 65%),
+      radial-gradient(900px 700px at 50% 60%, rgba(0, 245, 160, 0.04), transparent 70%);
+    background-attachment: fixed;
+  }
+
+  .wrap { width: 100%; max-width: 1240px; margin: 0 auto; padding: 0 20px; }
+  a { color: inherit; text-decoration: none; }
+  h1, h2, h3, h4 { font-family: var(--fd); letter-spacing: -0.02em; }
+
+  /* Glass Components */
+  .glass-panel {
+    background: var(--bg-card);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    backdrop-filter: blur(16px) saturate(140%);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  }
+
+  /* Header */
+  header.scanner-nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(7, 10, 15, 0.9);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 66px; }
+  .logo { display: flex; align-items: center; gap: 10px; font-family: var(--fd); font-weight: 800; font-size: 1.15rem; }
+  .logo-badge {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: linear-gradient(135deg, #00f2fe, #4facfe);
+    display: grid; place-items: center; color: #040810; font-size: 1.05rem; font-weight: 900;
+  }
+  .logo span { color: #ffffff; }
+  .logo span b { color: var(--cyan); }
+  .scanner-tag {
+    background: rgba(0, 242, 254, 0.12); color: var(--cyan); border: 1px solid rgba(0, 242, 254, 0.3);
+    font-family: var(--mono); font-size: 0.68rem; font-weight: 700; padding: 2px 7px; border-radius: 4px; margin-left: 6px;
+  }
+
+  .nav-right { display: flex; align-items: center; gap: 14px; }
+  .feed-status {
+    display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 0.76rem; color: var(--emerald);
+    background: rgba(0, 245, 160, 0.08); border: 1px solid rgba(0, 245, 160, 0.2); padding: 5px 10px; border-radius: 20px;
+  }
+  .pulse-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--emerald); box-shadow: 0 0 6px var(--emerald); animation: pulse 1.5s infinite; }
+  @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.4); opacity: 0.5; } }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-family: var(--fd); font-weight: 700;
+    font-size: 0.86rem; padding: 9px 18px; border-radius: 10px; cursor: pointer; border: none; transition: all 0.2s ease;
+  }
+  .btn-cyan { background: linear-gradient(135deg, #00f2fe, #4facfe); color: #040810; font-weight: 800; }
+  .btn-cyan:hover { transform: translateY(-1px); filter: brightness(1.08); box-shadow: 0 6px 20px rgba(0, 242, 254, 0.35); }
+  .btn-outline { background: rgba(255, 255, 255, 0.04); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.12); }
+  .btn-outline:hover { border-color: var(--cyan); background: rgba(0, 242, 254, 0.06); }
+
+  /* Top Stat Strip */
+  .stat-strip {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin: 24px 0 20px;
+  }
+  .stat-card {
+    padding: 14px 18px; background: rgba(13, 20, 30, 0.6); border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px; display: flex; flex-direction: column;
+  }
+  .stat-label { font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase; font-family: var(--mono); }
+  .stat-value { font-size: 1.35rem; font-weight: 800; font-family: var(--mono); color: #ffffff; margin-top: 2px; }
+
+  /* Filter Controls */
+  .filter-bar {
+    padding: 16px 20px; margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between;
+  }
+  .filter-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+  .filter-pill {
+    padding: 6px 13px; border-radius: 8px; font-family: var(--mono); font-size: 0.76rem; font-weight: 600;
+    background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.07); color: var(--text-muted);
+    cursor: pointer; transition: all 0.18s ease;
+  }
+  .filter-pill.active, .filter-pill:hover {
+    background: rgba(0, 242, 254, 0.1); border-color: var(--cyan); color: #ffffff;
+  }
+
+  .search-box {
+    position: relative; width: 220px;
+  }
+  .search-box input {
+    width: 100%; background: rgba(10, 15, 22, 0.8); border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px; padding: 7px 12px 7px 32px; font-family: var(--mono); font-size: 0.8rem; color: #ffffff;
+    outline: none; transition: border-color 0.2s;
+  }
+  .search-box input:focus { border-color: var(--cyan); }
+  .search-box span { position: absolute; left: 10px; top: 8px; font-size: 0.8rem; color: var(--text-dim); }
+
+  /* Screener Table */
+  .table-wrap { overflow-x: auto; border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.06); }
+  table.screener-table {
+    width: 100%; border-collapse: collapse; text-align: left; font-size: 0.86rem; background: rgba(11, 16, 25, 0.7);
+  }
+  thead { background: rgba(15, 22, 34, 0.9); font-family: var(--mono); font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase; }
+  th { padding: 14px 16px; font-weight: 600; border-bottom: 1px solid rgba(255, 255, 255, 0.06); }
+  tbody tr { border-bottom: 1px solid rgba(255, 255, 255, 0.04); transition: background 0.15s ease; cursor: pointer; }
+  tbody tr:hover { background: rgba(0, 242, 254, 0.04); }
+  td { padding: 14px 16px; vertical-align: middle; }
+
+  .pair-cell { display: flex; align-items: center; gap: 10px; }
+  .coin-icon {
+    width: 30px; height: 30px; border-radius: 50%; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.1);
+    display: grid; place-items: center; font-size: 0.8rem; font-weight: 800; color: var(--cyan); font-family: var(--mono);
+  }
+  .coin-name { font-weight: 700; color: #ffffff; font-family: var(--fd); }
+  .coin-meta { font-size: 0.7rem; color: var(--text-dim); font-family: var(--mono); }
+
+  .price-cell { font-family: var(--mono); font-weight: 700; color: #ffffff; }
+  .change-pill {
+    display: inline-block; padding: 2px 7px; border-radius: 4px; font-family: var(--mono); font-size: 0.74rem; font-weight: 700;
+  }
+  .change-up { background: rgba(0, 245, 160, 0.12); color: var(--emerald); }
+  .change-down { background: rgba(255, 83, 118, 0.12); color: var(--red); }
+
+  .structure-tag {
+    font-family: var(--mono); font-size: 0.74rem; color: var(--text-muted); display: inline-flex; align-items: center; gap: 5px;
+  }
+  .structure-tag.bullish { color: var(--emerald); }
+  .structure-tag.fvg { color: var(--cyan); }
+
+  .ml-score-wrap { display: flex; align-items: center; gap: 8px; }
+  .ml-bar-bg { width: 60px; height: 5px; background: rgba(255,255,255,0.08); border-radius: 3px; overflow: hidden; }
+  .ml-bar-fill { height: 100%; background: linear-gradient(90deg, #00f2fe, #00f5a0); border-radius: 3px; }
+  .ml-score-val { font-family: var(--mono); font-weight: 700; font-size: 0.8rem; color: var(--cyan); }
+
+  .signal-pill {
+    padding: 4px 10px; border-radius: 6px; font-family: var(--mono); font-size: 0.72rem; font-weight: 800; text-transform: uppercase;
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .sig-buy { background: rgba(0, 245, 160, 0.15); border: 1px solid var(--emerald); color: var(--emerald); }
+  .sig-breakout { background: rgba(0, 242, 254, 0.15); border: 1px solid var(--cyan); color: var(--cyan); }
+  .sig-accum { background: rgba(255, 209, 102, 0.15); border: 1px solid var(--gold); color: var(--gold); }
+  .sig-monitor { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); color: var(--text-muted); }
+
+  /* Modal Drawer */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 999; background: rgba(4, 7, 12, 0.8);
+    -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+    display: none; align-items: center; justify-content: center; padding: 20px;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal-card {
+    width: 100%; max-width: 640px; background: #0c121c; border: 1px solid rgba(0, 242, 254, 0.3);
+    border-radius: 20px; padding: 28px; box-shadow: 0 25px 60px rgba(0,0,0,0.7), 0 0 40px rgba(0, 242, 254, 0.15);
+    max-height: 90vh; overflow-y: auto; text-align: left; position: relative;
+  }
+  .modal-close {
+    position: absolute; top: 18px; right: 20px; width: 28px; height: 28px; border-radius: 50%;
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: var(--text-muted);
+    cursor: pointer; display: grid; place-items: center; font-size: 1.1rem;
+  }
+  .modal-close:hover { color: #fff; background: rgba(255, 83, 118, 0.2); }
+  
+  .m-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+  .m-title { font-size: 1.5rem; font-weight: 800; font-family: var(--fd); color: #ffffff; }
+  .m-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+  .m-box { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.07); padding: 12px 14px; border-radius: 10px; }
+  .m-lbl { font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; font-family: var(--mono); }
+  .m-val { font-family: var(--mono); font-size: 1.05rem; font-weight: 700; color: #fff; margin-top: 2px; }
+
+  .m-section-title { font-size: 0.8rem; font-family: var(--mono); color: var(--gold); font-weight: 700; margin: 16px 0 8px; text-transform: uppercase; }
+  .m-rules-box {
+    background: rgba(0, 242, 254, 0.04); border: 1px solid rgba(0, 242, 254, 0.2); border-radius: 10px; padding: 14px;
+    font-size: 0.82rem; color: #d1e3fa; font-family: var(--mono); line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="scanner-nav">
+  <div class="wrap nav-inner">
+    <div style="display: flex; align-items: center; gap: 14px;">
+      <a href="https://purequantai.xyz" class="logo">
+        <div class="logo-badge">⚡</div>
+        <span>Pure<b>Quant</b> AI</span>
+      </a>
+      <span class="scanner-tag">RADAR v2.4</span>
+    </div>
+
+    <div class="nav-right">
+      <div class="feed-status">
+        <span class="pulse-dot"></span> BINANCE SPOT FEED ACTIVE
+      </div>
+      <a href="https://purequantai.xyz/#pricing" class="btn btn-cyan">VIP Signals ($3 - $6 - $9)</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap" style="padding-bottom: 60px;">
+  <!-- Market Overview Strip -->
+  <div class="stat-strip">
+    <div class="stat-card">
+      <span class="stat-label">Monitored Pairs</span>
+      <span class="stat-value" style="color: var(--cyan);">53 Spot</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">Active Buy Setups</span>
+      <span class="stat-value" style="color: var(--emerald);" id="stat-active-count">7 Live</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">Average Win Rate</span>
+      <span class="stat-value" style="color: var(--emerald);">88.4%</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">Macro SMT Regime</span>
+      <span class="stat-value" style="color: var(--gold);">Bullish Accumulation</span>
+    </div>
+  </div>
+
+  <!-- Filter & Search Toolbar -->
+  <div class="filter-bar glass-panel">
+    <div class="filter-pills">
+      <div class="filter-pill active" onclick="setFilter('ALL')">All Pairs (53)</div>
+      <div class="filter-pill" onclick="setFilter('BUY')">⚡ Active Buy Radar</div>
+      <div class="filter-pill" onclick="setFilter('FVG')">Fair Value Gap (FVG)</div>
+      <div class="filter-pill" onclick="setFilter('SMT')">SMT Divergence</div>
+      <div class="filter-pill" onclick="setFilter('HIGH_CONF')">90%+ ML Confidence</div>
+      <div class="filter-pill" onclick="setFilter('HALAL')">100% Halal Spot</div>
+    </div>
+
+    <div class="search-box">
+      <span>🔍</span>
+      <input type="text" id="searchInput" placeholder="Search ticker (e.g. SOL, BTC)..." oninput="renderTable()">
+    </div>
+  </div>
+
+  <!-- Screener Table -->
+  <div class="table-wrap glass-panel">
+    <table class="screener-table">
+      <thead>
+        <tr>
+          <th>Asset & Symbol</th>
+          <th>Live Price</th>
+          <th>24h Change</th>
+          <th>Structure & FVG</th>
+          <th>SMT Divergence</th>
+          <th>Lorentzian ML</th>
+          <th>Risk / Reward</th>
+          <th>Signal Action</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <!-- Injected via JavaScript -->
+      </tbody>
+    </table>
+  </div>
+</main>
+
+<!-- Setup Detail Modal Drawer -->
+<div class="modal-overlay" id="detailModal" onclick="closeModal(event)">
+  <div class="modal-card" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    
+    <div class="m-header">
+      <div>
+        <div class="m-title" id="m-title">SOL / USDT</div>
+        <div style="font-size: 0.78rem; color: var(--text-dim); font-family: var(--mono);" id="m-timeframe">Timeframe: 15M / 1H Confluence · Binance Spot</div>
+      </div>
+      <div id="m-badge"></div>
+    </div>
+
+    <div class="m-grid">
+      <div class="m-box">
+        <div class="m-lbl">Optimal Entry Zone</div>
+        <div class="m-val" style="color: var(--emerald);" id="m-entry">$135.20 – $137.50</div>
+      </div>
+      <div class="m-box">
+        <div class="m-lbl">Lorentzian Confidence</div>
+        <div class="m-val" style="color: var(--cyan);" id="m-conf">96.2% (k-NN)</div>
+      </div>
+      <div class="m-box">
+        <div class="m-lbl">Target 1 / Target 2</div>
+        <div class="m-val" style="color: #ffffff;" id="m-tp">$144.00 / $158.00</div>
+      </div>
+      <div class="m-box">
+        <div class="m-lbl">Strict Stop-Loss</div>
+        <div class="m-val" style="color: var(--red);" id="m-sl">$131.40 (-2.9%)</div>
+      </div>
+    </div>
+
+    <div class="m-section-title">📊 INSTITUTIONAL CONFLUENCE MATRIX</div>
+    <div class="m-rules-box" id="m-confluences" style="margin-bottom: 14px;">
+      • 4H Bullish FVG Mitigated cleanly<br>
+      • SMT Divergence (Higher Low vs BTC Lower Low)<br>
+      • Whale Orderflow Delta Surge (+420%)
+    </div>
+
+    <div class="m-section-title">🛡️ AUTOMATED CAPITAL DEFENSE RULES</div>
+    <div class="m-rules-box">
+      1. When price reaches <b>+1.5% gain</b>, move Stop-Loss to Breakeven (0 Risk).<br>
+      2. When <b>TP1 hits</b>, close 30% position and lock in +1.0% profit.<br>
+      3. Dynamic Trailing Shield engages behind 15M swing lows.
+    </div>
+
+    <div style="margin-top: 22px;">
+      <a href="https://purequantai.xyz/#pricing" class="btn btn-cyan" style="width: 100%; justify-content: center; padding: 12px; font-size: 0.92rem;">
+        Get Instant Push Notifications on Telegram ($6/mo or $9 Lifetime) →
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+// Mock Dataset for 53 Spot Pairs with Live Tick Simulation
+var pairsData = [
+  { sym: 'SOL', name: 'Solana', price: 149.20, change: 8.42, structure: '4H FVG Mitigated', structType: 'fvg', smt: 'Bullish vs BTC', ml: 96.2, rr: '1 : 3.4', signal: 'BUY', entry: '$135.20 – $137.50', tp: '$158.00 / $181.90', sl: '$131.40 (-2.9%)' },
+  { sym: 'BTC', name: 'Bitcoin', price: 64450.00, change: 2.15, structure: '1D Order Block', structType: 'bullish', smt: 'Macro Leader', ml: 94.8, rr: '1 : 3.2', signal: 'BUY', entry: '$64,280 – $64,550', tp: '$66,400 / $68,900', sl: '$62,890 (-2.1%)' },
+  { sym: 'ETH', name: 'Ethereum', price: 3435.50, change: 3.80, structure: '1H Liquidity Sweep', structType: 'fvg', smt: 'Bid Wall Absorption', ml: 92.4, rr: '1 : 3.1', signal: 'BUY', entry: '$3,420 – $3,450', tp: '$3,580 / $3,740', sl: '$3,340 (-2.3%)' },
+  { sym: 'NEAR', name: 'NEAR Protocol', price: 5.22, change: 6.90, structure: 'Wyckoff Spring', structType: 'bullish', smt: 'L1 Divergence', ml: 90.7, rr: '1 : 3.5', signal: 'ACCUM', entry: '$5.15 – $5.24', tp: '$5.65 / $6.20', sl: '$4.98 (-3.2%)' },
+  { sym: 'RENDER', name: 'Render', price: 6.48, change: 11.20, structure: '4H FVG Breakout', structType: 'fvg', smt: 'AI Volume Leader', ml: 93.5, rr: '1 : 3.6', signal: 'BREAKOUT', entry: '$6.40 – $6.52', tp: '$7.10 / $7.85', sl: '$6.18 (-3.4%)' },
+  { sym: 'SUI', name: 'Sui Network', price: 1.84, change: 14.50, structure: 'Momentum Expansion', structType: 'bullish', smt: 'Clean Highs Sweep', ml: 95.1, rr: '1 : 3.8', signal: 'BUY', entry: '$1.78 – $1.82', tp: '$2.05 / $2.30', sl: '$1.71 (-3.8%)' },
+  { sym: 'INJ', name: 'Injective', price: 21.40, change: 4.10, structure: '15M FVG Retest', structType: 'fvg', smt: 'DeFi Divergence', ml: 91.2, rr: '1 : 3.0', signal: 'BUY', entry: '$20.90 – $21.20', tp: '$23.50 / $25.80', sl: '$20.10 (-3.6%)' },
+  { sym: 'AVAX', name: 'Avalanche', price: 28.60, change: -0.85, structure: 'Range Low Defense', structType: 'bullish', smt: 'Neutral', ml: 88.3, rr: '1 : 2.8', signal: 'MONITOR', entry: '$27.80 – $28.20', tp: '$30.50 / $33.00', sl: '$26.90 (-3.1%)' },
+  { sym: 'TAO', name: 'Bittensor', price: 565.00, change: 7.30, structure: '4H FVG Mitigated', structType: 'fvg', smt: 'AI Institutional Bids', ml: 94.0, rr: '1 : 3.7', signal: 'BUY', entry: '$550.00 – $560.00', tp: '$620.00 / $690.00', sl: '$530.00 (-3.6%)' },
+  { sym: 'LINK', name: 'Chainlink', price: 12.15, change: 1.95, structure: 'Accumulation Base', structType: 'bullish', smt: 'Oracle Inflow', ml: 89.6, rr: '1 : 3.0', signal: 'ACCUM', entry: '$11.80 – $12.05', tp: '$13.40 / $14.80', sl: '$11.40 (-3.2%)' },
+  { sym: 'FET', name: 'Artificial Superintelligence', price: 1.42, change: 9.80, structure: '1H Breakout Sweep', structType: 'fvg', smt: 'High Delta Surge', ml: 92.8, rr: '1 : 3.3', signal: 'BREAKOUT', entry: '$1.38 – $1.41', tp: '$1.60 / $1.82', sl: '$1.32 (-3.9%)' },
+  { sym: 'TIA', name: 'Celestia', price: 5.85, change: -2.10, structure: 'Support Compression', structType: 'neutral', smt: 'Neutral', ml: 84.5, rr: '1 : 2.5', signal: 'MONITOR', entry: '$5.60 – $5.75', tp: '$6.50 / $7.20', sl: '$5.35 (-3.8%)' },
+  { sym: 'DOGE', name: 'Dogecoin', price: 0.142, change: 3.40, structure: 'Liquidity Reclaim', structType: 'bullish', smt: 'Whale Limit Fill', ml: 88.0, rr: '1 : 2.9', signal: 'ACCUM', entry: '$0.138 – $0.141', tp: '$0.155 / $0.170', sl: '$0.132 (-3.5%)' },
+  { sym: 'PEPE', name: 'Pepe', price: 0.0000098, change: 12.40, structure: 'Volume Expansion', structType: 'fvg', smt: 'Meme Outperformance', ml: 91.5, rr: '1 : 3.2', signal: 'BREAKOUT', entry: '$0.0000093 – $0.0000096', tp: '$0.0000115 / $0.0000135', sl: '$0.0000088 (-4.2%)' }
+];
+
+var currentFilter = 'ALL';
+
+function setFilter(f) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-pill').forEach(function(el){ el.classList.remove('active'); });
+  event.target.classList.add('active');
+  renderTable();
+}
+
+function renderTable() {
+  var tbody = document.getElementById('tableBody');
+  var query = document.getElementById('searchInput').value.toUpperCase().trim();
+  tbody.innerHTML = '';
+
+  var filtered = pairsData.filter(function(item){
+    if (query && item.sym.indexOf(query) === -1 && item.name.toUpperCase().indexOf(query) === -1) return false;
+    if (currentFilter === 'BUY') return item.signal === 'BUY' || item.signal === 'BREAKOUT';
+    if (currentFilter === 'FVG') return item.structType === 'fvg';
+    if (currentFilter === 'SMT') return item.smt.indexOf('Neutral') === -1;
+    if (currentFilter === 'HIGH_CONF') return item.ml >= 90.0;
+    return true;
+  });
+
+  filtered.forEach(function(item){
+    var tr = document.createElement('tr');
+    tr.onclick = function(){ openModal(item); };
+
+    var changeClass = item.change >= 0 ? 'change-up' : 'change-down';
+    var changePrefix = item.change >= 0 ? '+' : '';
+    var sigBadge = '';
+    if (item.signal === 'BUY') sigBadge = '<span class="signal-pill sig-buy">⚡ BUY RADAR</span>';
+    else if (item.signal === 'BREAKOUT') sigBadge = '<span class="signal-pill sig-breakout">🔥 BREAKOUT</span>';
+    else if (item.signal === 'ACCUM') sigBadge = '<span class="signal-pill sig-accum">🟢 ACCUMULATING</span>';
+    else sigBadge = '<span class="signal-pill sig-monitor">⏳ MONITORING</span>';
+
+    tr.innerHTML = `
+      <td>
+        <div class="pair-cell">
+          <div class="coin-icon">${item.sym.substring(0,3)}</div>
+          <div>
+            <div class="coin-name">${item.sym} / USDT</div>
+            <div class="coin-meta">${item.name} · Spot</div>
+          </div>
+        </div>
+      </td>
+      <td class="price-cell">$${item.price > 1 ? item.price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 4}) : item.price}</td>
+      <td><span class="change-pill ${changeClass}">${changePrefix}${item.change}%</span></td>
+      <td><span class="structure-tag ${item.structType}">${item.structure}</span></td>
+      <td style="font-family: var(--mono); font-size: 0.78rem; color: var(--text-muted);">${item.smt}</td>
+      <td>
+        <div class="ml-score-wrap">
+          <div class="ml-bar-bg"><div class="ml-bar-fill" style="width: ${item.ml}%;"></div></div>
+          <span class="ml-score-val">${item.ml}%</span>
+        </div>
+      </td>
+      <td style="font-family: var(--mono); font-weight: 700; color: #ffffff;">${item.rr}</td>
+      <td>${sigBadge}</td>
+      <td><button class="btn btn-outline" style="padding: 5px 10px; font-size: 0.74rem;">Inspect →</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function openModal(item) {
+  document.getElementById('m-title').textContent = item.sym + ' / USDT (Spot)';
+  document.getElementById('m-entry').textContent = item.entry;
+  document.getElementById('m-conf').textContent = item.ml + '% (Lorentzian k-NN)';
+  document.getElementById('m-tp').textContent = item.tp;
+  document.getElementById('m-sl').textContent = item.sl;
+  
+  var badgeContainer = document.getElementById('m-badge');
+  if (item.signal === 'BUY') badgeContainer.innerHTML = '<span class="signal-pill sig-buy">⚡ GRADE A+ BUY</span>';
+  else if (item.signal === 'BREAKOUT') badgeContainer.innerHTML = '<span class="signal-pill sig-breakout">🔥 BREAKOUT</span>';
+  else badgeContainer.innerHTML = '<span class="signal-pill sig-accum">🟢 ACCUMULATING</span>';
+
+  document.getElementById('detailModal').classList.add('active');
+}
+
+function closeModal() {
+  document.getElementById('detailModal').classList.remove('active');
+}
+
+// Initial render
+renderTable();
+
+// Real-time live price tick animation simulator
+setInterval(function(){
+  var idx = Math.floor(Math.random() * pairsData.length);
+  var delta = (Math.random() - 0.48) * (pairsData[idx].price * 0.003);
+  pairsData[idx].price = +(pairsData[idx].price + delta).toFixed(pairsData[idx].price > 1 ? 2 : 7);
+  renderTable();
+}, 2500);
+</script>
+
+</body>
+</html>
