@@ -308,22 +308,25 @@ def ai_generate_support_reply(query: str) -> Optional[str]:
 # 🎨 UI MENUS & FORMATTERS
 # ==============================================================================
 
-def get_main_menu_keyboard() -> Dict[str, Any]:
+def get_main_menu_keyboard(user_id: Any = None) -> Dict[str, Any]:
     free_channel_url = f"https://t.me/{FREE_CHANNEL_USERNAME}" if FREE_CHANNEL_USERNAME else "https://t.me"
+    dashboard_url = f"https://dashboard.purequantai.xyz/?tg_id={user_id}" if user_id else "https://dashboard.purequantai.xyz/"
     return {
         "inline_keyboard": [
             [
                 {"text": "💎 Unlock VIP Signals Pass", "callback_data": "menu_plans"}
             ],
             [
-                {"text": "📢 Free Signals Channel", "url": free_channel_url},
+                {"text": "🌐 Web Live Terminal", "url": dashboard_url},
                 {"text": "📊 My Subscription", "callback_data": "menu_status"}
             ],
             [
-                {"text": "💬 24/7 AI & Live Support Desk", "callback_data": "menu_support"}
+                {"text": "📢 Free Signals Channel", "url": free_channel_url},
+                {"text": "💬 24/7 Support Desk", "callback_data": "menu_support"}
             ]
         ]
     }
+
 
 def get_plans_keyboard() -> Dict[str, Any]:
     return {
@@ -440,7 +443,8 @@ def handle_start(chat_id: int, first_name: str, param: str = ""):
         return
 
     text = format_welcome_message(first_name)
-    send_message(chat_id, text, get_main_menu_keyboard())
+    send_message(chat_id, text, get_main_menu_keyboard(chat_id))
+
 
 def handle_status(chat_id: int, username: str):
     subs = load_subscribers()
@@ -858,11 +862,34 @@ def process_message(msg: Dict[str, Any]):
         send_message(chat_id, support_prompt, {"inline_keyboard": [[{"text": "🔙 Back to Menu", "callback_data": "menu_main"}]]})
         return
 
+    # Handle /id
+    if text == "/id" or text.startswith("/myid"):
+        send_message(
+            chat_id,
+            f"🆔 <b>Your Telegram User ID:</b> <code>{chat_id}</code>\n\n"
+            f"Enter this numeric ID on the Web Terminal (https://dashboard.purequantai.xyz) to verify your VIP channel access and unlock the dashboard.",
+            {"inline_keyboard": [[{"text": "🚀 Open Web Terminal (1-Click Login)", "url": f"https://dashboard.purequantai.xyz/?tg_id={chat_id}"}]]}
+        )
+        return
+
+    # Handle /dashboard or /terminal
+    if text.startswith("/dashboard") or text.startswith("/terminal") or text.startswith("/web"):
+        send_message(
+            chat_id,
+            f"⚡ <b>PureQuant Live Web Terminal:</b>\n\n"
+            f"Click the button below to open your authenticated VIP live terminal:\n"
+            f"👉 <a href='https://dashboard.purequantai.xyz/?tg_id={chat_id}'>https://dashboard.purequantai.xyz/</a>",
+            {"inline_keyboard": [[{"text": "🚀 Open Web Terminal (1-Click Login)", "url": f"https://dashboard.purequantai.xyz/?tg_id={chat_id}"}]]}
+        )
+        return
+
     # Handle /help
     if text.startswith("/help"):
         help_text = (
             f"ℹ️ <b>PUREQUANT AI COMMANDS</b>\n\n"
             f"• /start — Open the Main Interactive Menu\n"
+            f"• /dashboard — 1-Click Login to Web Live Terminal\n"
+            f"• /id — Get your Telegram User ID for Web Verification\n"
             f"• /plans — View VIP Subscription Pricing ($3 / $6 / $9)\n"
             f"• /status — Check your current active VIP subscription\n"
             f"• /support — Contact 24/7 AI & Live Support Desk\n"
@@ -871,6 +898,7 @@ def process_message(msg: Dict[str, Any]):
         )
         send_message(chat_id, help_text)
         return
+
 
     # Admin command: /stats
     if text.startswith("/stats") and str(chat_id) == ADMIN_TELEGRAM_ID:
