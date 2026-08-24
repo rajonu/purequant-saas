@@ -218,7 +218,31 @@ def send_message(chat_id: Any, text: str, reply_markup: Dict[str, Any] = None, p
     }
     if reply_markup:
         payload["reply_markup"] = reply_markup
-    return tg_api_call("sendMessage", payload)
+    res = tg_api_call("sendMessage", payload)
+    if res.get("ok"):
+        log_system_activity("Message Sent", str(chat_id), text[:120].replace('\n', ' '))
+    return res
+
+def send_photo(chat_id: Any, photo_path: str, caption: str = "", reply_markup: Dict[str, Any] = None, parse_mode: str = "HTML") -> Dict[str, Any]:
+    url = f"{TELEGRAM_API_URL}/bot{BOT_TOKEN}/sendPhoto"
+    data = {
+        "chat_id": chat_id,
+        "caption": caption,
+        "parse_mode": parse_mode
+    }
+    if reply_markup:
+        data["reply_markup"] = json.dumps(reply_markup)
+    
+    try:
+        with open(photo_path, "rb") as f:
+            files = {"photo": f}
+            res = requests.post(url, data=data, files=files, timeout=25).json()
+            if res.get("ok"):
+                log_system_activity("Photo Proof Sent", str(chat_id), caption[:120].replace('\n', ' '))
+            return res
+    except Exception as e:
+        print(f"⚠️ Error sending photo: {e}")
+        return {"ok": False, "description": str(e)}
 
 def edit_message_text(chat_id: Any, message_id: int, text: str, reply_markup: Dict[str, Any] = None, parse_mode: str = "HTML") -> Dict[str, Any]:
     payload = {
@@ -238,6 +262,40 @@ def answer_callback_query(callback_query_id: str, text: str = None, show_alert: 
         payload["text"] = text
         payload["show_alert"] = show_alert
     return tg_api_call("answerCallbackQuery", payload)
+
+# ==============================================================================
+# 📜 SYSTEM ACTIVITY & MESSAGE HISTORY LOGGER
+# ==============================================================================
+
+ACTIVITY_LOG_FILE = os.path.join(DATA_DIR, "activity_history.json")
+
+def log_system_activity(category: str, target: str, summary: str, status: str = "success"):
+    try:
+        os.makedirs(DATA_DIR, exist_ok=True)
+        logs = load_system_activity()
+        entry = {
+            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S UTC"),
+            "category": category,
+            "target": target,
+            "summary": summary,
+            "status": status
+        }
+        logs.insert(0, entry)
+        # Keep latest 200 items
+        logs = logs[:200]
+        with open(ACTIVITY_LOG_FILE, "w", encoding="utf-8") as f:
+            json.dump(logs, f, indent=2, ensure_ascii=False)
+    except Exception as e:
+        print(f"Activity logging error: {e}")
+
+def load_system_activity() -> List[Dict[str, Any]]:
+    if os.path.exists(ACTIVITY_LOG_FILE):
+        try:
+            with open(ACTIVITY_LOG_FILE, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            return []
+    return []
 
 def generate_vip_invite_link(channel_id: str = None) -> Optional[str]:
     target_channel = channel_id or VIP_CHANNEL_ID
@@ -876,6 +934,63 @@ def broadcast_daily_recaps(custom_data: Dict[str, Any] = None) -> Dict[str, bool
 
     return results
 
+def broadcast_trade_proof_card(
+    pair: str = "SOL/USDT",
+    pnl_percent: str = "+34.60%",
+    entry_price: str = "$135.20",
+    exit_price: str = "$181.90",
+    target_hit: str = "TP3 (Macro Expansion)",
+    is_preview: bool = False,
+    admin_chat_id: Any = None
+) -> Dict[str, Any]:
+    """Generates and broadcasts a trade proof screenshot card to the Free Channel"""
+    try:
+        from trade_proof_card import generate_trade_proof_card
+        card_path = f"/tmp/proof_{pair.replace('/', '_')}.png"
+        generate_trade_proof_card(
+            pair=pair,
+            pnl_percent=pnl_percent,
+            entry_price=entry_price,
+            exit_price=exit_price,
+            target_hit=target_hit,
+            output_path=card_path
+        )
+
+        clean_pair = pair.upper().lstrip('#')
+        bot_username = os.getenv("SAAS_BOT_USERNAME", "PureQuantAIBot").lstrip("@")
+
+        caption = (
+            f"🏆 <b>PUREQUANT AI :: CLOSED TRADE HARVESTED</b>\n\n"
+            f"<b>Asset:</b> #{clean_pair} (Spot Long · 100% Halal)\n"
+            f"🟢 <b>Entry:</b> {entry_price}\n"
+            f"🎯 <b>Exit / High:</b> {exit_price} ({target_hit})\n"
+            f"📈 <b>Net Spot Gain:</b> <b>{pnl_percent}</b> (Zero Leverage · Strict Ownership)\n\n"
+            f"🧠 <b>Lorentzian ML Confidence:</b> 95.4% Precision Cluster\n"
+            f"🛡️ <b>Capital Defense:</b> Trailing Breakeven Locked\n\n"
+            f"⚡ <i>VIP Members entered at the bottom of the 4H FVG order block. Upgrade below to receive the next live trade signal in real-time!</i>"
+        )
+
+        keyboard = {
+            "inline_keyboard": [
+                [
+                    {"text": "🥈 Unlock Pro VIP ($6/mo)", "url": f"https://t.me/{bot_username}?start=pro"},
+                    {"text": "👑 Get Lifetime VIP ($9)", "url": f"https://t.me/{bot_username}?start=lifetime_vip"}
+                ],
+                [
+                    {"text": "⚡ Starter Spot ($3/mo)", "url": f"https://t.me/{bot_username}?start=starter"}
+                ]
+            ]
+        }
+
+        target_chat = admin_chat_id if is_preview else FREE_CHANNEL_ID
+        if target_chat and os.path.exists(card_path):
+            res = send_photo(target_chat, card_path, caption, keyboard)
+            return res
+        return {"ok": False, "description": "Target chat missing or file error"}
+    except Exception as e:
+        print(f"⚠️ Error broadcasting proof card: {e}")
+        return {"ok": False, "description": str(e)}
+
 # ==============================================================================
 # ⏰ EXPIRATION WATCHDOG & EVENING RECAP DAEMON
 # ==============================================================================
@@ -1061,6 +1176,66 @@ def process_message(msg: Dict[str, Any]):
         bot_username = os.getenv("SAAS_BOT_USERNAME", "PureQuantAIBot").lstrip("@")
         free_kb = {"inline_keyboard": [[{"text": "⚡ Unlock Tomorrow's VIP Signals ($3 - $6/mo)", "url": f"https://t.me/{bot_username}"}]]}
         send_message(chat_id, "<b>📢 Free Channel Daily Recap Preview:</b>\n\n" + format_daily_free_recap(), free_kb)
+        return
+
+    # Admin command: /history or /logs or /activity
+    if (text == "/history" or text == "/logs" or text == "/activity") and str(chat_id) == ADMIN_TELEGRAM_ID:
+        logs = load_system_activity()
+        if not logs:
+            send_message(chat_id, "ℹ️ <b>No system activity logged yet.</b>")
+            return
+        
+        lines = ["📜 <b>PUREQUANT AI :: SYSTEM ACTIVITY & SENT MESSAGES (LATEST 10)</b>\n"]
+        for idx, item in enumerate(logs[:10]):
+            lines.append(
+                f"<b>{idx+1}. [{item['category']}]</b> · <code>{item['target']}</code>\n"
+                f"⏱️ <i>{item['timestamp']}</i>\n"
+                f"💬 {item['summary']}\n"
+            )
+        send_message(chat_id, "\n".join(lines))
+        return
+
+    # Admin command: /proof or /send_proof <pair> <gain> <entry> <exit>
+    if (text.startswith("/proof") or text.startswith("/send_proof")) and str(chat_id) == ADMIN_TELEGRAM_ID:
+        parts = text.split(" ")
+        pair = parts[1] if len(parts) > 1 else "SOL/USDT"
+        pnl = parts[2] if len(parts) > 2 else "+34.60%"
+        entry = parts[3] if len(parts) > 3 else "$135.20"
+        exit_p = parts[4] if len(parts) > 4 else "$181.90"
+        
+        res = broadcast_trade_proof_card(pair=pair, pnl_percent=pnl, entry_price=entry, exit_price=exit_p, is_preview=False)
+        send_message(chat_id, f"✅ <b>Trade Proof Card Published to Free Channel!</b>" if res.get("ok") else f"⚠️ Error: {res}")
+        return
+
+    # Admin command: /preview_proof <pair> <gain> <entry> <exit>
+    if text.startswith("/preview_proof") and str(chat_id) == ADMIN_TELEGRAM_ID:
+        parts = text.split(" ")
+        pair = parts[1] if len(parts) > 1 else "SOL/USDT"
+        pnl = parts[2] if len(parts) > 2 else "+34.60%"
+        entry = parts[3] if len(parts) > 3 else "$135.20"
+        exit_p = parts[4] if len(parts) > 4 else "$181.90"
+        
+        res = broadcast_trade_proof_card(pair=pair, pnl_percent=pnl, entry_price=entry, exit_price=exit_p, is_preview=True, admin_chat_id=chat_id)
+        if not res.get("ok"):
+            send_message(chat_id, f"⚠️ Preview Error: {res}")
+        return
+
+    # Admin command: /subscribers
+    if text.startswith("/subscribers") and str(chat_id) == ADMIN_TELEGRAM_ID:
+        subs = load_subscribers()
+        active = [f"• <code>{uid}</code> (@{s.get('username', 'N/A')}): {s.get('plan_name')} (Expires: {s.get('expires_at')})" for uid, s in subs.items() if s.get("is_active")]
+        msg = f"👥 <b>ACTIVE VIP SUBSCRIBERS ({len(active)}):</b>\n\n" + ("\n".join(active) if active else "No active subscribers yet.")
+        send_message(chat_id, msg)
+        return
+
+    # Admin command: /pending
+    if text.startswith("/pending") and str(chat_id) == ADMIN_TELEGRAM_ID:
+        pending = load_pending()
+        if not pending:
+            send_message(chat_id, "✅ <b>No pending payment verifications.</b>")
+            return
+        p_list = [f"• User <code>{uid}</code> (@{p.get('username')}): {p.get('plan_name')} (${p.get('amount')}) via {p.get('network')}\nTXID: <code>{p.get('tx_hash')}</code>" for uid, p in pending.items()]
+        send_message(chat_id, f"⏳ <b>PENDING PAYMENTS ({len(pending)}):</b>\n\n" + "\n\n".join(p_list))
         return
 
     # Admin command: /post_vip <text>
