@@ -465,33 +465,6 @@
   <span><b>First 100 Early Spots:</b> Lock in <b>$3 / $6 / $9 Lifetime VIP</b> Pricing (78/100 Claimed)</span>
 </div>
 
-<!-- ===== Instant AI Neural Boot Loader ===== -->
-<style>
-#kernel-loader {
-  position: fixed; inset: 0; z-index: 99999; background: #070a0f; display: flex; flex-direction: column;
-  align-items: center; justify-content: center; gap: 16px; transition: opacity 0.4s ease;
-}
-#kernel-loader.done { opacity: 0; visibility: hidden; pointer-events: none; }
-.kernel-spinner {
-  width: 50px; height: 50px; border: 2.5px solid rgba(0, 242, 254, 0.15); border-top-color: #00f2fe;
-  border-radius: 50%; animation: spin 0.8s linear infinite; box-shadow: 0 0 20px rgba(0, 242, 254, 0.25);
-}
-.kernel-text { font-family: var(--mono); font-size: 0.8rem; letter-spacing: 0.12em; color: #00f2fe; }
-@keyframes spin { to { transform: rotate(360deg); } }
-</style>
-<div id="kernel-loader">
-  <div class="kernel-spinner"></div>
-  <div class="kernel-text">PUREQUANT AI :: INITIALIZED</div>
-</div>
-<script>
-window.addEventListener('load', function(){
-  setTimeout(function(){
-    var l = document.getElementById('kernel-loader');
-    if(l) l.classList.add('done');
-  }, 300);
-});
-</script>
-
 <!-- ===== Sticky Header ===== -->
 <header class="nav">
   <div class="wrap nav-inner">
