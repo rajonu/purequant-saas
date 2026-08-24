@@ -292,7 +292,7 @@ def ai_generate_support_reply(query: str) -> Optional[str]:
             "• Starter Spot: $3.00 / mo\n"
             "• Pro VIP AI: $6.00 / mo\n"
             "• Lifetime VIP Pass: $9.00 one-time (10 Years)\n\n"
-            "Click <b>[⚡ 3-6-9 Launch VIP Access]</b> in the main menu to generate your payment invoice!"
+            "Click <b>[💎 Unlock VIP Signals]</b> in the main menu to generate your payment invoice!"
         )
 
     if any(w in q for w in ["link", "invite", "where is", "access", "join vip"]):
@@ -313,7 +313,7 @@ def get_main_menu_keyboard() -> Dict[str, Any]:
     return {
         "inline_keyboard": [
             [
-                {"text": "⚡ 3-6-9 Launch VIP Access", "callback_data": "menu_plans"}
+                {"text": "💎 Unlock VIP Signals Pass", "callback_data": "menu_plans"}
             ],
             [
                 {"text": "📢 Free Signals Channel", "url": free_channel_url},
@@ -371,7 +371,7 @@ def format_welcome_message(first_name: str) -> str:
         f"• <b>Lorentzian Distance ML:</b> Multi-dimensional predictive directional classification.\n"
         f"• <b>Fair Value Gap (FVG) + SMT Radar:</b> Precision entry at unmitigated order blocks.\n"
         f"• <b>Dynamic Risk Shield:</b> Automated Breakeven & Trailing Stop-Loss alerts.\n\n"
-        f"🔥 <b>Special Launch Pricing (3-6-9 Model):</b>\n"
+        f"🔥 <b>Institutional VIP Spot Membership:</b>\n"
         f"• <b>Starter Spot:</b> $3.00 / mo\n"
         f"• <b>Pro VIP AI:</b> $6.00 / mo\n"
         f"• <b>Lifetime VIP Pass:</b> $9.00 one-time (Zero renewal fees)\n\n"
