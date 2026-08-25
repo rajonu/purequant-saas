@@ -22,6 +22,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from saas_signal_dispatcher import SaasSignalDispatcher, send_tg_message, send_tg_photo
 from trade_proof_card import generate_trade_proof_card
+from facebook_poster import FacebookPoster
 
 
 def run_daily_evening_recap(dry_run: bool = False) -> Dict[str, Any]:
@@ -163,6 +164,20 @@ Lorentzian distance classification and multi-timeframe FVG sweeps successfully a
 
     # Send to VIP Channel
     send_tg_message(dispatcher.vip_channel, vip_recap_msg, message_type="VIP_DAILY_RECAP")
+
+    # Send to Facebook Page (if configured)
+    fb_poster = FacebookPoster()
+    if fb_poster.is_configured() and card_path and os.path.exists(card_path):
+        fb_caption = fb_poster.build_compliant_winrate_recap_caption(
+            date_str=date_display,
+            win_rate=f"{win_rate:.1f}%",
+            total_setups=len(today_trades),
+            winning_setups=wins,
+            net_model_expansion=net_pnl_str
+        )
+        fb_res = fb_poster.publish_photo_post(card_path, fb_caption)
+        if fb_res.get("status") == "SUCCESS":
+            print(f"  [+] 🌐 Facebook Page Post Published: {fb_res.get('fb_url')}")
 
     # Send confirmation to Admin
     admin_id = os.getenv("ADMIN_TELEGRAM_ID", "1787832045")

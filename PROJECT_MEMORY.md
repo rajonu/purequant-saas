@@ -62,6 +62,11 @@
 
 * [`landing_page/index.html`](file:///Users/rajrio/Desktop/dev/purequant-saas/landing_page/index.html): Complete standalone landing page with live signal radar, proof screenshots, and 3-6-9 pricing.
 * [`landing_page/assets/`](file:///Users/rajrio/Desktop/dev/purequant-saas/landing_page/assets/): Verified exchange proof images (`proof_btc.jpg`, `proof_sol.jpg`, `proof_eth.jpg`).
+* [`rpi_app.py`](file:///Users/rajrio/Desktop/dev/purequant-saas/rpi_app.py): 24/7 Raspberry Pi Web Control Panel, Webhook receiver, and auto-poster.
+* [`facebook_poster.py`](file:///Users/rajrio/Desktop/dev/purequant-saas/facebook_poster.py): Facebook Meta Graph API compliance & publishing engine.
+* [`install_raspberry_pi.sh`](file:///Users/rajrio/Desktop/dev/purequant-saas/install_raspberry_pi.sh): One-click systemd automated installer for Raspberry Pi.
+* [`RPI_SETUP_GUIDE.md`](file:///Users/rajrio/Desktop/dev/purequant-saas/RPI_SETUP_GUIDE.md): Setup instructions for running on Raspberry Pi hardware.
+* [`/Users/rajrio/Desktop/dev/purequant-fb-vercel`](file:///Users/rajrio/Desktop/dev/purequant-fb-vercel): 100% Free Vercel Serverless deployment for instant cloud webhooks.
 * [`subscription_bot.py`](file:///Users/rajrio/Desktop/dev/purequant-saas/subscription_bot.py): Paywall bot backend and signal formatter.
 * [`BUSINESS_IMPLEMENTATION_PLAN.md`](file:///Users/rajrio/Desktop/dev/purequant-saas/BUSINESS_IMPLEMENTATION_PLAN.md): Marketing and commercial blueprint.
 * [`ARCHITECTURE.md`](file:///Users/rajrio/Desktop/dev/purequant-saas/ARCHITECTURE.md): Technical system architecture and diagrams.

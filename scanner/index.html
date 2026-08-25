@@ -4,13 +4,96 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- ===== SEO & Metadata ===== -->
+<!-- ===== Primary SEO & Metadata ===== -->
 <title>PureQuant AI — Live Crypto Spot Scanner & Lorentzian ML Radar</title>
+<meta name="title" content="PureQuant AI — Live Crypto Spot Scanner & Lorentzian ML Radar">
 <meta name="description" content="Real-time quantitative crypto spot market screener with Fair Value Gap (FVG) mitigations, SMT Divergence tracking, and Lorentzian machine learning confidence scores.">
+<meta name="keywords" content="crypto spot screener, crypto scanner, lorentzian machine learning, fair value gap scanner, smt divergence radar, purequant ai scanner, live crypto signals">
+<meta name="author" content="PureQuant AI">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<link rel="canonical" href="https://purequantai.xyz/scanner/">
+
+<!-- ===== Icons & Theme ===== -->
 <meta name="theme-color" content="#070a0f">
 <link rel="icon" type="image/png" href="/assets/favicon.png">
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="apple-touch-icon" href="/assets/logo.png">
+
+<!-- ===== Open Graph / Facebook Meta ===== -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://purequantai.xyz/scanner/">
+<meta property="og:site_name" content="PureQuant AI">
+<meta property="og:title" content="PureQuant AI — Live Crypto Spot Scanner & Lorentzian ML Radar">
+<meta property="og:description" content="Real-time quantitative crypto spot market screener with Fair Value Gap (FVG) mitigations, SMT Divergence tracking, and Lorentzian machine learning confidence scores.">
+<meta property="og:image" content="https://purequantai.xyz/assets/logo.png">
+<meta property="og:image:secure_url" content="https://purequantai.xyz/assets/logo.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="512">
+<meta property="og:image:height" content="512">
+<meta property="og:locale" content="en_US">
+
+<!-- ===== Twitter Cards ===== -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="https://purequantai.xyz/scanner/">
+<meta name="twitter:title" content="PureQuant AI — Live Crypto Spot Scanner & Lorentzian ML Radar">
+<meta name="twitter:description" content="Real-time quantitative crypto spot market screener with Fair Value Gap (FVG) mitigations, SMT Divergence tracking, and Lorentzian machine learning confidence scores.">
+<meta name="twitter:image" content="https://purequantai.xyz/assets/logo.png">
+
+<!-- ===== Structured Data (JSON-LD) ===== -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "PureQuant AI Live Crypto Spot Scanner",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "Web, iOS, Android",
+  "url": "https://purequantai.xyz/scanner/",
+  "offers": {
+    "@type": "Offer",
+    "price": "0.00",
+    "priceCurrency": "USD",
+    "availability": "https://schema.org/InStock"
+  },
+  "description": "Real-time quantitative crypto spot market screener with Fair Value Gap (FVG) mitigations, SMT Divergence tracking, and Lorentzian machine learning confidence scores."
+}
+</script>
+
+<!-- ===== Meta (Facebook) Pixel Code ===== -->
+<script>
+  window.FB_PIXEL_ID = window.FB_PIXEL_ID || 'YOUR_PIXEL_ID';
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  if (window.FB_PIXEL_ID && window.FB_PIXEL_ID !== 'YOUR_PIXEL_ID') {
+    fbq('init', window.FB_PIXEL_ID);
+  } else {
+    fbq('init', 'YOUR_PIXEL_ID');
+  }
+  fbq('track', 'PageView');
+  fbq('track', 'ViewContent', { content_name: 'Live Spot Scanner', content_category: 'Scanner' });
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+       src="https://www.facebook.com/tr?id=YOUR_PIXEL_ID&ev=PageView&noscript=1" alt="fb-pixel" />
+</noscript>
+<!-- End Meta Pixel Code -->
+
+<!-- ===== Google Analytics 4 (gtag.js) ===== -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-9P6LXW3LPS"></script>
+<script>
+  window.GA_MEASUREMENT_ID = 'G-9P6LXW3LPS';
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-9P6LXW3LPS', { 'send_page_view': true });
+  gtag('event', 'select_content', { content_type: 'scanner', item_id: 'live_spot_screener' });
+</script>
+<!-- End Google Analytics -->
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -466,6 +549,8 @@ setInterval(function(){
   var delta = (Math.random() - 0.48) * (pairsData[idx].price * 0.003);
   pairsData[idx].price = +(pairsData[idx].price + delta).toFixed(pairsData[idx].price > 1 ? 2 : 7);
   renderTable();
+}, 3000);
+
 // Security Protections: Disable Right Click & DevTools Shortcuts
 document.addEventListener('contextmenu', function(e) {
   e.preventDefault();
@@ -481,6 +566,60 @@ document.addEventListener('keydown', function(e) {
     e.preventDefault();
   }
 });
+
+// Multi-Channel Event Tracker (Meta Pixel & Google Analytics 4)
+function trackUnifiedEvent(fbEvent, fbParams, gaEvent, gaParams) {
+  try {
+    if (typeof fbq === 'function') {
+      fbq('track', fbEvent, fbParams || {});
+    }
+  } catch (err) {
+    console.debug('Pixel track error:', err);
+  }
+  try {
+    if (typeof gtag === 'function') {
+      gtag('event', gaEvent || fbEvent, gaParams || fbParams || {});
+    }
+  } catch (err) {
+    console.debug('GA4 track error:', err);
+  }
+}
+
+document.addEventListener('click', function(e) {
+  var target = e.target.closest('a');
+  if (!target) return;
+  var href = target.getAttribute('href') || '';
+  
+  if (href.includes('start=starter')) {
+    trackUnifiedEvent(
+      'InitiateCheckout',
+      { content_name: 'Starter Spot (30 Days)', value: 3.00, currency: 'USD', content_type: 'product', tier: 'starter' },
+      'begin_checkout',
+      { value: 3.00, currency: 'USD', items: [{ item_name: 'Starter Spot (30 Days)', price: 3.00, quantity: 1, item_category: 'starter' }] }
+    );
+  } else if (href.includes('start=pro')) {
+    trackUnifiedEvent(
+      'InitiateCheckout',
+      { content_name: 'Pro VIP AI (30 Days)', value: 6.00, currency: 'USD', content_type: 'product', tier: 'pro' },
+      'begin_checkout',
+      { value: 6.00, currency: 'USD', items: [{ item_name: 'Pro VIP AI (30 Days)', price: 6.00, quantity: 1, item_category: 'pro' }] }
+    );
+  } else if (href.includes('start=lifetime_vip')) {
+    trackUnifiedEvent(
+      'InitiateCheckout',
+      { content_name: 'Lifetime VIP Pass', value: 9.00, currency: 'USD', content_type: 'product', tier: 'lifetime_vip' },
+      'begin_checkout',
+      { value: 9.00, currency: 'USD', items: [{ item_name: 'Lifetime VIP Pass', price: 9.00, quantity: 1, item_category: 'lifetime_vip' }] }
+    );
+  } else if (href.includes('t.me/PureQuantSignals')) {
+    trackUnifiedEvent(
+      'Lead',
+      { content_name: 'Free Telegram Signals Channel' },
+      'generate_lead',
+      { method: 'Telegram Free Community', content_name: 'Free Signals Channel' }
+    );
+  }
+}, { passive: true });
 </script>
 
 </body>
