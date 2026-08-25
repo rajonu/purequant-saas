@@ -29,5 +29,8 @@ Thumbs.db
 *.swp
 *.swo
 
-# Persistent runtime data (optional backup exception)
-# data/subscribers.json
+# Persistent runtime data
+data/sent_messages_log.json
+data/free_signal_daily_state.json
+data/recap_tracker.json
+
