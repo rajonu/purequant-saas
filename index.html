@@ -326,28 +326,32 @@
   }
 
   /* Hero Section */
-  .hero { padding: clamp(48px, 7vw, 84px) 0 32px; text-align: center; }
+  .hero { padding: clamp(44px, 6.5vw, 80px) 0 30px; text-align: center; }
   .hero h1 {
-    font-size: clamp(2.2rem, 5.2vw, 3.4rem);
+    font-size: clamp(2rem, 5vw, 3.4rem);
     font-weight: 800;
-    line-height: 1.16;
+    line-height: 1.15;
     letter-spacing: -0.03em;
     max-width: 860px;
-    margin: 18px auto 20px;
+    margin: 16px auto 18px;
   }
-  .hero h1 span {
+  .hero h1 span, .hero-highlight {
     background: linear-gradient(135deg, #00f2fe 0%, #4facfe 50%, #00f5a0 100%);
     -webkit-background-clip: text; background-clip: text;
     -webkit-text-fill-color: transparent;
   }
   .hero p {
-    font-size: 1.08rem; color: var(--text-muted); max-width: 660px; margin: 0 auto 32px; line-height: 1.65;
+    font-size: 1.05rem; color: var(--text-muted); max-width: 660px; margin: 0 auto 28px; line-height: 1.65;
   }
-  .hero-cta-group { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; margin-bottom: 24px; }
+  .hero-cta-group { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; margin-bottom: 22px; }
   .hero-specs {
-    display: flex; justify-content: center; gap: 24px; font-family: var(--mono); font-size: 0.8rem; color: var(--text-dim); flex-wrap: wrap;
+    display: flex; justify-content: center; gap: 14px; font-family: var(--mono); font-size: 0.8rem; color: var(--text-dim); flex-wrap: wrap; margin-top: 6px;
   }
-  .hero-specs span { display: inline-flex; align-items: center; gap: 6px; }
+  .hero-specs span {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.07);
+    padding: 8px 14px; border-radius: 9px; white-space: nowrap; color: #cbd5e1;
+  }
 
   /* Section Spacing & Typography */
   .section { padding: 64px 0; }
@@ -595,29 +599,30 @@
 
   /* Mobile Responsive Perfection */
   @media(max-width: 768px) {
-    .urgency-banner { font-size: 0.72rem; padding: 7px 12px; white-space: normal; }
+    .urgency-banner { font-size: 0.72rem; padding: 7px 10px; white-space: normal; line-height: 1.35; }
     .urgency-banner span { white-space: normal; }
-    header.nav .wrap { padding: 0 16px; }
-    .nav-inner { height: 60px; }
-    .logo { font-size: 1.05rem; }
-    .logo-badge { width: 30px; height: 30px; font-size: 0.95rem; }
-    .nav-actions { gap: 6px; }
-    .nav-actions .btn-outline { display: none; }
-    .nav-actions .btn-cyan { padding: 7px 12px; font-size: 0.78rem; border-radius: 8px; }
+    header.nav .wrap { padding: 0 14px; }
+    .nav-inner { height: 58px; gap: 8px; }
+    .logo { font-size: 1.02rem; gap: 8px; }
+    .logo-img { width: 28px; height: 28px; border-radius: 7px; }
+    .nav-actions { gap: 8px; }
+    .nav-free-btn { display: none !important; }
+    .nav-vip-btn { padding: 6px 12px !important; font-size: 0.78rem !important; border-radius: 8px !important; }
+    .hamburger-btn { width: 34px; height: 34px; font-size: 1.15rem; border-radius: 8px; display: flex !important; }
     
-    .hero { padding: 32px 0 20px; }
-    .badge-cozy { font-size: 0.65rem; padding: 4px 10px; max-width: 100%; white-space: normal; line-height: 1.35; margin-bottom: 12px; }
-    .hero h1 { font-size: 1.85rem; line-height: 1.2; letter-spacing: -0.025em; margin: 12px auto 14px; }
-    .hero p { font-size: 0.92rem; line-height: 1.55; margin-bottom: 20px; }
-    .hero-cta-group { flex-direction: column; width: 100%; max-width: 320px; margin: 0 auto 20px; gap: 10px; }
-    .hero-cta-group .btn { width: 100%; font-size: 0.92rem; padding: 13px 18px; }
-    .hero-specs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 10px; max-width: 320px; margin: 0 auto; text-align: left; }
-    .hero-specs span { font-size: 0.72rem; gap: 4px; }
+    .hero { padding: 24px 0 18px; }
+    .badge-cozy { font-size: 0.64rem; padding: 4px 10px; max-width: 95%; white-space: normal; line-height: 1.35; margin-bottom: 10px; }
+    .hero h1 { font-size: 1.68rem; line-height: 1.2; letter-spacing: -0.025em; margin: 10px auto 12px; max-width: 320px; }
+    .hero p { font-size: 0.88rem; line-height: 1.5; margin-bottom: 18px; max-width: 95%; }
+    .hero-cta-group { flex-direction: column; width: 100%; max-width: 310px; margin: 0 auto 16px; gap: 10px; }
+    .hero-cta-group .btn { width: 100%; font-size: 0.9rem; padding: 12px 16px; }
+    .hero-specs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 10px; max-width: 310px; margin: 0 auto; }
+    .hero-specs span { padding: 7px 6px; font-size: 0.7rem; border-radius: 8px; white-space: nowrap; justify-content: center; text-align: center; }
 
-    .section { padding: 46px 0; }
-    .sec-head { margin-bottom: 28px; }
-    .sec-title { font-size: 1.6rem; }
-    .sec-sub { font-size: 0.88rem; }
+    .section { padding: 42px 0; }
+    .sec-head { margin-bottom: 24px; }
+    .sec-title { font-size: 1.5rem; line-height: 1.25; }
+    .sec-sub { font-size: 0.86rem; }
     
     .proof-stats-bar { grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px; }
     .proof-stat-box { padding: 12px 10px; }
@@ -675,10 +680,10 @@
       <a href="#faq">FAQ</a>
     </nav>
     <div class="nav-actions">
-      <a href="https://t.me/PureQuantSignals" target="_blank" class="btn btn-outline" style="padding: 8px 14px; font-size: 0.84rem; display: inline-flex; align-items: center; gap: 6px;">
+      <a href="https://t.me/PureQuantSignals" target="_blank" class="btn btn-outline nav-free-btn">
         <span class="pulse-dot" style="background: var(--emerald); box-shadow: 0 0 8px var(--emerald);"></span> Free Signals
       </a>
-      <a href="#pricing" class="btn btn-cyan" style="padding: 9px 18px; font-size: 0.86rem;">Get Lifetime VIP ($9)</a>
+      <a href="#pricing" class="btn btn-cyan nav-vip-btn">Get VIP ($9)</a>
       <button id="hamburger-toggle" class="hamburger-btn" aria-label="Toggle navigation menu" onclick="toggleDrawer()">☰</button>
     </div>
   </div>
@@ -690,7 +695,7 @@
     <div class="badge-cozy">
       <span class="pulse-dot"></span> 53+ SPOT PAIRS MONITORED · FVG & LORENTZIAN ML ACTIVE
     </div>
-    <h1>Institutional Spot Edge <br><span>Powered by Lorentzian AI</span></h1>
+    <h1>Institutional Spot Edge <br><span class="hero-highlight">Powered by Lorentzian AI</span></h1>
     <p>Eliminate emotional trading and liquidation risk. PureQuant AI delivers multi-dimensional machine learning signals, Fair Value Gap (FVG) mitigations, and automated trailing capital defense straight to Telegram.</p>
     
     <div class="hero-cta-group">
@@ -701,10 +706,10 @@
     </div>
 
     <div class="hero-specs">
-      <span>🛡️ 100% Spot (Zero Debt)</span>
-      <span>🧠 Lorentzian k-NN ML</span>
+      <span>🛡️ 100% Spot Only</span>
+      <span>🧠 Lorentzian ML</span>
       <span>⚡ FVG & SMT Radar</span>
-      <span>🔒 Trailing Risk Shield</span>
+      <span>🔒 Trailing Shield</span>
     </div>
   </div>
 </section>
