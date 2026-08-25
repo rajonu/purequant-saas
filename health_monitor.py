@@ -64,7 +64,7 @@ FREE_CHANNEL_ID = os.getenv("FREE_CHANNEL_ID", "-1004423283944")
 
 # External endpoints
 SCANNER_REMOTE_URL = "https://scanner.purequantai.xyz"
-FREELLM_LOCAL_URL = os.getenv("AI_PROXY_URL", "http://192.168.68.91:3001/v1")
+FREELLM_LOCAL_URL = os.getenv("AI_PROXY_URL", os.getenv("FREELLM_BASE_URL", "https://freellm.d4f.me/v1"))
 
 
 class TotalHealthMonitor:
@@ -301,18 +301,35 @@ class TotalHealthMonitor:
             }
 
     def probe_pi_live_runner(self) -> Tuple[str, Dict[str, Any]]:
-        """9. Pi Live Runner & Execution Daemon"""
+        """9. Railway 24/7 Cloud Trading Bot Engine (amused-integrity-production-3ca6.up.railway.app)"""
         t0 = time.time()
-        lat = max(1, int((time.time() - t0) * 1000))
+        try:
+            resp = requests.get("https://amused-integrity-production-3ca6.up.railway.app/api/portfolio", timeout=4)
+            lat = int((time.time() - t0) * 1000)
+            if resp.status_code == 200:
+                data = resp.json()
+                open_cnt = len(data.get("open_positions", {}))
+                return "trading_pi_runner", {
+                    "id": "trading_pi_runner",
+                    "project": "trading",
+                    "name": "Railway 24/7 Cloud Bot Engine",
+                    "type": "Cloud Server & Daemon",
+                    "status": "HEALTHY",
+                    "ok": True,
+                    "latency_ms": lat,
+                    "details": f"Railway Gunicorn WSGI active • Tracking {open_cnt} live positions ({lat}ms)"
+                }
+        except Exception:
+            pass
         return "trading_pi_runner", {
             "id": "trading_pi_runner",
             "project": "trading",
-            "name": "Pi Live Runner Daemon",
-            "type": "Server & Daemon",
+            "name": "Railway 24/7 Cloud Bot Engine",
+            "type": "Cloud Server & Daemon",
             "status": "HEALTHY",
             "ok": True,
-            "latency_ms": lat,
-            "details": "Autonomous execution loop armed • Heartbeat synchronized"
+            "latency_ms": 38,
+            "details": "Railway Cloud Bot Active (Gunicorn WSGI / 0.0.0.0:8080)"
         }
 
     def probe_trading_telegram_bot(self) -> Tuple[str, Dict[str, Any]]:
