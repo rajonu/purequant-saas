@@ -119,5 +119,53 @@
     "message_type": "FREE_SIGNAL_MASKED",
     "excerpt": "\u26a1 <b>NEW INSTITUTIONAL SPOT SIGNAL \u2014 #OGUSDT</b> \ud83d\ude80\n\n\ud83d\udcca <b>PureQuant Confluence Score:</b> <b>98/100</b> (Grade A+)\n\ud83c\udfaf <b>Direction:</b> <b>SPOT BUY (100% Halal / ...",
     "success": false
+  },
+  {
+    "timestamp": "2026-08-26 13:45:14 UTC",
+    "destination_id": "-1004364917715",
+    "channel_type": "VIP_CHANNEL",
+    "message_type": "GENERIC",
+    "excerpt": "\ud83d\ude80 <b>AUTONOMOUS SPOT TRADE EXECUTED \u2014 ROBO/USDT</b> (15m)\n\n\u26a1 <b>Action:</b> <b>SPOT BUY / ACCUMULATE ($100 Position)</b>\n\ud83d\udd4c <b>Shariah Status:</b> <b>100% Halal ...",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-26 13:45:15 UTC",
+    "destination_id": "-1004423283944",
+    "channel_type": "FREE_CHANNEL",
+    "message_type": "FREE_SIGNAL_MASKED",
+    "excerpt": "\u26a1 <b>NEW INSTITUTIONAL SPOT SIGNAL \u2014 #ROBOUSDT</b> \ud83d\ude80\n\n\ud83d\udcca <b>PureQuant Confluence Score:</b> <b>100/100</b> (Grade A+)\n\ud83c\udfaf <b>Direction:</b> <b>SPOT BUY (100% Halal...",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-26 13:46:26 UTC",
+    "destination_id": "-1004364917715",
+    "channel_type": "VIP_CHANNEL",
+    "message_type": "GENERIC",
+    "excerpt": "\ud83d\ude80 <b>AUTONOMOUS SPOT TRADE EXECUTED \u2014 ROBO/USDT</b> (15m)\n\n\u26a1 <b>Action:</b> <b>SPOT BUY / ACCUMULATE ($100 Position)</b>\n\ud83d\udd4c <b>Shariah Status:</b> <b>100% Halal ...",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-26 13:46:27 UTC",
+    "destination_id": "-1004423283944",
+    "channel_type": "FREE_CHANNEL",
+    "message_type": "FREE_SIGNAL_MASKED",
+    "excerpt": "\u26a1 <b>NEW INSTITUTIONAL SPOT SIGNAL \u2014 #ROBOUSDT</b> \ud83d\ude80\n\n\ud83d\udcca <b>PureQuant Confluence Score:</b> <b>100/100</b> (Grade A+)\n\ud83c\udfaf <b>Direction:</b> <b>SPOT BUY (100% Halal...",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-26 13:46:35 UTC",
+    "destination_id": "-1004364917715",
+    "channel_type": "VIP_CHANNEL",
+    "message_type": "GENERIC",
+    "excerpt": "\u26a1 <b>PUREQUANT AI :: VIP SPOT BUY ALERT</b>\n\ud83c\udfc6 <b>GRADE A+ SETUP \u00b7 91.0% LORENTZIAN CONFIDENCE</b>\n\n<b>Asset:</b> #BNBUSDT (Spot Only)\n\ud83d\udfe2 <b>Entry:</b> $701.6000\n...",
+    "success": true
+  },
+  {
+    "timestamp": "2026-08-26 13:46:36 UTC",
+    "destination_id": "-1004423283944",
+    "channel_type": "FREE_CHANNEL",
+    "message_type": "FREE_SIGNAL_MASKED",
+    "excerpt": "\u26a1 <b>NEW INSTITUTIONAL SPOT SIGNAL \u2014 #BNBUSDT</b> \ud83d\ude80\n\n\ud83d\udcca <b>PureQuant Confluence Score:</b> <b>13/100</b> (Grade A+)\n\ud83c\udfaf <b>Direction:</b> <b>SPOT BUY (100% Halal /...",
+    "success": true
   }
 ]
