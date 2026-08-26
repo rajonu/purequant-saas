@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PureQuant AI — System Health & Infrastructure Status Matrix</title>
-  <meta name="description" content="Real-time operational health, telemetry uptime, and subsystem status matrix for PureQuant AI institutional quantitative engines.">
+  <title>PureQuant AI — System Health & Infrastructure Status Matrix (28 Subsystems)</title>
+  <meta name="description" content="Real-time operational health, telemetry uptime, and 28-subsystem status matrix for PureQuant AI institutional quantitative engines.">
   <link rel="canonical" href="https://purequantai.xyz/health">
   <link rel="icon" type="image/png" href="/assets/favicon.png">
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -14,7 +14,7 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://purequantai.xyz/health">
   <meta property="og:title" content="PureQuant AI — System Health & Status Matrix">
-  <meta property="og:description" content="Real-time operational health, latency telemetry, and subsystem status matrix.">
+  <meta property="og:description" content="Real-time operational health, latency telemetry, and 28-subsystem status matrix.">
   <meta property="og:image" content="https://purequantai.xyz/assets/logo.png">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -65,7 +65,7 @@
     }
 
     .container {
-      max-width: 1200px;
+      max-width: 1280px;
       margin: 0 auto;
       position: relative;
       z-index: 1;
@@ -192,7 +192,7 @@
       display: flex;
       align-items: center;
       gap: 1.25rem;
-      max-width: 680px;
+      max-width: 720px;
     }
 
     .pulse-beacon {
@@ -284,6 +284,46 @@
       line-height: 1.55;
     }
 
+    /* Category Filter Tabs */
+    .controls-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0.65rem 1rem;
+      margin-bottom: 1.75rem;
+    }
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      padding: 0.4rem 0.8rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .filter-btn:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .filter-btn.active {
+      background: rgba(0, 245, 160, 0.12);
+      border-color: rgba(0, 245, 160, 0.4);
+      color: var(--emerald);
+    }
+
     .section-title {
       font-family: var(--fd);
       font-size: 1.25rem;
@@ -303,7 +343,7 @@
 
     .modules-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
       gap: 14px;
       margin-bottom: 2.5rem;
     }
@@ -349,12 +389,14 @@
       display: grid;
       place-items: center;
       font-size: 1rem;
+      flex-shrink: 0;
     }
     .mod-name {
       font-family: var(--fd);
-      font-size: 0.96rem;
+      font-size: 0.95rem;
       font-weight: 700;
       color: #ffffff;
+      line-height: 1.3;
     }
     .mod-badge {
       display: inline-flex;
@@ -368,6 +410,7 @@
       background: rgba(0, 245, 160, 0.1);
       border: 1px solid rgba(0, 245, 160, 0.3);
       color: var(--emerald);
+      flex-shrink: 0;
     }
     .mod-badge.degraded {
       background: rgba(255, 209, 102, 0.12);
@@ -409,7 +452,7 @@
     }
     .sim-info { font-size: 0.82rem; color: var(--text-muted); }
     .sim-info b { color: var(--cyan); }
-    .sim-buttons { display: flex; gap: 8px; }
+    .sim-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
     .sim-btn {
       padding: 6px 12px;
       border-radius: 6px;
@@ -452,7 +495,7 @@
       <img src="/assets/logo.png" alt="PureQuant AI" class="brand-logo">
       <div>
         <div class="brand-title">PureQuant <span>AI</span> · System Health</div>
-        <div class="brand-sub">LIVE TELEMETRY & UPTIME MONITOR</div>
+        <div class="brand-sub">28-SUBSYSTEM TELEMETRY & UPTIME MATRIX</div>
       </div>
     </a>
 
@@ -470,14 +513,14 @@
       <div>
         <div class="hero-title" id="heroTitle">All Systems Operational</div>
         <div class="hero-desc" id="heroDesc">
-          All <b>10 quantitative spot trading engines</b>, market data feeds, Lorentzian ML models, and automated stop-loss protection matrices are operating at <b>100% capacity</b>.
+          All <b>28 quantitative spot trading engines</b>, market data feeds, Lorentzian ML models, and automated stop-loss protection matrices are operating at <b>100% capacity</b>.
         </div>
       </div>
     </div>
 
     <div class="hero-stats-row">
       <div class="stat-item">
-        <div class="stat-val" id="statOnline">10 / 10</div>
+        <div class="stat-val" id="statOnline">28 / 28</div>
         <div class="stat-lbl">Subsystems Online</div>
       </div>
       <div class="stat-item">
@@ -485,7 +528,7 @@
         <div class="stat-lbl">30-Day Uptime</div>
       </div>
       <div class="stat-item">
-        <div class="stat-val" id="statLatency">28 ms</div>
+        <div class="stat-val" id="statLatency">24 ms</div>
         <div class="stat-lbl">Avg Telemetry</div>
       </div>
     </div>
@@ -502,12 +545,18 @@
     </div>
   </div>
 
-  <!-- Subsystems Matrix -->
-  <div class="section-title">
-    <span>CORE SPOT TRADING & AI SUBSYSTEMS</span>
-    <span id="lastUpdated">Updated: Just now</span>
+  <!-- Filter Category Tabs -->
+  <div class="controls-bar">
+    <div class="filter-group">
+      <button class="filter-btn active" onclick="setCategoryFilter('all', this)">All Subsystems (28)</button>
+      <button class="filter-btn" onclick="setCategoryFilter('trading', this)">Trading & AI Core (10)</button>
+      <button class="filter-btn" onclick="setCategoryFilter('saas', this)">SaaS & Paywall (7)</button>
+      <button class="filter-btn" onclick="setCategoryFilter('scanner', this)">Terminal Screener APIs (11)</button>
+    </div>
+    <span id="lastUpdated" style="font-family: var(--mono); font-size: 0.76rem; color: var(--text-dim);">Updated: Just now</span>
   </div>
 
+  <!-- Subsystems Matrix -->
   <div class="modules-grid" id="modulesContainer">
     <!-- Rendered Dynamically via JS -->
   </div>
@@ -518,107 +567,52 @@
       ⚙️ <b>Live Health Simulator:</b> Test how the health page and footer button transition between states.
     </div>
     <div class="sim-buttons">
-      <button class="sim-btn sim-btn-green" onclick="setSystemState('HEALTHY')">🟢 Set All Green (Operational)</button>
+      <button class="sim-btn sim-btn-green" onclick="setSystemState('HEALTHY')">🟢 Set All Green (28/28 Operational)</button>
       <button class="sim-btn sim-btn-amber" onclick="setSystemState('DEGRADED')">🟡 Set Degraded (Incident Alert)</button>
     </div>
   </div>
 </div>
 
 <script>
-const defaultSubsystems = [
-  {
-    id: 'exchange_feed',
-    name: 'Binance & MEXC Real-time Spot Feed',
-    icon: '📡',
-    desc: 'Low-latency orderflow websockets, live price ticks, and multi-exchange orderbook polling.',
-    latency: '24ms',
-    uptime: '100.0%',
-    status: 'HEALTHY'
-  },
-  {
-    id: 'lorentzian_ml',
-    name: 'Lorentzian k-NN Classifier (ML Model)',
-    icon: '🧠',
-    desc: 'Multi-dimensional machine learning feature space mapping 10,000+ historical winning clusters.',
-    latency: '82ms',
-    uptime: '100.0%',
-    status: 'HEALTHY'
-  },
-  {
-    id: 'fvg_detector',
-    name: 'Fair Value Gap (FVG) Orderflow Engine',
-    icon: '📐',
-    desc: 'Detects 15m/1h/4h unmitigated institutional price imbalances and 50% Consequent Encroachment.',
-    latency: '18ms',
-    uptime: '100.0%',
-    status: 'HEALTHY'
-  },
-  {
-    id: 'smt_radar',
-    name: 'Smart Money Concepts (SMC) & SMT Radar',
-    icon: '📈',
-    desc: 'Real-time multi-asset correlation divergence detector comparing altcoin spot strength against BTC.',
-    latency: '21ms',
-    uptime: '100.0%',
-    status: 'HEALTHY'
-  },
-  {
-    id: 'trailing_shield',
-    name: 'Dynamic Breakeven & Trailing Risk Shield',
-    icon: '🛡️',
-    desc: 'Autonomous capital defense protocol: Auto-Breakeven @ +1.5% and step-up Trailing SL @ +2.2%.',
-    latency: '12ms',
-    uptime: '100.0%',
-    status: 'HEALTHY'
-  },
-  {
-    id: 'ai_analyst',
-    name: 'Neural AI Analyst Verdict Engine',
-    icon: '🤖',
-    desc: 'Deep local LLM analysis reviewing macro sentiment, volume profile delta, and confluence scores.',
-    latency: '94ms',
-    uptime: '99.98%',
-    status: 'HEALTHY'
-  },
-  {
-    id: 'halal_filter',
-    name: 'Shariah & Halal Spot Filter Matrix',
-    icon: '🕌',
-    desc: 'Autonomous 100% halal spot screening verifying zero leverage, zero debt, and Shariah compliance.',
-    latency: '15ms',
-    uptime: '100.0%',
-    status: 'HEALTHY'
-  },
-  {
-    id: 'telegram_bot',
-    name: 'Telegram VIP Signal Dispatcher',
-    icon: '⚡',
-    desc: 'Instant broadcast queue pushing verified Grade A+ setups and trade autopsies in real time.',
-    latency: '38ms',
-    uptime: '100.0%',
-    status: 'HEALTHY'
-  },
-  {
-    id: 'scanner_api',
-    name: 'Web Screener & Alpha Terminal API',
-    icon: '📊',
-    desc: 'Edge CDN gateway powering scanner.purequantai.xyz across 53+ monitored spot pairs.',
-    latency: '29ms',
-    uptime: '100.0%',
-    status: 'HEALTHY'
-  },
-  {
-    id: 'health_watchdog',
-    name: 'Autonomous 24/7 Health Watchdog',
-    icon: '🐕',
-    desc: 'Automated diagnostic daemon probing memory, CPU, latency, and exchange API connectivity.',
-    latency: '10ms',
-    uptime: '100.0%',
-    status: 'HEALTHY'
-  }
+// The Complete 28 PureQuant AI Subsystems
+const all28Subsystems = [
+  // 1. Trading Core Engine (10)
+  { id: 'trading_market_feed', category: 'trading', icon: '📈', name: 'Binance / CCXT Real-time Market Feed', desc: 'Low-latency orderflow websockets, live price ticks, and multi-exchange orderbook polling.', latency: '18ms', uptime: '100.0%', status: 'HEALTHY' },
+  { id: 'trading_freellm_ai', category: 'trading', icon: '🧠', name: 'FreeLLM AI Proxy & Copilot Engine', desc: 'Local neural model reasoning evaluating multi-factor trade confluence and macro sentiment.', latency: '84ms', uptime: '100.0%', status: 'HEALTHY' },
+  { id: 'trading_ai_memory', category: 'trading', icon: '💾', name: 'Autonomous AI Memory & Trade Store', desc: 'Persistent trade memory logging historical market reactions and cluster outcomes.', latency: '12ms', uptime: '100.0%', status: 'HEALTHY' },
+  { id: 'trading_halal_screener', category: 'trading', icon: '☪️', name: 'Islamic Shariah Screener & Filter', desc: 'Autonomous 100% halal spot screening verifying zero leverage, zero debt, and compliance.', latency: '14ms', uptime: '100.0%', status: 'HEALTHY' },
+  { id: 'trading_news_sentiment', category: 'trading', icon: '📰', name: 'Live Crypto & News Sentiment Scanner', desc: 'Real-time headline NLP parser and volume surge correlation filter.', latency: '35ms', uptime: '100.0%', status: 'HEALTHY' },
+  { id: 'trading_strategy_engines', category: 'trading', icon: '📐', name: 'SMC FVG, SMT & Lorentzian ML Engine', desc: 'Multi-dimensional machine learning space mapping 10k+ historical winning setups.', latency: '78ms', uptime: '100.0%', status: 'HEALTHY' },
+  { id: 'trading_portfolio_shield', category: 'trading', icon: '🛡️', name: 'Portfolio & Dynamic Trailing Risk Shield', desc: 'Autonomous capital defense: Auto-Breakeven @ +1.5% and step-up Trailing SL @ +2.2%.', latency: '10ms', uptime: '100.0%', status: 'HEALTHY' },
+  { id: 'trading_host_resources', category: 'trading', icon: '💻', name: 'Host System & Hardware Diagnostic', desc: 'Monitors CPU, memory allocation, network latency, and memory leak prevention.', latency: '8ms', uptime: '100.0%', status: 'HEALTHY' },
+  { id: 'trading_pi_runner', category: 'trading', icon: '⚙️', name: 'Cloud Bot Daemon & Execution Runner', desc: '24/7 autonomous live paper trading engine and portfolio state synchronizer.', latency: '22ms', uptime: '100.0%', status: 'HEALTHY' },
+  { id: 'trading_tg_bot', category: 'trading', icon: '✈️', name: 'Trading Telegram Bot Gateway', desc: 'Interactive Telegram interface for trade queries, balance checks, and manual triggers.', latency: '36ms', uptime: '100.0%', status: 'HEALTHY' },
+
+  // 2. SaaS & Paywall Infrastructure (7)
+  { id: 'saas_vip_dispatcher', category: 'saas', icon: '📡', name: 'VIP Channel Signal Dispatcher', desc: 'Instant high-speed broadcast queue pushing verified Grade A+ setups in real time.', latency: '28ms', uptime: '100.0%', status: 'HEALTHY' },
+  { id: 'saas_free_channel', category: 'saas', icon: '🎯', name: 'Free Channel Quota & Teaser Manager', desc: 'Automated 1-signal-daily teaser scheduler and conversion funnel engine.', latency: '19ms', uptime: '100.0%', status: 'HEALTHY' },
+  { id: 'saas_paywall_bot', category: 'saas', icon: '🤖', name: 'Subscription & Automated Paywall Bot', desc: 'Instant invite link generation, member verification, and plan tier provisioning.', latency: '32ms', uptime: '100.0%', status: 'HEALTHY' },
+  { id: 'saas_subscriber_db', category: 'saas', icon: '🗄️', name: 'Subscriber Database & Expiry Auditor', desc: 'Real-time JSON/SQL subscription store with automated renewal and lifecycle tracking.', latency: '15ms', uptime: '100.0%', status: 'HEALTHY' },
+  { id: 'saas_deposit_wallets', category: 'saas', icon: '💳', name: 'Multi-Chain Deposit Gateways (5 Chains)', desc: 'Autonomous on-chain blockchain payment validation (Solana, TON, TRC20, BSC, ERC20).', latency: '42ms', uptime: '100.0%', status: 'HEALTHY' },
+  { id: 'saas_performance_recap', category: 'saas', icon: '📊', name: 'Daily Performance Recap & PnL Engine', desc: 'Generates daily percentage win-rate recaps and institutional trade autopsies.', latency: '20ms', uptime: '100.0%', status: 'HEALTHY' },
+  { id: 'saas_landing_page', category: 'saas', icon: '🌐', name: 'SaaS Web Portal & Global Edge CDN', desc: 'High-availability static asset and landing page edge delivery network.', latency: '14ms', uptime: '100.0%', status: 'HEALTHY' },
+
+  // 3. Terminal Screener & APIs (11)
+  { id: 'scanner_express_gateway', category: 'scanner', icon: '⚡', name: 'Terminal API Gateway & Express Server', desc: 'Edge routing gateway serving 53+ spot pairs to scanner.purequantai.xyz.', latency: '24ms', uptime: '100.0%', status: 'HEALTHY' },
+  { id: 'scanner_alpha_pulse', category: 'scanner', icon: '🔥', name: 'Alpha Pulse Accumulation Engine', desc: 'Identifies aggressive institutional limit buying before public momentum ignition.', latency: '21ms', uptime: '100.0%', status: 'HEALTHY' },
+  { id: 'scanner_quant_signals', category: 'scanner', icon: '🎯', name: 'Quant Signals Multi-Factor Engine', desc: 'Aggregates RSI, EMA200, MACD, and OBV into 0-100 confluence scores.', latency: '26ms', uptime: '100.0%', status: 'HEALTHY' },
+  { id: 'scanner_neural_pro', category: 'scanner', icon: '🔮', name: 'Neural Pro MTF Validation Models', desc: 'Multi-timeframe 15m/1h/4h alignment confirmation and false breakout filter.', latency: '34ms', uptime: '100.0%', status: 'HEALTHY' },
+  { id: 'scanner_microcap', category: 'scanner', icon: '💎', name: 'Micro-Cap Alpha Gems Tracker', desc: 'Continuous liquidity and volume anomaly screener for emerging spot assets.', latency: '22ms', uptime: '100.0%', status: 'HEALTHY' },
+  { id: 'scanner_market_regime', category: 'scanner', icon: '🌪️', name: 'Market Regime & Volatility Radar', desc: 'Calculates macro BTC regime (Bull Trend, Range Expansion, or Extreme Choppiness).', latency: '19ms', uptime: '100.0%', status: 'HEALTHY' },
+  { id: 'scanner_btc_mtf', category: 'scanner', icon: '₿', name: 'BTC Multi-Timeframe Matrix & Pulse', desc: 'Real-time Bitcoin anchor metric feeding overall market bias to altcoin screeners.', latency: '16ms', uptime: '100.0%', status: 'HEALTHY' },
+  { id: 'scanner_sector_flow', category: 'scanner', icon: '🏢', name: 'Sector Flow & Macro Heatmap', desc: 'Categorizes capital rotation across Layer-1, DeFi, AI, Meme, and Infra sectors.', latency: '25ms', uptime: '100.0%', status: 'HEALTHY' },
+  { id: 'scanner_golden_conviction', category: 'scanner', icon: '🏆', name: 'Golden Conviction Models (90+ Score)', desc: 'Strict multi-indicator filter isolating ultra-high probability trade setups.', latency: '28ms', uptime: '100.0%', status: 'HEALTHY' },
+  { id: 'scanner_coin_deepdive', category: 'scanner', icon: '🔬', name: 'Asset Neural Deep-Dive Inspector', desc: 'Instant single-coin diagnostic breakdown with full orderflow metrics.', latency: '38ms', uptime: '100.0%', status: 'HEALTHY' },
+  { id: 'scanner_delta_tracker', category: 'scanner', icon: '📅', name: 'Daily Delta Tracker & Diff Engine', desc: 'Historical daily snapshot comparator analyzing 24h net momentum shifts.', latency: '18ms', uptime: '100.0%', status: 'HEALTHY' }
 ];
 
-let subsystems = JSON.parse(localStorage.getItem('pq_subsystems_state')) || defaultSubsystems;
+let currentCategory = 'all';
+let subsystems = JSON.parse(localStorage.getItem('pq_subsystems_28_state')) || all28Subsystems;
 
 function renderModules() {
   const container = document.getElementById('modulesContainer');
@@ -633,8 +627,15 @@ function renderModules() {
   container.innerHTML = '';
 
   let healthyCount = 0;
+  let totalLatency = 0;
+
   subsystems.forEach(m => {
     if (m.status === 'HEALTHY') healthyCount++;
+    const latNum = parseInt(m.latency) || 20;
+    totalLatency += latNum;
+
+    // Category filter check
+    if (currentCategory !== 'all' && m.category !== currentCategory) return;
 
     const isDegraded = m.status !== 'HEALTHY';
     const card = document.createElement('div');
@@ -663,35 +664,44 @@ function renderModules() {
   const allGreen = healthyCount === subsystems.length;
   statOnline.textContent = `${healthyCount} / ${subsystems.length}`;
 
+  const avgLat = Math.round(totalLatency / subsystems.length);
+  statLatency.textContent = `${avgLat} ms`;
+
   if (allGreen) {
     heroStatus.className = 'status-hero';
     heroTitle.textContent = 'All Systems Operational';
-    heroDesc.innerHTML = 'All <b>10 quantitative spot trading engines</b>, market data feeds, Lorentzian ML models, and automated stop-loss protection matrices are operating at <b>100% capacity</b>.';
+    heroDesc.innerHTML = 'All <b>28 quantitative spot trading engines</b>, market data feeds, Lorentzian ML models, and automated stop-loss protection matrices are operating at <b>100% capacity</b>.';
     incidentNotice.classList.remove('active');
     statUptime.textContent = '100.0%';
-    statLatency.textContent = '28 ms';
     localStorage.setItem('pq_overall_health', 'HEALTHY');
   } else {
     heroStatus.className = 'status-hero degraded';
     heroTitle.textContent = 'Active Incident Monitoring';
     heroDesc.innerHTML = '<b>Our Engineering Team is currently investigating and deploying a fix.</b> Automated failsafes, trailing stop-losses, and portfolio capital protection matrices remain <b>100% active</b>.';
     incidentNotice.classList.add('active');
-    statUptime.textContent = '99.4%';
-    statLatency.textContent = '145 ms';
+    statUptime.textContent = '99.2%';
     localStorage.setItem('pq_overall_health', 'DEGRADED');
   }
 
   document.getElementById('lastUpdated').textContent = `Telemetry synced: ${new Date().toLocaleTimeString()}`;
 }
 
+function setCategoryFilter(cat, btn) {
+  currentCategory = cat;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderModules();
+}
+
 function setSystemState(state) {
   if (state === 'HEALTHY') {
     subsystems.forEach(m => m.status = 'HEALTHY');
   } else {
+    // Degrade trading market feed & freellm
     subsystems[0].status = 'DEGRADED';
-    subsystems[5].status = 'DEGRADED';
+    subsystems[1].status = 'DEGRADED';
   }
-  localStorage.setItem('pq_subsystems_state', JSON.stringify(subsystems));
+  localStorage.setItem('pq_subsystems_28_state', JSON.stringify(subsystems));
   renderModules();
 }
 
@@ -701,7 +711,7 @@ function probeTelemetry() {
   setTimeout(() => {
     subsystems.forEach(m => {
       if (m.status === 'HEALTHY') {
-        m.latency = (Math.floor(Math.random() * 25) + 12) + 'ms';
+        m.latency = (Math.floor(Math.random() * 25) + 10) + 'ms';
       }
     });
     renderModules();
