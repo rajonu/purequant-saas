@@ -120,7 +120,7 @@ class TotalHealthMonitor:
             }
 
     def probe_freellm_ai(self) -> Tuple[str, Dict[str, Any]]:
-        """2. FreeLLM AI Proxy & Copilot"""
+        """2. PureQuant Super Intelligent Proxy & Copilot"""
         t0 = time.time()
         try:
             resp = requests.get(f"{FREELLM_LOCAL_URL}/models", timeout=1.8)
@@ -130,7 +130,7 @@ class TotalHealthMonitor:
                 return "trading_freellm_ai", {
                     "id": "trading_freellm_ai",
                     "project": "trading",
-                    "name": "FreeLLM AI Proxy & Copilot",
+                    "name": "PureQuant Super Intelligent Proxy & Copilot",
                     "type": "AI Engine",
                     "status": "HEALTHY",
                     "ok": True,
@@ -142,7 +142,7 @@ class TotalHealthMonitor:
         return "trading_freellm_ai", {
             "id": "trading_freellm_ai",
             "project": "trading",
-            "name": "FreeLLM AI Proxy & Copilot",
+            "name": "PureQuant Super Intelligent Proxy & Copilot",
             "type": "AI Engine",
             "status": "HEALTHY",
             "ok": True,

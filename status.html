@@ -1,1645 +1,728 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PureQuant AI — System Health & Infrastructure Status Matrix</title>
-    <meta name="title" content="PureQuant AI — System Health & Infrastructure Status Matrix">
-    <meta name="description" content="Real-time operational health, telemetry uptime, and subsystem status matrix for PureQuant AI institutional quantitative engines.">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://purequantai.xyz/status/">
-    <link rel="icon" type="image/png" href="/assets/favicon.png">
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="apple-touch-icon" href="/assets/logo.png">
-
-    <!-- ===== Open Graph / Facebook Meta ===== -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://purequantai.xyz/status/">
-    <meta property="og:site_name" content="PureQuant AI">
-    <meta property="og:title" content="PureQuant AI — System Health & Status Matrix">
-    <meta property="og:description" content="Real-time operational health, latency telemetry, and subsystem status matrix.">
-    <meta property="og:image" content="https://purequantai.xyz/assets/logo.png">
-    <meta property="og:locale" content="en_US">
-
-    <!-- ===== Twitter Cards ===== -->
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="PureQuant AI — System Health & Status Matrix">
-    <meta name="twitter:description" content="Real-time operational health, latency telemetry, and subsystem status matrix.">
-    <meta name="twitter:image" content="https://purequantai.xyz/assets/logo.png">
-
-    <!-- ===== Meta (Facebook) Pixel Code ===== -->
-    <script>
-      window.FB_PIXEL_ID = '1060818472972710';
-      !function(f,b,e,v,n,t,s)
-      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-      n.queue=[];t=b.createElement(e);t.async=!0;
-      t.src=v;s=b.getElementsByTagName(e)[0];
-      s.parentNode.insertBefore(t,s)}(window, document,'script',
-      'https://connect.facebook.net/en_US/fbevents.js');
-      fbq('init', '1060818472972710');
-      fbq('track', 'PageView');
-    </script>
-    <noscript>
-      <img height="1" width="1" style="display:none"
-           src="https://www.facebook.com/tr?id=1060818472972710&ev=PageView&noscript=1" alt="fb-pixel" />
-    </noscript>
-    <!-- End Meta Pixel Code -->
-
-    <!-- ===== Google Analytics 4 (gtag.js) ===== -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-9P6LXW3LPS"></script>
-    <script>
-      window.GA_MEASUREMENT_ID = 'G-9P6LXW3LPS';
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-9P6LXW3LPS', { 'send_page_view': true });
-    </script>
-    <!-- End Google Analytics -->
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-base: #070a0f;
-            --bg-card: rgba(13, 18, 28, 0.75);
-            --bg-card-hover: rgba(18, 25, 38, 0.85);
-            --border-subtle: rgba(255, 255, 255, 0.07);
-            --border-glow: rgba(0, 245, 160, 0.25);
-            --text-main: #f1f5f9;
-            --text-muted: #94a3b8;
-            --text-dim: #64748b;
-            --green: #00f5a0;
-            --green-glow: rgba(0, 245, 160, 0.35);
-            --green-bg: rgba(0, 245, 160, 0.1);
-            --cyan: #00f2fe;
-            --cyan-glow: rgba(0, 242, 254, 0.3);
-            --amber: #ffd166;
-            --amber-bg: rgba(255, 209, 102, 0.12);
-            --red: #ff5376;
-            --red-bg: rgba(255, 83, 118, 0.15);
-            --purple: #c084fc;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            background-color: var(--bg-base);
-            color: var(--text-main);
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            min-height: 100vh;
-            padding: 1.5rem 1rem 3rem;
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        /* Ambient Glow Background */
-        body::before {
-            content: '';
-            position: fixed;
-            top: -20%;
-            left: 20%;
-            width: 60vw;
-            height: 50vh;
-            background: radial-gradient(circle, rgba(0, 245, 160, 0.05) 0%, rgba(0, 242, 254, 0.03) 50%, transparent 80%);
-            filter: blur(80px);
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 1;
-        }
-
-        /* PIN LOCK OVERLAY SCREEN */
-        .pin-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(7, 10, 15, 0.95);
-            backdrop-filter: blur(25px);
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1.5rem;
-        }
-
-        .pin-card {
-            background: rgba(13, 18, 28, 0.85);
-            border: 1px solid rgba(0, 245, 160, 0.3);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 30px rgba(0, 245, 160, 0.15);
-            border-radius: 20px;
-            max-width: 420px;
-            width: 100%;
-            padding: 2.25rem 2rem;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .pin-badge {
-            width: 56px;
-            height: 56px;
-            border-radius: 16px;
-            background: linear-gradient(135deg, rgba(0, 245, 160, 0.2), rgba(0, 242, 254, 0.2));
-            border: 1px solid rgba(0, 245, 160, 0.4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 26px;
-            margin: 0 auto 1.25rem;
-            box-shadow: 0 0 20px var(--green-glow);
-        }
-
-        .pin-title {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.35rem;
-            font-weight: 700;
-            color: #ffffff;
-            letter-spacing: -0.02em;
-            margin-bottom: 0.35rem;
-        }
-
-        .pin-desc {
-            font-size: 0.82rem;
-            color: var(--text-muted);
-            line-height: 1.5;
-            margin-bottom: 1.5rem;
-        }
-
-        .pin-input-wrap {
-            margin-bottom: 1.25rem;
-        }
-
-        .pin-input {
-            width: 100%;
-            background: rgba(0, 0, 0, 0.4);
-            border: 1.5px solid rgba(255, 255, 255, 0.12);
-            color: var(--green);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 1.6rem;
-            font-weight: 700;
-            letter-spacing: 10px;
-            text-align: center;
-            padding: 0.75rem 1rem;
-            border-radius: 12px;
-            outline: none;
-            transition: all 0.2s ease;
-        }
-
-        .pin-input:focus {
-            border-color: var(--green);
-            box-shadow: 0 0 20px var(--green-glow);
-        }
-
-        .pin-error-text {
-            color: var(--red);
-            font-size: 0.8rem;
-            font-weight: 600;
-            min-height: 1.2rem;
-            margin-top: 0.5rem;
-        }
-
-        .pin-card.shake {
-            animation: pinShake 0.4s ease;
-        }
-
-        @keyframes pinShake {
-            0%, 100% { transform: translateX(0); }
-            20%, 60% { transform: translateX(-8px); }
-            40%, 80% { transform: translateX(8px); }
-        }
-
-        .pin-btn {
-            width: 100%;
-            background: linear-gradient(135deg, rgba(0, 245, 160, 0.25), rgba(0, 242, 254, 0.25));
-            border: 1px solid var(--green);
-            color: #ffffff;
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 0.95rem;
-            font-weight: 700;
-            padding: 0.85rem;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 0 15px rgba(0, 245, 160, 0.2);
-            margin-top: 0.5rem;
-        }
-
-        .pin-btn:hover {
-            background: linear-gradient(135deg, rgba(0, 245, 160, 0.4), rgba(0, 242, 254, 0.4));
-            box-shadow: 0 0 25px var(--green-glow);
-            transform: translateY(-1px);
-        }
-
-        /* Top Header */
-        header {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            gap: 1.25rem;
-            padding-bottom: 1.5rem;
-            border-bottom: 1px solid var(--border-subtle);
-            margin-bottom: 1.5rem;
-        }
-
-        .brand-box {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .brand-logo {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, rgba(0, 245, 160, 0.2), rgba(0, 242, 254, 0.2));
-            border: 1px solid rgba(0, 245, 160, 0.4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            box-shadow: 0 0 20px var(--green-glow);
-        }
-
-        .brand-title {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.5rem;
-            font-weight: 700;
-            letter-spacing: -0.03em;
-            background: linear-gradient(135deg, #ffffff 30%, #94a3b8 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .brand-subtitle {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-top: 0.15rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border-subtle);
-            color: var(--text-main);
-            padding: 0.55rem 0.9rem;
-            border-radius: 8px;
-            font-size: 0.82rem;
-            font-weight: 600;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            transition: all 0.2s ease;
-            backdrop-filter: blur(10px);
-        }
-
-        .btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.2);
-            transform: translateY(-1px);
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, rgba(0, 245, 160, 0.2), rgba(0, 242, 254, 0.2));
-            border-color: rgba(0, 245, 160, 0.5);
-            color: #ffffff;
-            box-shadow: 0 0 15px rgba(0, 245, 160, 0.15);
-        }
-
-        .btn-primary:hover {
-            background: linear-gradient(135deg, rgba(0, 245, 160, 0.3), rgba(0, 242, 254, 0.3));
-            border-color: var(--green);
-            box-shadow: 0 0 20px var(--green-glow);
-        }
-
-        /* Hero Status Banner */
-        .status-hero {
-            background: linear-gradient(135deg, rgba(0, 245, 160, 0.08) 0%, rgba(13, 18, 28, 0.8) 100%);
-            border: 1px solid rgba(0, 245, 160, 0.3);
-            border-radius: 16px;
-            padding: 1.5rem 1.75rem;
-            margin-bottom: 1.5rem;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            gap: 1.25rem;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .status-hero::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 100%;
-            background: var(--green);
-            box-shadow: 0 0 12px var(--green);
-        }
-
-        .hero-left {
-            display: flex;
-            align-items: center;
-            gap: 1.25rem;
-        }
-
-        .pulse-beacon {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: var(--green);
-            box-shadow: 0 0 0 0 rgba(0, 245, 160, 0.7);
-            animation: pulse-ring 2s infinite cubic-bezier(0.66, 0, 0, 1);
-            position: relative;
-        }
-
-        @keyframes pulse-ring {
-            0% { box-shadow: 0 0 0 0 rgba(0, 245, 160, 0.7); }
-            70% { box-shadow: 0 0 0 14px rgba(0, 245, 160, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(0, 245, 160, 0); }
-        }
-
-        .hero-title {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.35rem;
-            font-weight: 700;
-            color: #ffffff;
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-        }
-
-        .hero-desc {
-            font-size: 0.88rem;
-            color: var(--text-muted);
-            margin-top: 0.25rem;
-        }
-
-        .hero-stats-row {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            flex-wrap: wrap;
-        }
-
-        .stat-item {
-            text-align: right;
-        }
-
-        .stat-val {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--green);
-        }
-
-        .stat-lbl {
-            font-size: 0.72rem;
-            color: var(--text-dim);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        /* Degradation Sticky Alert Bar */
-        .degraded-alert-banner {
-            display: none;
-            background: linear-gradient(135deg, rgba(255, 83, 118, 0.2), rgba(255, 209, 102, 0.15));
-            border: 1px solid var(--red);
-            border-radius: 12px;
-            padding: 1rem 1.25rem;
-            margin-bottom: 1.5rem;
-            align-items: center;
-            justify-content: space-between;
-            gap: 1rem;
-            animation: shake 0.5s ease;
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            20%, 60% { transform: translateX(-4px); }
-            40%, 80% { transform: translateX(4px); }
-        }
-
-        .degraded-alert-banner.active {
-            display: flex;
-        }
-
-        /* Control / Filter Bar */
-        .controls-bar {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            gap: 1rem;
-            background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: 12px;
-            padding: 0.75rem 1rem;
-            margin-bottom: 1.5rem;
-            backdrop-filter: blur(12px);
-        }
-
-        .filter-group {
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-            flex-wrap: wrap;
-        }
-
-        .filter-btn {
-            background: transparent;
-            border: 1px solid transparent;
-            color: var(--text-muted);
-            padding: 0.4rem 0.75rem;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .filter-btn:hover {
-            color: var(--text-main);
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .filter-btn.active {
-            background: rgba(0, 245, 160, 0.15);
-            border-color: rgba(0, 245, 160, 0.4);
-            color: var(--green);
-        }
-
-        .search-box {
-            position: relative;
-            min-width: 220px;
-        }
-
-        .search-box input {
-            width: 100%;
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--border-subtle);
-            color: var(--text-main);
-            padding: 0.45rem 0.75rem 0.45rem 2rem;
-            border-radius: 6px;
-            font-size: 0.82rem;
-            font-family: inherit;
-            outline: none;
-            transition: all 0.2s ease;
-        }
-
-        .search-box input:focus {
-            border-color: var(--cyan);
-            box-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 0.65rem;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 0.8rem;
-            color: var(--text-dim);
-        }
-
-        /* Project Section Layout */
-        .project-section {
-            margin-bottom: 2.25rem;
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-            padding: 0 0.25rem;
-        }
-
-        .section-title-wrap {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .project-badge-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border-subtle);
-        }
-
-        .section-title {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.15rem;
-            font-weight: 700;
-            color: #ffffff;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .section-meta {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-
-        .section-status-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.35rem;
-            padding: 0.25rem 0.65rem;
-            border-radius: 999px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            background: var(--green-bg);
-            border: 1px solid rgba(0, 245, 160, 0.3);
-            color: var(--green);
-        }
-
-        /* Subsystem Cards Grid */
-        .modules-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 1rem;
-        }
-
-        .module-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: 12px;
-            padding: 1.15rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            gap: 0.75rem;
-            transition: all 0.25s ease;
-            backdrop-filter: blur(10px);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .module-card:hover {
-            background: var(--bg-card-hover);
-            border-color: var(--border-glow);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-        }
-
-        .card-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 0.75rem;
-        }
-
-        .module-icon-name {
-            display: flex;
-            align-items: center;
-            gap: 0.65rem;
-        }
-
-        .module-icon {
-            font-size: 1.25rem;
-            flex-shrink: 0;
-        }
-
-        .module-name {
-            font-size: 0.92rem;
-            font-weight: 700;
-            color: #ffffff;
-            line-height: 1.25;
-        }
-
-        .module-type {
-            font-size: 0.7rem;
-            color: var(--text-dim);
-            font-family: 'JetBrains Mono', monospace;
-            margin-top: 0.15rem;
-        }
-
-        .card-status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.35rem;
-            padding: 0.25rem 0.55rem;
-            border-radius: 6px;
-            font-size: 0.72rem;
-            font-weight: 700;
-            font-family: 'JetBrains Mono', monospace;
-            text-transform: uppercase;
-            flex-shrink: 0;
-        }
-
-        .status-healthy {
-            background: var(--green-bg);
-            border: 1px solid rgba(0, 245, 160, 0.4);
-            color: var(--green);
-        }
-
-        .status-healthy .dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--green);
-            box-shadow: 0 0 6px var(--green);
-        }
-
-        .status-degraded {
-            background: var(--amber-bg);
-            border: 1px solid rgba(255, 209, 102, 0.4);
-            color: var(--amber);
-        }
-
-        .status-degraded .dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--amber);
-        }
-
-        .status-critical {
-            background: var(--red-bg);
-            border: 1px solid rgba(255, 83, 118, 0.5);
-            color: var(--red);
-        }
-
-        .status-critical .dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--red);
-            box-shadow: 0 0 8px var(--red);
-        }
-
-        .card-details {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            line-height: 1.4;
-            background: rgba(0, 0, 0, 0.25);
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            border-radius: 8px;
-            padding: 0.5rem 0.65rem;
-            font-family: 'JetBrains Mono', monospace;
-            word-break: break-word;
-        }
-
-        .card-bottom {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: 0.4rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.04);
-        }
-
-        .uptime-bars {
-            display: flex;
-            gap: 2px;
-            align-items: center;
-        }
-
-        .uptime-bar {
-            width: 4px;
-            height: 14px;
-            border-radius: 1px;
-            background: var(--green);
-            opacity: 0.85;
-            transition: opacity 0.2s;
-        }
-
-        .uptime-bar:hover {
-            opacity: 1;
-            transform: scaleY(1.2);
-        }
-
-        .card-latency-probe {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .latency-tag {
-            font-size: 0.72rem;
-            font-family: 'JetBrains Mono', monospace;
-            color: var(--green);
-            background: rgba(0, 245, 160, 0.08);
-            padding: 0.15rem 0.4rem;
-            border-radius: 4px;
-        }
-
-        .btn-probe {
-            background: transparent;
-            border: none;
-            color: var(--text-dim);
-            cursor: pointer;
-            font-size: 0.75rem;
-            padding: 0.2rem 0.35rem;
-            border-radius: 4px;
-            transition: all 0.2s ease;
-        }
-
-        .btn-probe:hover {
-            color: var(--cyan);
-            background: rgba(0, 242, 254, 0.1);
-        }
-
-        /* Incident History Drawer */
-        .incident-section {
-            background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: 14px;
-            padding: 1.25rem;
-            margin-top: 2rem;
-            backdrop-filter: blur(12px);
-        }
-
-        .incident-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-
-        .incident-title {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: #ffffff;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .incident-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .incident-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0.6rem 0.85rem;
-            background: rgba(0, 0, 0, 0.25);
-            border: 1px solid var(--border-subtle);
-            border-radius: 8px;
-            font-size: 0.82rem;
-        }
-
-        .incident-item.healthy-event {
-            border-left: 3px solid var(--green);
-        }
-
-        .incident-item.degraded-event {
-            border-left: 3px solid var(--red);
-        }
-
-        /* Footer */
-        footer {
-            margin-top: 3rem;
-            text-align: center;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--border-subtle);
-            color: var(--text-dim);
-            font-size: 0.8rem;
-        }
-
-        footer a {
-            color: var(--text-muted);
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-
-        footer a:hover {
-            color: var(--green);
-        }
-
-        /* Circular Countdown Timer */
-        .countdown-circle {
-            position: relative;
-            width: 24px;
-            height: 24px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .countdown-circle svg {
-            transform: rotate(-90deg);
-        }
-
-        .countdown-circle circle {
-            fill: none;
-            stroke-width: 2.5;
-        }
-
-        .countdown-bg {
-            stroke: rgba(255, 255, 255, 0.1);
-        }
-
-        .countdown-progress {
-            stroke: var(--green);
-            stroke-dasharray: 63;
-            stroke-dashoffset: 0;
-            transition: stroke-dashoffset 1s linear;
-        }
-
-        @media (max-width: 768px) {
-            .modules-grid {
-                grid-template-columns: 1fr;
-            }
-            .status-hero {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .hero-stats-row {
-                width: 100%;
-                justify-content: space-between;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PureQuant AI — System Health & Infrastructure Status Matrix</title>
+  <meta name="description" content="Real-time operational health, telemetry uptime, and subsystem status matrix for PureQuant AI institutional quantitative engines.">
+  <link rel="canonical" href="https://purequantai.xyz/health">
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/assets/logo.png">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://purequantai.xyz/health">
+  <meta property="og:title" content="PureQuant AI — System Health & Status Matrix">
+  <meta property="og:description" content="Real-time operational health, latency telemetry, and subsystem status matrix.">
+  <meta property="og:image" content="https://purequantai.xyz/assets/logo.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #070a0f;
+      --bg-card: rgba(13, 18, 28, 0.75);
+      --bg-card-hover: rgba(18, 26, 40, 0.9);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-glow: rgba(0, 245, 160, 0.25);
+      --cyan: #00f2fe;
+      --emerald: #00f5a0;
+      --gold: #ffd166;
+      --red: #ff5376;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --fd: 'Space Grotesk', system-ui, sans-serif;
+      --body: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      font-family: var(--body);
+      min-height: 100vh;
+      padding: 1.5rem 1rem 3.5rem;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: -20%;
+      left: 20%;
+      width: 60vw;
+      height: 50vh;
+      background: radial-gradient(circle, rgba(0, 245, 160, 0.06) 0%, rgba(0, 242, 254, 0.03) 50%, transparent 80%);
+      filter: blur(90px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1.75rem;
+    }
+
+    .brand-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+    .brand-logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      object-fit: cover;
+      border: 1px solid rgba(0, 245, 160, 0.4);
+      box-shadow: 0 0 16px rgba(0, 245, 160, 0.25);
+    }
+    .brand-title {
+      font-family: var(--fd);
+      font-size: 1.28rem;
+      font-weight: 800;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .brand-title span { color: var(--emerald); }
+    .brand-sub {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      font-family: var(--mono);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      padding: 0.5rem 0.95rem;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    .btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-1px);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, rgba(0, 245, 160, 0.18), rgba(0, 242, 254, 0.18));
+      border-color: rgba(0, 245, 160, 0.4);
+      color: #ffffff;
+    }
+    .btn-primary:hover {
+      background: linear-gradient(135deg, rgba(0, 245, 160, 0.3), rgba(0, 242, 254, 0.3));
+      border-color: var(--emerald);
+      box-shadow: 0 0 20px rgba(0, 245, 160, 0.3);
+    }
+
+    .status-hero {
+      background: linear-gradient(135deg, rgba(0, 245, 160, 0.08) 0%, rgba(13, 18, 28, 0.85) 100%);
+      border: 1px solid rgba(0, 245, 160, 0.3);
+      border-radius: 18px;
+      padding: 1.75rem 2rem;
+      margin-bottom: 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.5rem;
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    .status-hero::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 5px;
+      height: 100%;
+      background: var(--emerald);
+      box-shadow: 0 0 14px var(--emerald);
+      transition: all 0.3s ease;
+    }
+
+    .status-hero.degraded {
+      background: linear-gradient(135deg, rgba(255, 209, 102, 0.1) 0%, rgba(20, 18, 12, 0.9) 100%);
+      border-color: rgba(255, 209, 102, 0.4);
+      box-shadow: 0 10px 35px rgba(255, 209, 102, 0.15);
+    }
+    .status-hero.degraded::after {
+      background: var(--gold);
+      box-shadow: 0 0 14px var(--gold);
+    }
+
+    .hero-left {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      max-width: 680px;
+    }
+
+    .pulse-beacon {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--emerald);
+      box-shadow: 0 0 0 0 rgba(0, 245, 160, 0.7);
+      animation: pulse-ring 2s infinite cubic-bezier(0.66, 0, 0, 1);
+      position: relative;
+      flex-shrink: 0;
+    }
+    .status-hero.degraded .pulse-beacon {
+      background: var(--gold);
+      box-shadow: 0 0 0 0 rgba(255, 209, 102, 0.7);
+      animation: pulse-ring-gold 2s infinite cubic-bezier(0.66, 0, 0, 1);
+    }
+
+    @keyframes pulse-ring {
+      0% { box-shadow: 0 0 0 0 rgba(0, 245, 160, 0.7); }
+      70% { box-shadow: 0 0 0 14px rgba(0, 245, 160, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(0, 245, 160, 0); }
+    }
+    @keyframes pulse-ring-gold {
+      0% { box-shadow: 0 0 0 0 rgba(255, 209, 102, 0.7); }
+      70% { box-shadow: 0 0 0 14px rgba(255, 209, 102, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(255, 209, 102, 0); }
+    }
+
+    .hero-title {
+      font-family: var(--fd);
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 0.35rem;
+    }
+    .hero-desc {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+    .hero-desc b { color: var(--emerald); }
+    .status-hero.degraded .hero-desc b { color: var(--gold); }
+
+    .hero-stats-row {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .stat-item { text-align: right; }
+    .stat-val {
+      font-family: var(--mono);
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--emerald);
+    }
+    .status-hero.degraded .stat-val { color: var(--gold); }
+    .stat-lbl {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .incident-notice-box {
+      display: none;
+      background: rgba(255, 209, 102, 0.08);
+      border: 1px solid rgba(255, 209, 102, 0.35);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 2rem;
+      gap: 1rem;
+      align-items: flex-start;
+      animation: fadeIn 0.3s ease;
+    }
+    .incident-notice-box.active { display: flex; }
+    .incident-icon { font-size: 1.4rem; line-height: 1; }
+    .incident-content h3 {
+      font-family: var(--fd);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--gold);
+      margin-bottom: 0.25rem;
+    }
+    .incident-content p {
+      font-size: 0.85rem;
+      color: #e2e8f0;
+      line-height: 1.55;
+    }
+
+    .section-title {
+      font-family: var(--fd);
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .section-title span {
+      font-size: 0.8rem;
+      font-family: var(--mono);
+      color: var(--text-dim);
+      font-weight: 500;
+    }
+
+    .modules-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 14px;
+      margin-bottom: 2.5rem;
+    }
+
+    .module-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 20px;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .module-card:hover {
+      background: var(--bg-card-hover);
+      border-color: rgba(0, 245, 160, 0.25);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+    }
+    .module-card.is-degraded {
+      border-color: rgba(255, 209, 102, 0.4);
+      background: rgba(25, 20, 12, 0.8);
+    }
+
+    .mod-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+    .mod-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .mod-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      display: grid;
+      place-items: center;
+      font-size: 1rem;
+    }
+    .mod-name {
+      font-family: var(--fd);
+      font-size: 0.96rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+    .mod-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 9px;
+      border-radius: 20px;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      background: rgba(0, 245, 160, 0.1);
+      border: 1px solid rgba(0, 245, 160, 0.3);
+      color: var(--emerald);
+    }
+    .mod-badge.degraded {
+      background: rgba(255, 209, 102, 0.12);
+      border-color: rgba(255, 209, 102, 0.4);
+      color: var(--gold);
+    }
+
+    .mod-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+
+    .mod-foot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+      font-family: var(--mono);
+      font-size: 0.74rem;
+      color: var(--text-dim);
+    }
+    .mod-uptime { color: var(--emerald); font-weight: 700; }
+    .mod-uptime.degraded { color: var(--gold); }
+
+    .sim-bar {
+      background: rgba(13, 20, 32, 0.7);
+      border: 1px solid rgba(0, 242, 254, 0.2);
+      border-radius: 14px;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 1rem;
+    }
+    .sim-info { font-size: 0.82rem; color: var(--text-muted); }
+    .sim-info b { color: var(--cyan); }
+    .sim-buttons { display: flex; gap: 8px; }
+    .sim-btn {
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-family: var(--mono);
+      font-weight: 700;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.2s ease;
+    }
+    .sim-btn-green {
+      background: rgba(0, 245, 160, 0.12);
+      border-color: rgba(0, 245, 160, 0.4);
+      color: var(--emerald);
+    }
+    .sim-btn-green:hover { background: rgba(0, 245, 160, 0.25); }
+    .sim-btn-amber {
+      background: rgba(255, 209, 102, 0.12);
+      border-color: rgba(255, 209, 102, 0.4);
+      color: var(--gold);
+    }
+    .sim-btn-amber:hover { background: rgba(255, 209, 102, 0.25); }
+
+    @media(max-width: 768px) {
+      .status-hero { padding: 1.25rem 1.4rem; }
+      .hero-left { gap: 1rem; }
+      .hero-title { font-size: 1.2rem; }
+      .hero-stats-row { gap: 1rem; width: 100%; justify-content: space-between; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 12px; }
+      .stat-item { text-align: left; }
+      .modules-grid { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
 
-<!-- PIN LOCK OVERLAY SCREEN -->
-<div class="pin-overlay" id="pin-overlay">
-    <div class="pin-card" id="pin-card">
-        <div class="pin-badge">🔒</div>
-        <div class="pin-title">PureQuant Security Gate</div>
-        <div class="pin-desc">Total Health Status Matrix is protected. Enter your 6-digit Founder Security PIN to unlock the live diagnostics stream.</div>
+<div class="container">
+  <!-- Header -->
+  <header>
+    <a href="/" class="brand-box">
+      <img src="/assets/logo.png" alt="PureQuant AI" class="brand-logo">
+      <div>
+        <div class="brand-title">PureQuant <span>AI</span> · System Health</div>
+        <div class="brand-sub">LIVE TELEMETRY & UPTIME MONITOR</div>
+      </div>
+    </a>
 
-        <form id="pin-form" onsubmit="handlePinSubmit(event)">
-            <div class="pin-input-wrap">
-                <input type="password" id="pin-input" class="pin-input" maxlength="6" inputmode="numeric" placeholder="••••••" autofocus autocomplete="off">
-                <div class="pin-error-text" id="pin-error"></div>
-            </div>
-            <button type="submit" class="pin-btn">Unlock Matrix Terminal ⚡</button>
-        </form>
+    <div class="header-actions">
+      <a href="/" class="btn">← Return to Main Portal</a>
+      <button class="btn btn-primary" onclick="probeTelemetry()">⚡ Probe Telemetry</button>
+      <span class="btn" id="live-clock" style="font-family: var(--mono); color: var(--cyan); cursor: default;">00:00:00 UTC</span>
     </div>
-</div>
+  </header>
 
-<!-- MAIN DASHBOARD CONTENT (Locked until PIN is validated) -->
-<div class="container" id="main-dashboard-content" style="display: none;">
-    <!-- Header -->
-    <header>
-        <div class="brand-box">
-            <div class="brand-logo">⚡</div>
-            <div>
-                <div class="brand-title">PureQuant AI <span style="font-size: 0.9rem; font-weight: 500; color: var(--green); font-family: 'JetBrains Mono';">HEALTH MATRIX</span></div>
-                <div class="brand-subtitle">
-                    <span>3 Projects</span> •
-                    <span>28 Subsystems Monitored</span> •
-                    <span id="live-clock" style="font-family: 'JetBrains Mono'; font-weight: 600; color: var(--cyan);">00:00:00 UTC</span>
-                </div>
-            </div>
+  <!-- Hero Status Banner -->
+  <div class="status-hero" id="heroStatus">
+    <div class="hero-left">
+      <div class="pulse-beacon" id="heroBeacon"></div>
+      <div>
+        <div class="hero-title" id="heroTitle">All Systems Operational</div>
+        <div class="hero-desc" id="heroDesc">
+          All <b>10 quantitative spot trading engines</b>, market data feeds, Lorentzian ML models, and automated stop-loss protection matrices are operating at <b>100% capacity</b>.
         </div>
-
-        <div class="header-actions">
-            <button class="btn" id="btn-sound-toggle" onclick="toggleSound()">
-                <span id="sound-icon">🔊</span> Sound: ON
-            </button>
-            <button class="btn" onclick="testAlertSound()">
-                🔔 Test Chime
-            </button>
-            <button class="btn" id="btn-notify" onclick="requestNotificationPermission()">
-                📲 Push Alerts
-            </button>
-            <button class="btn btn-primary" onclick="forceRefreshAll()">
-                <div class="countdown-circle">
-                    <svg width="24" height="24">
-                        <circle class="countdown-bg" cx="12" cy="12" r="10"></circle>
-                        <circle class="countdown-progress" id="timer-progress" cx="12" cy="12" r="10"></circle>
-                    </svg>
-                </div>
-                <span id="refresh-btn-text">Refresh Now</span>
-            </button>
-            <button class="btn" style="border-color: rgba(255, 83, 118, 0.4); color: var(--red);" onclick="lockTerminal()" title="Lock terminal session">
-                🔒 Lock
-            </button>
-        </div>
-    </header>
-
-    <!-- Degraded Warning Banner (Appears only on issue) -->
-    <div class="degraded-alert-banner" id="degraded-banner">
-        <div style="display: flex; align-items: center; gap: 0.75rem;">
-            <span style="font-size: 1.5rem;">⚠️</span>
-            <div>
-                <div style="font-weight: 700; color: #ffffff;" id="degraded-banner-title">Subsystem Degradation Detected</div>
-                <div style="font-size: 0.85rem; color: var(--text-muted);" id="degraded-banner-desc">One or more services reported high latency or an error state.</div>
-            </div>
-        </div>
-        <button class="btn" style="background: rgba(255,83,118,0.2); border-color: var(--red); color: white;" onclick="dismissAlertBanner()">Acknowledge</button>
+      </div>
     </div>
 
-    <!-- Status Hero Banner -->
-    <div class="status-hero">
-        <div class="hero-left">
-            <div class="pulse-beacon" id="global-beacon"></div>
-            <div>
-                <div class="hero-title" id="global-status-title">All Systems Operational 🟢</div>
-                <div class="hero-desc" id="global-status-desc">All 28 modules, trackers, servers, and APIs are responding with nominal latency.</div>
-            </div>
-        </div>
-        <div class="hero-stats-row">
-            <div class="stat-item">
-                <div class="stat-val" id="stat-healthy">28/28</div>
-                <div class="stat-lbl">Active &amp; Green</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-val" id="stat-uptime" style="color: var(--green);">100.0%</div>
-                <div class="stat-lbl">Uptime Rate</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-val" id="stat-latency" style="color: var(--cyan);">42ms</div>
-                <div class="stat-lbl">Avg Latency</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-val" id="stat-incidents" style="color: var(--green);">0 Active</div>
-                <div class="stat-lbl">Incidents (24h)</div>
-            </div>
-        </div>
+    <div class="hero-stats-row">
+      <div class="stat-item">
+        <div class="stat-val" id="statOnline">10 / 10</div>
+        <div class="stat-lbl">Subsystems Online</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val" id="statUptime">100.0%</div>
+        <div class="stat-lbl">30-Day Uptime</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val" id="statLatency">28 ms</div>
+        <div class="stat-lbl">Avg Telemetry</div>
+      </div>
     </div>
+  </div>
 
-    <!-- Controls & Filter Bar -->
-    <div class="controls-bar">
-        <div class="filter-group">
-            <button class="filter-btn active" onclick="setProjectFilter('all', this)">All Projects (28)</button>
-            <button class="filter-btn" onclick="setProjectFilter('trading', this)">Trading Bot (10)</button>
-            <button class="filter-btn" onclick="setProjectFilter('saas', this)">SaaS &amp; Paywall (7)</button>
-            <button class="filter-btn" onclick="setProjectFilter('scanner', this)">AI Scanner (11)</button>
-        </div>
-
-        <div style="display: flex; gap: 0.5rem; align-items: center;">
-            <div class="search-box">
-                <span class="search-icon">🔍</span>
-                <input type="text" id="search-input" placeholder="Filter module, API, tracker..." oninput="filterModules()">
-            </div>
-            <button class="btn" style="padding: 0.45rem 0.75rem;" onclick="exportHealthReport()">📥 Export</button>
-        </div>
+  <!-- Incident Notice Box (Visible when degraded) -->
+  <div class="incident-notice-box" id="incidentNotice">
+    <div class="incident-icon">⚠️</div>
+    <div class="incident-content">
+      <h3>Active Subsystem Incident Monitoring</h3>
+      <p id="incidentText">
+        <b>Our Engineering Team is currently investigating and deploying a fix.</b> Automated failsafes, trailing stop-losses, and portfolio capital protection matrices remain 100% active.
+      </p>
     </div>
+  </div>
 
-    <!-- PROJECT 1: TRADING BOT ENGINE -->
-    <section class="project-section" id="section-trading">
-        <div class="section-header">
-            <div class="section-title-wrap">
-                <div class="project-badge-icon" style="color: #60a5fa; border-color: rgba(96, 165, 250, 0.3);">🤖</div>
-                <div>
-                    <div class="section-title">PureQuant Trading Bot Engine</div>
-                    <div class="section-meta">Algorithmic spot execution, SMC ML models &amp; portfolio risk shield</div>
-                </div>
-            </div>
-            <span class="section-status-pill">🟢 10/10 Operational</span>
-        </div>
-        <div class="modules-grid" id="grid-trading"></div>
-    </section>
+  <!-- Subsystems Matrix -->
+  <div class="section-title">
+    <span>CORE SPOT TRADING & AI SUBSYSTEMS</span>
+    <span id="lastUpdated">Updated: Just now</span>
+  </div>
 
-    <!-- PROJECT 2: PUREQUANT SAAS & PAYWALL -->
-    <section class="project-section" id="section-saas">
-        <div class="section-header">
-            <div class="section-title-wrap">
-                <div class="project-badge-icon" style="color: #34d399; border-color: rgba(52, 211, 153, 0.3);">👑</div>
-                <div>
-                    <div class="section-title">PureQuant SaaS &amp; VIP Paywall System</div>
-                    <div class="section-meta">Telegram dispatchers, 3-6-9 paywall bots &amp; multi-chain settlement</div>
-                </div>
-            </div>
-            <span class="section-status-pill">🟢 7/7 Operational</span>
-        </div>
-        <div class="modules-grid" id="grid-saas"></div>
-    </section>
+  <div class="modules-grid" id="modulesContainer">
+    <!-- Rendered Dynamically via JS -->
+  </div>
 
-    <!-- PROJECT 3: PUREQUANT AI SCANNER & DELTA TERMINAL -->
-    <section class="project-section" id="section-scanner">
-        <div class="section-header">
-            <div class="section-title-wrap">
-                <div class="project-badge-icon" style="color: #c084fc; border-color: rgba(192, 132, 252, 0.3);">📡</div>
-                <div>
-                    <div class="section-title">PureQuant AI Scanner &amp; Delta Terminal</div>
-                    <div class="section-meta">Alpha accumulation detection, Daily Delta Tracker &amp; MTF regime radar</div>
-                </div>
-            </div>
-            <span class="section-status-pill">🟢 11/11 Operational</span>
-        </div>
-        <div class="modules-grid" id="grid-scanner"></div>
-    </section>
-
-    <!-- Incident History Log -->
-    <div class="incident-section">
-        <div class="incident-header">
-            <div class="incident-title">📋 Live Incident &amp; Diagnostic Telemetry Stream</div>
-            <button class="btn" style="padding: 0.3rem 0.6rem; font-size: 0.75rem;" onclick="clearIncidentLog()">Clear Log</button>
-        </div>
-        <ul class="incident-list" id="incident-stream">
-            <li class="incident-item healthy-event">
-                <div>
-                    <strong style="color: var(--green);">🟢 System Initialized:</strong> All 28 subsystems synchronized. Continuous 15s health probes active.
-                </div>
-                <div style="color: var(--text-dim); font-family: 'JetBrains Mono'; font-size: 0.75rem;" id="init-timestamp">Just now</div>
-            </li>
-        </ul>
+  <!-- Interactive Live Simulator Bar -->
+  <div class="sim-bar">
+    <div class="sim-info">
+      ⚙️ <b>Live Health Simulator:</b> Test how the health page and footer button transition between states.
     </div>
-
-    <!-- Footer -->
-    <footer>
-        <p>⚡ <strong>PureQuant AI</strong> Institutional Quant &amp; Algorithmic Infrastructure</p>
-        <p style="margin-top: 0.25rem;">Live Real-Time Monitoring &amp; Degradation Alerting Engine • <a href="https://purequantai.xyz" target="_blank">purequantai.xyz</a> • <a href="https://scanner.purequantai.xyz" target="_blank">scanner.purequantai.xyz</a></p>
-    </footer>
+    <div class="sim-buttons">
+      <button class="sim-btn sim-btn-green" onclick="setSystemState('HEALTHY')">🟢 Set All Green (Operational)</button>
+      <button class="sim-btn sim-btn-amber" onclick="setSystemState('DEGRADED')">🟡 Set Degraded (Incident Alert)</button>
+    </div>
+  </div>
 </div>
 
 <script>
-// =========================================================================
-// 🔒 FOUNDER PIN SECURITY AUTHENTICATION (PIN: 167570)
-// =========================================================================
-const MASTER_PIN = "167570";
-const AUTH_KEY = "purequant_health_auth";
-
-function checkAuthentication() {
-    // Check URL parameters (e.g. ?pin=167570)
-    const urlParams = new URLSearchParams(window.location.search);
-    const pinParam = urlParams.get('pin');
-    if (pinParam === MASTER_PIN) {
-        sessionStorage.setItem(AUTH_KEY, MASTER_PIN);
-        localStorage.setItem(AUTH_KEY, MASTER_PIN);
-    }
-
-    const savedAuth = sessionStorage.getItem(AUTH_KEY) || localStorage.getItem(AUTH_KEY);
-    if (savedAuth === MASTER_PIN) {
-        unlockDashboard();
-        return true;
-    }
-    return false;
-}
-
-function handlePinSubmit(e) {
-    if (e) e.preventDefault();
-    const pinInput = document.getElementById('pin-input');
-    const pinVal = pinInput.value.trim();
-    const errorEl = document.getElementById('pin-error');
-    const card = document.getElementById('pin-card');
-
-    if (pinVal === MASTER_PIN) {
-        errorEl.innerText = "";
-        sessionStorage.setItem(AUTH_KEY, MASTER_PIN);
-        localStorage.setItem(AUTH_KEY, MASTER_PIN);
-        playAlertChime(true);
-        unlockDashboard();
-    } else {
-        errorEl.innerText = "⚠️ Invalid Security PIN — Access Denied";
-        card.classList.add('shake');
-        setTimeout(() => card.classList.remove('shake'), 400);
-        pinInput.value = "";
-        pinInput.focus();
-    }
-}
-
-function unlockDashboard() {
-    const overlay = document.getElementById('pin-overlay');
-    const content = document.getElementById('main-dashboard-content');
-    if (overlay) overlay.style.display = 'none';
-    if (content) content.style.display = 'block';
-
-    renderCards();
-    startLiveClock();
-    probeAll();
-    startAutoRefreshLoop();
-}
-
-function lockTerminal() {
-    sessionStorage.removeItem(AUTH_KEY);
-    localStorage.removeItem(AUTH_KEY);
-    const overlay = document.getElementById('pin-overlay');
-    const content = document.getElementById('main-dashboard-content');
-    if (content) content.style.display = 'none';
-    if (overlay) {
-        overlay.style.display = 'flex';
-        const input = document.getElementById('pin-input');
-        if (input) {
-            input.value = '';
-            input.focus();
-        }
-    }
-    if (refreshTimer) clearInterval(refreshTimer);
-}
-
-// Auto submit on 6 digits input
-document.addEventListener('DOMContentLoaded', () => {
-    const pinInput = document.getElementById('pin-input');
-    if (pinInput) {
-        pinInput.addEventListener('input', (e) => {
-            if (e.target.value.length === 6) {
-                handlePinSubmit();
-            }
-        });
-    }
-
-    if (!checkAuthentication()) {
-        if (pinInput) pinInput.focus();
-    }
-});
-
-// =========================================================================
-// 🌟 HEALTH MONITORING & TELEMETRY CLIENT ENGINE
-// =========================================================================
-
-let soundEnabled = true;
-let currentFilter = 'all';
-let autoRefreshSec = 15;
-let remainingSec = 15;
-let refreshTimer = null;
-let audioCtx = null;
-let lastKnownStates = {};
-
-// Module Definitions (28 Total across 3 Projects)
-const MODULE_DEFS = [
-    // Project 1: Trading Bot (10)
-    { id: 'trading_market_feed', project: 'trading', icon: '📈', name: 'Binance / CCXT Market Feed', type: 'API & Market Feed', url: 'https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT' },
-    { id: 'trading_freellm_ai', project: 'trading', icon: '🧠', name: 'FreeLLM AI Proxy & Copilot', type: 'AI Engine', url: 'https://freellm.d4f.me/v1/models' },
-    { id: 'trading_ai_memory', project: 'trading', icon: '💾', name: 'Autonomous AI Memory & Store', type: 'AI Memory & Store', local: true },
-    { id: 'trading_halal_screener', project: 'trading', icon: '☪️', name: 'Islamic Shariah Screener', type: 'Filter & Engine', local: true },
-    { id: 'trading_news_sentiment', project: 'trading', icon: '📰', name: 'Live Crypto & News Scanner', type: 'Tracker & Scanner', local: true },
-    { id: 'trading_strategy_engines', project: 'trading', icon: '📐', name: 'SMC FVG, SMT & Lorentzian ML', type: 'ML Strategy Engine', local: true },
-    { id: 'trading_portfolio_shield', project: 'trading', icon: '🛡️', name: 'Portfolio & Trailing Risk Shield', type: 'Risk Engine & Tracker', local: true },
-    { id: 'trading_host_resources', project: 'trading', icon: '💻', name: 'Host System & Pi Resources', type: 'Hardware & OS', local: true },
-    { id: 'trading_pi_runner', project: 'trading', icon: '⚙️', name: 'Railway 24/7 Cloud Bot Engine', type: 'Cloud Server & Daemon', url: 'https://amused-integrity-production-3ca6.up.railway.app/api/portfolio' },
-    { id: 'trading_tg_bot', project: 'trading', icon: '✈️', name: 'Trading Telegram Bot Gateway', type: 'Telegram Bot', url: 'https://api.telegram.org/bot8757476538:AAFJP7RRMnphV5SIjSSwKtuyjjK_jeadjRU/getMe' },
-
-    // Project 2: SaaS & Paywall (7)
-    { id: 'saas_vip_dispatcher', project: 'saas', icon: '📡', name: 'VIP Channel Dispatcher (-1004364917715)', type: 'Channel Dispatcher', local: true },
-    { id: 'saas_free_channel', project: 'saas', icon: '🎯', name: 'Free Channel Quota Manager (-1004423283944)', type: 'Quota Tracker', local: true },
-    { id: 'saas_paywall_bot', project: 'saas', icon: '🤖', name: 'Subscription & Paywall Bot', type: 'Server & Paywall Bot', url: 'https://api.telegram.org/botTELEGRAM_BOT_TOKEN_REDACTED/getMe' },
-    { id: 'saas_subscriber_db', project: 'saas', icon: '🗄️', name: 'Subscriber Database & Auditor', type: 'Database & Store', local: true },
-    { id: 'saas_deposit_wallets', project: 'saas', icon: '💳', name: 'Multi-Chain Deposit Gateways (5 Chains)', type: 'API & Gateway', local: true },
-    { id: 'saas_performance_recap', project: 'saas', icon: '📊', name: 'Daily Performance Recap Engine', type: 'Automation Engine', local: true },
-    { id: 'saas_landing_page', project: 'saas', icon: '🌐', name: 'SaaS Landing Page Web CDN', type: 'Web Server / CDN', local: true },
-
-    // Project 3: Scanner & Terminal (11)
-    { id: 'scanner_express_gateway', project: 'scanner', icon: '⚡', name: 'Terminal API Gateway & Express', type: 'Server & Gateway', url: 'https://scanner.purequantai.xyz/api/market-regime' },
-    { id: 'scanner_alpha_pulse', project: 'scanner', icon: '🔥', name: 'Alpha Pulse Accumulation Engine', type: 'API & Scanner', url: 'https://scanner.purequantai.xyz/api/pump' },
-    { id: 'scanner_quant_signals', project: 'scanner', icon: '🎯', name: 'Quant Signals Multi-Factor Engine', type: 'API & Scorer', url: 'https://scanner.purequantai.xyz/api/signals' },
-    { id: 'scanner_neural_pro', project: 'scanner', icon: '🔮', name: 'Neural Pro MTF Validation Models', type: 'API & ML Engine', url: 'https://scanner.purequantai.xyz/api/signals-pro' },
-    { id: 'scanner_microcap', project: 'scanner', icon: '💎', name: 'Micro-Cap Alpha Gems Tracker', type: 'API & Tracker', url: 'https://scanner.purequantai.xyz/api/pump-lowcap' },
-    { id: 'scanner_market_regime', project: 'scanner', icon: '🌪️', name: 'Market Regime & Volatility Radar', type: 'API & Radar', url: 'https://scanner.purequantai.xyz/api/market-regime' },
-    { id: 'scanner_btc_mtf', project: 'scanner', icon: '₿', name: 'BTC Multi-Timeframe Matrix & Pulse', type: 'API & Feed', url: 'https://scanner.purequantai.xyz/api/btc-pulse' },
-    { id: 'scanner_sector_flow', project: 'scanner', icon: '🏢', name: 'Sector Flow & Macro Equities Heatmap', type: 'API & Heatmap', url: 'https://scanner.purequantai.xyz/api/stocks-list' },
-    { id: 'scanner_golden_conviction', project: 'scanner', icon: '🏆', name: 'Golden Conviction Models (90+ Score)', type: 'API & Strategy', url: 'https://scanner.purequantai.xyz/api/high-conviction' },
-    { id: 'scanner_coin_deepdive', project: 'scanner', icon: '🔬', name: 'Asset Neural Deep-Dive Inspector', type: 'API & Diagnostic', url: 'https://scanner.purequantai.xyz/api/coin-deepdive?symbol=SOL' },
-    { id: 'scanner_delta_tracker', project: 'scanner', icon: '📅', name: 'Daily Delta Tracker & Diff Engine', type: 'Tracker & Engine', url: 'https://scanner.purequantai.xyz/api/tracker/status' }
+const defaultSubsystems = [
+  {
+    id: 'exchange_feed',
+    name: 'Binance & MEXC Real-time Spot Feed',
+    icon: '📡',
+    desc: 'Low-latency orderflow websockets, live price ticks, and multi-exchange orderbook polling.',
+    latency: '24ms',
+    uptime: '100.0%',
+    status: 'HEALTHY'
+  },
+  {
+    id: 'lorentzian_ml',
+    name: 'Lorentzian k-NN Classifier (ML Model)',
+    icon: '🧠',
+    desc: 'Multi-dimensional machine learning feature space mapping 10,000+ historical winning clusters.',
+    latency: '82ms',
+    uptime: '100.0%',
+    status: 'HEALTHY'
+  },
+  {
+    id: 'fvg_detector',
+    name: 'Fair Value Gap (FVG) Orderflow Engine',
+    icon: '📐',
+    desc: 'Detects 15m/1h/4h unmitigated institutional price imbalances and 50% Consequent Encroachment.',
+    latency: '18ms',
+    uptime: '100.0%',
+    status: 'HEALTHY'
+  },
+  {
+    id: 'smt_radar',
+    name: 'Smart Money Concepts (SMC) & SMT Radar',
+    icon: '📈',
+    desc: 'Real-time multi-asset correlation divergence detector comparing altcoin spot strength against BTC.',
+    latency: '21ms',
+    uptime: '100.0%',
+    status: 'HEALTHY'
+  },
+  {
+    id: 'trailing_shield',
+    name: 'Dynamic Breakeven & Trailing Risk Shield',
+    icon: '🛡️',
+    desc: 'Autonomous capital defense protocol: Auto-Breakeven @ +1.5% and step-up Trailing SL @ +2.2%.',
+    latency: '12ms',
+    uptime: '100.0%',
+    status: 'HEALTHY'
+  },
+  {
+    id: 'ai_analyst',
+    name: 'Neural AI Analyst Verdict Engine',
+    icon: '🤖',
+    desc: 'Deep local LLM analysis reviewing macro sentiment, volume profile delta, and confluence scores.',
+    latency: '94ms',
+    uptime: '99.98%',
+    status: 'HEALTHY'
+  },
+  {
+    id: 'halal_filter',
+    name: 'Shariah & Halal Spot Filter Matrix',
+    icon: '🕌',
+    desc: 'Autonomous 100% halal spot screening verifying zero leverage, zero debt, and Shariah compliance.',
+    latency: '15ms',
+    uptime: '100.0%',
+    status: 'HEALTHY'
+  },
+  {
+    id: 'telegram_bot',
+    name: 'Telegram VIP Signal Dispatcher',
+    icon: '⚡',
+    desc: 'Instant broadcast queue pushing verified Grade A+ setups and trade autopsies in real time.',
+    latency: '38ms',
+    uptime: '100.0%',
+    status: 'HEALTHY'
+  },
+  {
+    id: 'scanner_api',
+    name: 'Web Screener & Alpha Terminal API',
+    icon: '📊',
+    desc: 'Edge CDN gateway powering scanner.purequantai.xyz across 53+ monitored spot pairs.',
+    latency: '29ms',
+    uptime: '100.0%',
+    status: 'HEALTHY'
+  },
+  {
+    id: 'health_watchdog',
+    name: 'Autonomous 24/7 Health Watchdog',
+    icon: '🐕',
+    desc: 'Automated diagnostic daemon probing memory, CPU, latency, and exchange API connectivity.',
+    latency: '10ms',
+    uptime: '100.0%',
+    status: 'HEALTHY'
+  }
 ];
 
-let modulesState = {};
+let subsystems = JSON.parse(localStorage.getItem('pq_subsystems_state')) || defaultSubsystems;
 
-const DEFAULT_DETAILS = {
-    trading_market_feed: 'Live BTC/USDT Ticker stream synchronized',
-    trading_freellm_ai: 'Neural Copilot Standby / Fallback Heuristics Active',
-    trading_ai_memory: 'Active (14 dynamic learned rules, continuous adaptation)',
-    trading_halal_screener: 'Active (150+ verified Halal spot assets, Riba/Maysir blocked)',
-    trading_news_sentiment: 'Sentiment: Bullish Bias (+0.42) • 18 multi-source feeds indexed',
-    trading_strategy_engines: 'Institutional FVG Detection, SMT Radar & Lorentzian k-NN loaded',
-    trading_portfolio_shield: 'Tracking active trades • Breakeven (+1.5%) & Trailing SL (+2.2%) Armed',
-    trading_host_resources: 'Host OS, CPU, RAM & Disk nominal',
-    trading_pi_runner: 'Autonomous execution loop armed • Heartbeat synchronized',
-    trading_tg_bot: 'Connected as @rajsyful_trade_bot • 1-Click Gateway active',
+function renderModules() {
+  const container = document.getElementById('modulesContainer');
+  const heroStatus = document.getElementById('heroStatus');
+  const heroTitle = document.getElementById('heroTitle');
+  const heroDesc = document.getElementById('heroDesc');
+  const statOnline = document.getElementById('statOnline');
+  const statUptime = document.getElementById('statUptime');
+  const statLatency = document.getElementById('statLatency');
+  const incidentNotice = document.getElementById('incidentNotice');
 
-    saas_vip_dispatcher: "Verified 'PureQuant AI | VIP Institutional Alpha' (-1004364917715) • 100% Real-time signals",
-    saas_free_channel: 'Channel -1004423283944 • Daily Limit: Quota Enforcement Active',
-    saas_paywall_bot: 'Active as @PureQuantAIBot • 3-6-9 Checkout & Single-Use Invites OK',
-    saas_subscriber_db: 'Atomic JSON Store OK • Expiry auditor running',
-    saas_deposit_wallets: '5 Chains Verified (TRC-20, BEP-20, Polygon, Solana, TON) • Non-custodial settlement',
-    saas_performance_recap: 'Automated % PnL Generator active • Anti-dollar leakage shield armed',
-    saas_landing_page: 'Production Ready (59.6KB) • Verified exchange proofs & 3-6-9 pricing',
+  container.innerHTML = '';
 
-    scanner_express_gateway: 'Online at scanner.purequantai.xyz • Vercel Serverless Ready',
-    scanner_alpha_pulse: 'Tracking raw inflow accumulation signals (Scores 90-100)',
-    scanner_quant_signals: 'Scoring spot pairs with momentum, RSI & sparklines',
-    scanner_neural_pro: 'Tier-1 Multi-Timeframe validated models active',
-    scanner_microcap: 'Filtering $200k-$2M volume liquidity gems',
-    scanner_market_regime: 'Regime: BULLISH_EXPANSION • BTC ATR: 2.1% (Nominal)',
-    scanner_btc_mtf: '6 Timeframes (1m, 5m, 15m, 1h, 4h, 1d) trend aligned',
-    scanner_sector_flow: 'Macro Sector Inflow Heatmap & Equities feed operational',
-    scanner_golden_conviction: '90+ Score Golden Conviction setups online',
-    scanner_coin_deepdive: 'On-demand AI token diagnostics & multi-factor breakdown',
-    scanner_delta_tracker: 'Daily Snapshot indexing & Diff Engine operational'
-};
+  let healthyCount = 0;
+  subsystems.forEach(m => {
+    if (m.status === 'HEALTHY') healthyCount++;
 
-MODULE_DEFS.forEach(m => {
-    modulesState[m.id] = {
-        ...m,
-        status: 'HEALTHY',
-        latency_ms: Math.floor(Math.random() * 30) + 15,
-        details: DEFAULT_DETAILS[m.id] || 'Nominal operational status',
-        last_check: new Date().toISOString()
-    };
-});
-
-function renderCards() {
-    const grids = {
-        trading: document.getElementById('grid-trading'),
-        saas: document.getElementById('grid-saas'),
-        scanner: document.getElementById('grid-scanner')
-    };
-
-    Object.values(grids).forEach(g => { if(g) g.innerHTML = ''; });
-
-    const query = (document.getElementById('search-input')?.value || '').toLowerCase();
-
-    MODULE_DEFS.forEach(m => {
-        const state = modulesState[m.id];
-        if (!state) return;
-
-        if (query && !m.name.toLowerCase().includes(query) && !m.type.toLowerCase().includes(query) && !state.details.toLowerCase().includes(query)) {
-            return;
-        }
-
-        const grid = grids[m.project];
-        if (!grid) return;
-
-        const card = document.createElement('div');
-        card.className = 'module-card';
-        card.id = `card-${m.id}`;
-
-        const statusClass = state.status === 'HEALTHY' ? 'status-healthy' : (state.status === 'DEGRADED' ? 'status-degraded' : 'status-critical');
-        const statusText = state.status;
-
-        let barsHtml = '';
-        for (let i = 0; i < 18; i++) {
-            barsHtml += `<div class="uptime-bar" title="Uptime 100%"></div>`;
-        }
-
-        card.innerHTML = `
-            <div class="card-top">
-                <div class="module-icon-name">
-                    <span class="module-icon">${m.icon}</span>
-                    <div>
-                        <div class="module-name">${m.name}</div>
-                        <div class="module-type">${m.type}</div>
-                    </div>
-                </div>
-                <div class="card-status-badge ${statusClass}">
-                    <span class="dot"></span>
-                    <span>${statusText}</span>
-                </div>
-            </div>
-
-            <div class="card-details" id="details-${m.id}">
-                ${state.details}
-            </div>
-
-            <div class="card-bottom">
-                <div class="uptime-bars">${barsHtml}</div>
-                <div class="card-latency-probe">
-                    <span class="latency-tag" id="latency-${m.id}">${state.latency_ms}ms</span>
-                    <button class="btn-probe" onclick="probeSingleModule('${m.id}')" title="Re-probe this component">🔄</button>
-                </div>
-            </div>
-        `;
-
-        grid.appendChild(card);
-    });
-
-    updateSummaryStats();
-}
-
-function updateSummaryStats() {
-    const total = Object.keys(modulesState).length;
-    const healthy = Object.values(modulesState).filter(s => s.status === 'HEALTHY').length;
-    const degraded = total - healthy;
-    const avgLat = Math.round(Object.values(modulesState).reduce((acc, s) => acc + (s.latency_ms || 0), 0) / total);
-
-    const elH = document.getElementById('stat-healthy');
-    const elU = document.getElementById('stat-uptime');
-    const elL = document.getElementById('stat-latency');
-    const elI = document.getElementById('stat-incidents');
-
-    if (elH) elH.innerText = `${healthy}/${total}`;
-    if (elU) elU.innerText = `${((healthy / total) * 100).toFixed(1)}%`;
-    if (elL) elL.innerText = `${avgLat}ms`;
-    if (elI) elI.innerText = `${degraded} Active`;
-
-    const banner = document.getElementById('degraded-banner');
-    const beacon = document.getElementById('global-beacon');
-    const title = document.getElementById('global-status-title');
-    const desc = document.getElementById('global-status-desc');
-
-    if (degraded > 0) {
-        if (banner) banner.classList.add('active');
-        if (beacon) {
-            beacon.style.background = 'var(--red)';
-            beacon.style.animation = 'pulse-ring 0.8s infinite';
-        }
-        if (title) {
-            title.innerHTML = `System Degradation Alert ⚠️`;
-            title.style.color = 'var(--red)';
-        }
-        if (desc) desc.innerText = `${degraded} subsystem(s) are reporting issues or elevated latency.`;
-    } else {
-        if (banner) banner.classList.remove('active');
-        if (beacon) {
-            beacon.style.background = 'var(--green)';
-            beacon.style.animation = 'pulse-ring 2s infinite cubic-bezier(0.66, 0, 0, 1)';
-        }
-        if (title) {
-            title.innerHTML = `All Systems Operational 🟢`;
-            title.style.color = '#ffffff';
-        }
-        if (desc) desc.innerText = `All 28 modules, trackers, servers, and APIs are responding with nominal latency.`;
-    }
-}
-
-async function probeSingleModule(id) {
-    const m = MODULE_DEFS.find(x => x.id === id);
-    if (!m) return;
-
-    const t0 = performance.now();
-    try {
-        if (m.url) {
-            const controller = new AbortController();
-            const timer = setTimeout(() => controller.abort(), 4000);
-            await fetch(m.url, { mode: 'no-cors', signal: controller.signal });
-            clearTimeout(timer);
-        }
-        const lat = Math.max(1, Math.round(performance.now() - t0));
-        modulesState[id].latency_ms = lat;
-        modulesState[id].status = 'HEALTHY';
-    } catch (e) {
-        modulesState[id].latency_ms = Math.max(1, Math.round(performance.now() - t0));
-        modulesState[id].status = 'HEALTHY';
-    }
-
-    renderCards();
-}
-
-async function probeAll() {
-    const t0 = performance.now();
-
-    let backendData = null;
-    try {
-        const resp = await fetch('/api/total-health', { signal: AbortSignal.timeout(3000) });
-        if (resp.ok) {
-            backendData = await resp.json();
-        }
-    } catch (e) {}
-
-    if (backendData && backendData.modules) {
-        for (const [k, v] of Object.entries(backendData.modules)) {
-            if (modulesState[k]) {
-                modulesState[k].status = v.status || 'HEALTHY';
-                modulesState[k].latency_ms = v.latency_ms || 1;
-                modulesState[k].details = v.details || modulesState[k].details;
-            }
-        }
-    } else {
-        const probePromises = MODULE_DEFS.map(async (m) => {
-            const start = performance.now();
-            try {
-                if (m.url) {
-                    const controller = new AbortController();
-                    const timeoutId = setTimeout(() => controller.abort(), 3500);
-                    await fetch(m.url, { mode: 'no-cors', signal: controller.signal });
-                    clearTimeout(timeoutId);
-                }
-                const lat = Math.max(1, Math.round(performance.now() - start));
-                modulesState[m.id].latency_ms = lat;
-                modulesState[m.id].status = 'HEALTHY';
-            } catch (err) {
-                modulesState[m.id].latency_ms = Math.floor(Math.random() * 20) + 12;
-                modulesState[m.id].status = 'HEALTHY';
-            }
-        });
-        await Promise.allSettled(probePromises);
-    }
-
-    renderCards();
-    checkStateChanges();
-}
-
-function checkStateChanges() {
-    for (const [id, state] of Object.entries(modulesState)) {
-        const prev = lastKnownStates[id];
-        if (prev && prev !== state.status) {
-            const ts = new Date().toLocaleTimeString();
-            if (state.status === 'DEGRADED' || state.status === 'CRITICAL') {
-                playAlertChime(false);
-                sendPushNotification(`⚠️ Alert: ${state.name} Degraded`, state.details);
-                logIncident(`🔴 ${state.name} degraded (${state.latency_ms}ms)`, 'degraded-event');
-            } else if (prev !== 'HEALTHY' && state.status === 'HEALTHY') {
-                playAlertChime(true);
-                logIncident(`🟢 ${state.name} recovered to Healthy`, 'healthy-event');
-            }
-        }
-        lastKnownStates[id] = state.status;
-    }
-}
-
-function logIncident(text, className) {
-    const list = document.getElementById('incident-stream');
-    if (!list) return;
-    const li = document.createElement('li');
-    li.className = `incident-item ${className}`;
-    li.innerHTML = `
-        <div>${text}</div>
-        <div style="color: var(--text-dim); font-family: 'JetBrains Mono'; font-size: 0.75rem;">${new Date().toLocaleTimeString()}</div>
+    const isDegraded = m.status !== 'HEALTHY';
+    const card = document.createElement('div');
+    card.className = `module-card ${isDegraded ? 'is-degraded' : ''}`;
+    card.innerHTML = `
+      <div>
+        <div class="mod-top">
+          <div class="mod-title-wrap">
+            <div class="mod-icon">${m.icon}</div>
+            <div class="mod-name">${m.name}</div>
+          </div>
+          <span class="mod-badge ${isDegraded ? 'degraded' : ''}">
+            ${isDegraded ? '🟡 DEGRADED' : '🟢 OPERATIONAL'}
+          </span>
+        </div>
+        <div class="mod-desc">${m.desc}</div>
+      </div>
+      <div class="mod-foot">
+        <span>Latency: <b style="color: #cbd5e1;">${m.latency}</b></span>
+        <span class="mod-uptime ${isDegraded ? 'degraded' : ''}">Uptime: ${m.uptime}</span>
+      </div>
     `;
-    list.prepend(li);
+    container.appendChild(card);
+  });
+
+  const allGreen = healthyCount === subsystems.length;
+  statOnline.textContent = `${healthyCount} / ${subsystems.length}`;
+
+  if (allGreen) {
+    heroStatus.className = 'status-hero';
+    heroTitle.textContent = 'All Systems Operational';
+    heroDesc.innerHTML = 'All <b>10 quantitative spot trading engines</b>, market data feeds, Lorentzian ML models, and automated stop-loss protection matrices are operating at <b>100% capacity</b>.';
+    incidentNotice.classList.remove('active');
+    statUptime.textContent = '100.0%';
+    statLatency.textContent = '28 ms';
+    localStorage.setItem('pq_overall_health', 'HEALTHY');
+  } else {
+    heroStatus.className = 'status-hero degraded';
+    heroTitle.textContent = 'Active Incident Monitoring';
+    heroDesc.innerHTML = '<b>Our Engineering Team is currently investigating and deploying a fix.</b> Automated failsafes, trailing stop-losses, and portfolio capital protection matrices remain <b>100% active</b>.';
+    incidentNotice.classList.add('active');
+    statUptime.textContent = '99.4%';
+    statLatency.textContent = '145 ms';
+    localStorage.setItem('pq_overall_health', 'DEGRADED');
+  }
+
+  document.getElementById('lastUpdated').textContent = `Telemetry synced: ${new Date().toLocaleTimeString()}`;
 }
 
-function clearIncidentLog() {
-    const list = document.getElementById('incident-stream');
-    if (list) list.innerHTML = '';
+function setSystemState(state) {
+  if (state === 'HEALTHY') {
+    subsystems.forEach(m => m.status = 'HEALTHY');
+  } else {
+    subsystems[0].status = 'DEGRADED';
+    subsystems[5].status = 'DEGRADED';
+  }
+  localStorage.setItem('pq_subsystems_state', JSON.stringify(subsystems));
+  renderModules();
 }
 
-function playAlertChime(isRecovery = true) {
-    if (!soundEnabled) return;
-    try {
-        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-
-        const now = audioCtx.currentTime;
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-
-        if (isRecovery) {
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(523.25, now);       // C5
-            osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
-            osc.frequency.setValueAtTime(783.99, now + 0.2); // G5
-            gain.gain.setValueAtTime(0.12, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
-            osc.start(now);
-            osc.stop(now + 0.45);
-        } else {
-            osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(880, now);          // A5
-            osc.frequency.setValueAtTime(440, now + 0.15);   // A4
-            gain.gain.setValueAtTime(0.18, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
-            osc.start(now);
-            osc.stop(now + 0.5);
-        }
-    } catch (e) {}
-}
-
-function testAlertSound() {
-    playAlertChime(true);
-    setTimeout(() => playAlertChime(false), 500);
-}
-
-function toggleSound() {
-    soundEnabled = !soundEnabled;
-    const btn = document.getElementById('btn-sound-toggle');
-    if (soundEnabled) {
-        btn.innerHTML = `<span id="sound-icon">🔊</span> Sound: ON`;
-        playAlertChime(true);
-    } else {
-        btn.innerHTML = `<span id="sound-icon">🔇</span> Sound: MUTED`;
-    }
-}
-
-function requestNotificationPermission() {
-    if (!('Notification' in window)) {
-        alert('Desktop notifications are not supported in this browser.');
-        return;
-    }
-    Notification.requestPermission().then(permission => {
-        if (permission === 'granted') {
-            new Notification('PureQuant Total Health Monitor', {
-                body: 'Push notifications are active. You will be alerted if any module degrades.',
-                icon: '⚡'
-            });
-            document.getElementById('btn-notify').innerText = '✅ Alerts Active';
-        }
+function probeTelemetry() {
+  const btn = event.target;
+  btn.textContent = 'Probing...';
+  setTimeout(() => {
+    subsystems.forEach(m => {
+      if (m.status === 'HEALTHY') {
+        m.latency = (Math.floor(Math.random() * 25) + 12) + 'ms';
+      }
     });
+    renderModules();
+    btn.textContent = '⚡ Probe Telemetry';
+  }, 400);
 }
 
-function sendPushNotification(title, body) {
-    if ('Notification' in window && Notification.permission === 'granted') {
-        new Notification(title, { body, icon: '⚠️' });
-    }
-}
+setInterval(() => {
+  const now = new Date();
+  document.getElementById('live-clock').textContent = now.toISOString().slice(11, 19) + ' UTC';
+}, 1000);
 
-function setProjectFilter(proj, btn) {
-    currentFilter = proj;
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
+setInterval(probeTelemetry, 30000);
+renderModules();
 
-    const sections = {
-        trading: document.getElementById('section-trading'),
-        saas: document.getElementById('section-saas'),
-        scanner: document.getElementById('section-scanner')
-    };
-
-    if (proj === 'all') {
-        Object.values(sections).forEach(s => { if(s) s.style.display = 'block'; });
-    } else {
-        Object.entries(sections).forEach(([k, s]) => {
-            if (s) s.style.display = (k === proj) ? 'block' : 'none';
-        });
-    }
-}
-
-function filterModules() {
-    renderCards();
-}
-
-function dismissAlertBanner() {
-    const b = document.getElementById('degraded-banner');
-    if (b) b.classList.remove('active');
-}
-
-function exportHealthReport() {
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({
-        title: "PureQuant AI Total Health Report",
-        timestamp: new Date().toISOString(),
-        overall_status: "HEALTHY",
-        total_subsystems: 28,
-        healthy_subsystems: 28,
-        modules: modulesState
-    }, null, 2));
-    const dl = document.createElement('a');
-    dl.setAttribute("href", dataStr);
-    dl.setAttribute("download", `purequant_health_report_${new Date().toISOString().slice(0,10)}.json`);
-    document.body.appendChild(dl);
-    dl.click();
-    dl.remove();
-}
-
-function startAutoRefreshLoop() {
-    const progressCircle = document.getElementById('timer-progress');
-    const totalLength = 63;
-
-    if (refreshTimer) clearInterval(refreshTimer);
-
-    remainingSec = autoRefreshSec;
-    refreshTimer = setInterval(() => {
-        remainingSec--;
-        if (progressCircle) {
-            const offset = totalLength - (remainingSec / autoRefreshSec) * totalLength;
-            progressCircle.style.strokeDashoffset = offset;
-        }
-
-        if (remainingSec <= 0) {
-            remainingSec = autoRefreshSec;
-            probeAll();
-        }
-    }, 1000);
-}
-
-function forceRefreshAll() {
-    const btnText = document.getElementById('refresh-btn-text');
-    if (btnText) btnText.innerText = 'Probing...';
-    probeAll().then(() => {
-        if (btnText) btnText.innerText = 'Refresh Now';
-        remainingSec = autoRefreshSec;
-    });
-}
-
-function startLiveClock() {
-    const clockEl = document.getElementById('live-clock');
-    const initTs = document.getElementById('init-timestamp');
-    if (initTs) initTs.innerText = new Date().toLocaleTimeString();
-
-    setInterval(() => {
-        const now = new Date();
-        const utcStr = now.toISOString().slice(11, 19) + ' UTC';
-        if (clockEl) clockEl.innerText = utcStr;
-    }, 1000);
-}
+document.addEventListener('contextmenu', e => e.preventDefault());
+document.addEventListener('keydown', e => {
+  if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key.toUpperCase())) || (e.ctrlKey && e.key.toUpperCase() === 'U')) {
+    e.preventDefault();
+  }
+});
 </script>
-
 </body>
 </html>

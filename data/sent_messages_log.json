@@ -103,5 +103,21 @@
     "message_type": "FREE_TP_MASKED",
     "excerpt": "\ud83c\udfaf <b>TAKE-PROFIT TARGET HIT! \u2014 #SUIUSDT</b> \ud83d\udfe2\n\n\ud83d\udcb0 <b>Profit Secured:</b> <b>+9.10% SPOT GAIN</b>\n\ud83d\udcb5 <b>Entry Price:</b> <code>[\ud83d\udd12 Locked for VIP]</code>\n\ud83c\udfaf <b>Exit ...",
     "success": false
+  },
+  {
+    "timestamp": "2026-08-26 05:06:13 UTC",
+    "destination_id": "-1004423283944",
+    "channel_type": "FREE_CHANNEL",
+    "message_type": "FREE_SIGNAL_MASKED",
+    "excerpt": "\u26a1 <b>NEW INSTITUTIONAL SPOT SIGNAL \u2014 #OGUSDT</b> \ud83d\ude80\n\n\ud83d\udcca <b>PureQuant Confluence Score:</b> <b>98/100</b> (Grade A+)\n\ud83c\udfaf <b>Direction:</b> <b>SPOT BUY (100% Halal / ...",
+    "success": false
+  },
+  {
+    "timestamp": "2026-08-26 05:08:08 UTC",
+    "destination_id": "-1004423283944",
+    "channel_type": "FREE_CHANNEL",
+    "message_type": "FREE_SIGNAL_MASKED",
+    "excerpt": "\u26a1 <b>NEW INSTITUTIONAL SPOT SIGNAL \u2014 #OGUSDT</b> \ud83d\ude80\n\n\ud83d\udcca <b>PureQuant Confluence Score:</b> <b>98/100</b> (Grade A+)\n\ud83c\udfaf <b>Direction:</b> <b>SPOT BUY (100% Halal / ...",
+    "success": false
   }
 ]
