@@ -63,6 +63,11 @@ FREE_CHANNEL_ID = os.getenv("FREE_CHANNEL_ID", "").strip()
 FREE_CHANNEL_USERNAME = os.getenv("FREE_CHANNEL_USERNAME", "PureQuantSignals").lstrip("@")
 ADMIN_TELEGRAM_ID = os.getenv("ADMIN_TELEGRAM_ID", "").strip()
 SUPPORT_BOT_NAME = os.getenv("SAAS_BOT_USERNAME", "PureQuantAIBot").lstrip("@")
+SCANNER_GATE_ENABLED = os.getenv("SCANNER_GATE_ENABLED", "false").lower() == "true"
+SCANNER_URL = os.getenv("SCANNER_URL", "https://scanner.purequantai.xyz/").rstrip("/")
+
+if SCANNER_GATE_ENABLED:
+    from scanner_gate import issue_token
 
 def is_admin(chat_id: Any) -> bool:
     if not ADMIN_TELEGRAM_ID:
@@ -488,6 +493,22 @@ def format_payment_invoice(plan_key: str, net_key: str) -> str:
 
 def handle_start(chat_id: int, first_name: str, param: str = ""):
     USER_STATES[chat_id] = {"state": "idle"}
+    if param.startswith("scan") and SCANNER_GATE_ENABLED:
+        member = tg_api_call("getChatMember", {"chat_id": FREE_CHANNEL_ID, "user_id": chat_id})
+        status = (member.get("result") or {}).get("status") if member.get("ok") else None
+        if status in {"creator", "administrator", "member"}:
+            token = issue_token(chat_id)
+            send_message(chat_id, "✅ <b>Free channel verified.</b>\n\nOpen your scanner access:", {
+                "inline_keyboard": [[{"text": "📈 Open Free Scanner", "url": f"{SCANNER_URL}/?tg_gate={token}"}]]
+            })
+        else:
+            send_message(chat_id, "Please join the free channel first, then tap Verify:", {
+                "inline_keyboard": [
+                    [{"text": "📡 Join Free Channel", "url": f"https://t.me/{FREE_CHANNEL_USERNAME}"}],
+                    [{"text": "✅ Verify & Open Scanner", "url": f"https://t.me/{SUPPORT_BOT_NAME}?start=scan_verify"}]
+                ]
+            })
+        return
     if param in PLANS:
         USER_STATES[chat_id] = {"state": "select_net", "plan": param}
         plan = PLANS[param]
