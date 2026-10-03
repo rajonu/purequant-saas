@@ -106,26 +106,12 @@ PLANS = {
         "price_usdt": 3.0,
         "days": 30,
         "badge": "🥉 STARTER",
-        "desc": "Full 24/7 Spot Signals, Entry/TP/SL, 100% Halal Zero-Leverage.",
+        "desc": "Full 24/7 spot-market alerts with entry, TP and SL references; no leverage.",
         "features": [
             "24/7 Telegram Spot Alerts",
             "Top 50 High-Volume Spot Pairs",
             "Calculated Entry, SL & TP Targets",
-            "100% Halal / Spot-Only Filter"
-        ]
-    },
-    "pro": {
-        "name": "Pro VIP AI",
-        "price_usdt": 6.0,
-        "days": 30,
-        "badge": "🥈 PRO VIP (Popular)",
-        "desc": "Lorentzian ML Scores, Fair Value Gap (FVG), Trailing SL & Breakeven Locks.",
-        "features": [
-            "Everything in Starter Spot",
-            "Lorentzian ML Confidence Scores",
-            "Fair Value Gap (FVG) & SMT Radar",
-            "Dynamic Trailing SL & Breakeven Alerts",
-            "Daily AI Post-Mortem Autopsy Feed"
+            "Spot-only market filter"
         ]
     },
     "lifetime_vip": {
@@ -344,7 +330,7 @@ def ai_generate_support_reply(query: str) -> Optional[str]:
     if any(w in q for w in ["halal", "shariah", "haram", "leverage", "margin", "future"]):
         return (
             "🛡️ <b>Halal & Spot Ownership Guarantee:</b>\n\n"
-            "PureQuant AI is <b>100% Spot-Only</b>. There is zero leverage, zero margin loans, zero interest (Riba), and zero liquidation risk. "
+            "PureQuant AI is spot-focused and does not use leverage. Spot markets can still lose value, and no signal guarantees profit. "
             "You own 100% of the underlying crypto asset in your exchange spot wallet, making it mathematically sound and strictly Halal."
         )
 
@@ -359,7 +345,6 @@ def ai_generate_support_reply(query: str) -> Optional[str]:
             "💳 <b>Payment & Supported Networks:</b>\n\n"
             "We support USDT and USDC on <b>TRC-20, BEP-20 (BSC), Polygon, Solana, and TON</b>.\n"
             "• Starter Spot: $3.00 / mo\n"
-            "• Pro VIP AI: $6.00 / mo\n"
             "• Lifetime VIP Pass: $9.00 one-time (10 Years)\n\n"
             "Click <b>[💎 Unlock VIP Signals]</b> in the main menu to generate your payment invoice!"
         )
@@ -404,9 +389,6 @@ def get_plans_keyboard() -> Dict[str, Any]:
                 {"text": "🥉 Starter Spot — $3.00 / mo", "callback_data": "select_plan:starter"}
             ],
             [
-                {"text": "🥈 Pro VIP AI — $6.00 / mo (Popular)", "callback_data": "select_plan:pro"}
-            ],
-            [
                 {"text": "👑 Lifetime VIP Pass — $9.00 (Best Value)", "callback_data": "select_plan:lifetime_vip"}
             ],
             [
@@ -439,13 +421,12 @@ def format_welcome_message(first_name: str) -> str:
     return (
         f"⚡ <b>Welcome to PureQuant AI, {first_name}!</b>\n\n"
         f"Institutional-grade quantitative crypto spot intelligence.\n"
-        f"• <b>100% Spot Only:</b> Zero leverage, zero liquidation risk, 100% Halal.\n"
+        f"• <b>Spot-only market intelligence:</b> No leverage; market risk applies.\n"
         f"• <b>Lorentzian Distance ML:</b> Multi-dimensional predictive directional classification.\n"
         f"• <b>Fair Value Gap (FVG) + SMT Radar:</b> Precision entry at unmitigated order blocks.\n"
         f"• <b>Dynamic Risk Shield:</b> Automated Breakeven & Trailing Stop-Loss alerts.\n\n"
         f"🔥 <b>Institutional VIP Spot Membership:</b>\n"
         f"• <b>Starter Spot:</b> $3.00 / mo\n"
-        f"• <b>Pro VIP AI:</b> $6.00 / mo\n"
         f"• <b>Lifetime VIP Pass:</b> $9.00 one-time (Zero renewal fees)\n\n"
         f"Select an option below to get started:"
     )
@@ -457,12 +438,6 @@ def format_plan_overview() -> str:
         f"• 24/7 Institutional Spot Signals on Top 50 Pairs\n"
         f"• Precise Entry, TP1, TP2, TP3 & SL Levels\n"
         f"• Halal / 100% Spot Asset Ownership\n\n"
-        f"🥈 <b>Pro VIP AI — $6.00 / month</b> <s>($19/mo)</s> ⭐ <i>Most Popular</i>\n"
-        f"• Everything in Starter Spot\n"
-        f"• Lorentzian ML Confidence Scoring\n"
-        f"• Fair Value Gap (FVG) & SMT Divergence Radar\n"
-        f"• Dynamic Trailing Stop-Loss & Breakeven Locks\n"
-        f"• Daily AI Post-Mortem Trade Forensic Audits\n\n"
         f"👑 <b>Lifetime VIP Pass — $9.00 ONE-TIME</b> <s>($99)</s> 🔥 <i>Best Value</i>\n"
         f"• 10 Years Unlimited Full VIP Telegram Access\n"
         f"• All Future V2 ML Algorithms Included Free\n"
@@ -680,7 +655,7 @@ def notify_admin_payment_submitted(user_id: int, username: str, plan_key: str, n
         print("⚠️ ADMIN_TELEGRAM_ID is not configured in .env!")
         return
 
-    plan = PLANS.get(plan_key, PLANS["pro"])
+    plan = PLANS.get(plan_key, PLANS["starter"])
     network = WALLETS.get(net_key, {"name": net_key})
 
     msg = (
@@ -710,7 +685,7 @@ def handle_admin_approval(admin_chat_id: int, message_id: int, target_uid: str, 
 
     p = pending[target_uid]
     plan_key = p["plan_key"]
-    plan = PLANS.get(plan_key, PLANS["pro"])
+    plan = PLANS.get(plan_key, PLANS["starter"])
 
     # 1. Generate 1-time invite link
     invite_link = generate_vip_invite_link(VIP_CHANNEL_ID)
@@ -796,7 +771,7 @@ def broadcast_vip_signal(setup: Dict[str, Any]) -> bool:
     msg = (
         f"⚡ <b>PUREQUANT AI :: VIP SPOT BUY ALERT</b>\n"
         f"🏆 <b>GRADE A+ SETUP · {setup.get('confidence', '94.8%')} LORENTZIAN CONFIDENCE</b>\n\n"
-        f"<b>Asset:</b> #{setup.get('pair', 'SOL/USDT')} (Spot Only · 100% Halal)\n"
+            f"<b>Asset:</b> #{setup.get('pair', 'SOL/USDT')} (Spot Only)\n"
         f"<b>Exchange:</b> Binance / Bybit Spot\n\n"
         f"<b>📊 INSTITUTIONAL CONFLUENCES:</b>\n"
         f"• 4H Bullish FVG Mitigated @ {setup.get('fvg_level', '$135.20')}\n"
@@ -988,7 +963,7 @@ def broadcast_trade_proof_card(
 
         caption = (
             f"🏆 <b>PUREQUANT AI :: CLOSED TRADE HARVESTED</b>\n\n"
-            f"<b>Asset:</b> #{clean_pair} (Spot Long · 100% Halal)\n"
+            f"<b>Asset:</b> #{clean_pair} (Spot Long)\n"
             f"🟢 <b>Entry:</b> {entry_price}\n"
             f"🎯 <b>Exit / High:</b> {exit_price} ({target_hit})\n"
             f"📈 <b>Net Spot Gain:</b> <b>{pnl_percent}</b> (Zero Leverage · Strict Ownership)\n\n"
@@ -1000,7 +975,6 @@ def broadcast_trade_proof_card(
         keyboard = {
             "inline_keyboard": [
                 [
-                    {"text": "🥈 Unlock Pro VIP ($6/mo)", "url": f"https://t.me/{bot_username}?start=pro"},
                     {"text": "👑 Get Lifetime VIP ($9)", "url": f"https://t.me/{bot_username}?start=lifetime_vip"}
                 ],
                 [
@@ -1315,9 +1289,9 @@ def process_message(msg: Dict[str, Any]):
 
     # 1. State: awaiting_txid
     if current_state == "awaiting_txid":
-        plan_key = USER_STATES[chat_id].get("plan", "pro")
+        plan_key = USER_STATES[chat_id].get("plan", "starter")
         net_key = USER_STATES[chat_id].get("network", "TRC20")
-        plan = PLANS.get(plan_key, PLANS["pro"])
+        plan = PLANS.get(plan_key, PLANS["starter"])
 
         pending = load_pending()
         pending[str(chat_id)] = {
