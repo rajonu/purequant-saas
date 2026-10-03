@@ -1,0 +1,18 @@
+# The Vercel project serves the static public site only. Keep bot/runtime
+# code, local ledgers, credentials, and development artifacts out of the
+# deployment bundle.
+*.py
+*.pyc
+*.map
+.env*
+config.env.example
+data/
+Dockerfile
+Procfile
+requirements.txt
+README.md
+ARCHITECTURE.md
+DEPLOYMENT_GUIDE.md
+TELEGRAM_SETUP_TUTORIAL.md
+PROJECT_MEMORY.md
+*.md

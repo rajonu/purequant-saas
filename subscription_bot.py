@@ -16,11 +16,30 @@ from typing import Dict, Any, Optional, List
 
 # Built-in Health Check Server for 100% Free Web Service Hosting (Render / Railway / Koyeb)
 class HealthCheckHandler(BaseHTTPRequestHandler):
-    def do_GET(self):
+    server_version = "PureQuant-Health"
+    sys_version = ""
+
+    def version_string(self):
+        return self.server_version
+
+    def _send_health_response(self, include_body: bool = True):
+        body = b"PureQuant AI Paywall Bot is Active & Running 24/7 OK"
         self.send_response(200)
         self.send_header("Content-type", "text/plain; charset=utf-8")
+        self.send_header("Content-Length", str(len(body)))
+        self.send_header("Cache-Control", "no-store")
+        self.send_header("X-Content-Type-Options", "nosniff")
+        self.send_header("Referrer-Policy", "no-referrer")
+        self.send_header("Content-Security-Policy", "default-src 'none'")
         self.end_headers()
-        self.wfile.write(b"PureQuant AI Paywall Bot is Active & Running 24/7 OK")
+        if include_body:
+            self.wfile.write(body)
+
+    def do_GET(self):
+        self._send_health_response()
+
+    def do_HEAD(self):
+        self._send_health_response(include_body=False)
 
     def log_message(self, format, *args):
         pass  # Quiet HTTP logs

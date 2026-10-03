@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
+Disallow: /health
+Disallow: /health-status
+Disallow: /status
 
 Sitemap: https://www.purequantai.xyz/sitemap.xml
