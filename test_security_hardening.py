@@ -49,6 +49,11 @@ class StaticHardeningTests(unittest.TestCase):
         html = (ROOT / "landing_page/status/index.html").read_text(encoding="utf-8")
         self.assertNotRegex(html, r"api\.telegram\.org/bot\d+:")
 
+    def test_trading_bot_token_has_no_source_fallback(self):
+        source = (ROOT / "health_monitor.py").read_text(encoding="utf-8")
+        self.assertIn('TRADING_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "").strip()', source)
+        self.assertNotRegex(source, r"TELEGRAM_BOT_TOKEN\"\s*,\s*\"\d{6,12}:")
+
 
 class HealthResponseTests(unittest.TestCase):
     def test_health_response_is_cache_safe_and_does_not_fingerprint_python(self):
