@@ -11,6 +11,14 @@
       "destination": "/health.html"
     },
     {
+      "source": "/dashboard",
+      "destination": "/dashboard/index.html"
+    },
+    {
+      "source": "/dashboard/",
+      "destination": "/dashboard/index.html"
+    },
+    {
       "source": "/health-status",
       "destination": "/health.html"
     },

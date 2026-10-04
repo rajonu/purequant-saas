@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>PureQuant AI · Scanner Dashboard</title>
+  <link rel="icon" href="../favicon.ico">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <a class="brand" href="../"><img src="../assets/logo.png" alt="PureQuant AI"><span>PureQuant <b>AI</b></span></a>
+      <div class="topbar-actions"><span id="feed-message">Connecting to scanner feed…</span><button id="refresh-button" type="button">Refresh</button></div>
+    </header>
+
+    <section class="hero">
+      <div><p class="eyebrow">SCANNER-ONLY OPERATIONS</p><h1>Signal performance terminal</h1><p class="subtitle">Canonical scanner signals, terminal outcomes, and service health. No exchange execution or portfolio data.</p></div>
+      <span id="last-sync" class="sync">Last sync: —</span>
+    </section>
+
+    <section class="kpi-grid" aria-label="Scanner KPIs">
+      <article class="kpi"><span>Net Return</span><strong id="kpi-net-return">—</strong><small>Closed scanner outcomes</small></article>
+      <article class="kpi"><span>Win Rate</span><strong id="kpi-win-rate">—</strong><small>Valid PnL results only</small></article>
+      <article class="kpi"><span>Active Signals</span><strong id="kpi-active">—</strong><small>Current canonical feed</small></article>
+      <article class="kpi"><span>System Health</span><strong id="kpi-health">—</strong><small>Scanner services available</small></article>
+    </section>
+
+    <nav class="tabs" aria-label="Dashboard views">
+      <button class="tab active" data-tab="active" type="button">Active Signals<span>Live scanner feed</span></button>
+      <button class="tab" data-tab="history" type="button">Signal History <em>(PnL %)</em><span>Terminal outcomes</span></button>
+      <button class="tab" data-tab="health" type="button">System &amp; Module Health<span>Scanner services only</span></button>
+    </nav>
+
+    <section id="panel-active" class="tab-panel active">
+      <div class="section-heading"><div><p class="eyebrow">CURRENT SIGNALS</p><h2>Active scanner signals</h2></div><span class="note">Serial view · canonical source</span></div>
+      <div class="table-wrap"><table><thead><tr><th>Symbol</th><th>Direction</th><th>Entry reference</th><th>State</th><th>Setup</th><th>Score</th><th>Updated</th></tr></thead><tbody id="active-body"></tbody></table></div>
+    </section>
+
+    <section id="panel-history" class="tab-panel">
+      <div class="section-heading"><div><p class="eyebrow">CLOSED SIGNALS</p><h2>Signal history <em>(PnL %)</em></h2></div><span class="note">Formula uses entry, exit, and direction</span></div>
+      <div class="table-wrap"><table><thead><tr><th>Symbol</th><th>Direction</th><th>Entry</th><th>Exit</th><th>Outcome</th><th>PnL %</th><th>Closed</th></tr></thead><tbody id="history-body"></tbody></table></div>
+      <p class="disclaimer">Net Return and Win Rate use only history rows with valid entry, exit, and BUY/SELL direction. Missing prices remain “—” and are excluded from KPI calculations.</p>
+    </section>
+
+    <section id="panel-health" class="tab-panel">
+      <div class="section-heading"><div><p class="eyebrow">SERVICE TELEMETRY</p><h2>System &amp; module health</h2></div><span class="note">No trading-bot or exchange controls</span></div>
+      <div id="health-grid" class="health-grid"></div>
+    </section>
+  </main>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
